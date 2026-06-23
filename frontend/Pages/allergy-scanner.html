@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Alergias - Safe-Bite</title>
+    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-green: #2ecc71;
+            --primary-blue: #3498db;
+            --danger-red: #e74c3c;
+            --warning-orange: #f39c12;
+            --success-green: #27ae60;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+            --gradient-danger: linear-gradient(135deg, #e74c3c, #c0392b);
+            --gradient-warning: linear-gradient(135deg, #f39c12, #e67e22);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+            --transition-fast: all 0.3s ease;
+            --transition-medium: all 0.5s ease;
+        }
+
+        /* Body Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            color: var(--text-dark);
+        }
+
+        /* Container */
+        .allergy-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .allergy-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .allergy-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .allergy-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .allergy-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main Content */
+        .allergy-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        @media (max-width: 968px) {
+            .allergy-main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scanner Section */
+        .scanner-section {
+            background: var(--light-gray);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .scanner-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scanner-title i {
+            color: var(--primary-green);
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 3px dashed var(--medium-gray);
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-green);
+            background: rgba(46, 204, 113, 0.05);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary-blue);
+            background: rgba(52, 152, 219, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Preview Area */
+        .preview-area {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .analyze-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .analyze-btn.loading {
+            pointer-events: none;
+        }
+
+        .analyze-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .results-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .results-title i {
+            color: var(--primary-blue);
+        }
+
+        .result-card {
+            background: var(--light-gray);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-green);
+            transition: var(--transition-fast);
+        }
+
+        .result-card:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .result-card.warning {
+            border-left-color: var(--success-green);
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .result-card.danger {
+            border-left-color: var(--danger-red);
+            background: rgba(231, 76, 60, 0.05);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .result-severity {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-safe {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .severity-caution {
+            background: var(--success-green);
+            color: white;
+        }
+
+        .severity-warning {
+            background: linear-gradient(135deg, #d6a00c, #e6a122);
+            color: white;
+            box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
+        }
+
+        .severity-danger {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        .result-description {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .allergen-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .allergen-tag {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .allergen-tag.warning {
+            background: var(--gradient-warning);
+        }
+
+        .allergen-tag.danger {
+            background: var(--gradient-danger);
+        }
+
+        /* Allergy Table Section */
+        .allergy-table-section {
+            grid-column: 1 / -1;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .table-title {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-title i {
+            color: var(--primary-green);
+        }
+
+        .allergy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .allergy-table th {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .allergy-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--text-dark);
+        }
+
+        .allergy-table tr:hover {
+            background: var(--light-gray);
+        }
+
+        .allergy-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .allergy-symptoms {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.4;
+        }
+
+        .allergy-severity {
+            text-align: center;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--medium-gray);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="allergy-container">
+        <!-- Header -->
+        <header class="allergy-header">
+            <a href="dashboard.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+            <h1><i class="fas fa-shield-virus"></i> Analisador de Alergias Alimentares</h1>
+            <p>IA avançada para detecção de alérgenos em alimentos através de imagens</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="allergy-main">
+            <!-- Scanner Section -->
+            <section class="scanner-section">
+                <h2 class="scanner-title">
+                    <i class="fas fa-camera"></i>
+                    Escanear Imagem
+                </h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="upload-text">Clique para adiciona imagem ou arraste uma imagem aqui</div>
+                    <div class="upload-subtext">Suporta: JPG, PNG, GIF (Máx: 10MB)</div>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+
+                <div class="preview-area" id="previewArea">
+                    <img id="previewImage" class="preview-image" alt="Preview">
+                    <button id="analyzeBtn" class="analyze-btn">
+                        <i class="fas fa-search"></i> Analisar com IA
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section">
+                <h2 class="results-title">
+                    <i class="fas fa-flask"></i>
+                    Resultados da Análise
+                </h2>
+                
+                <div id="resultsContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox empty-icon"></i>
+                        <p>Nenhuma análise realizada ainda</p>
+                        <p>Envie uma imagem para começar</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Allergy Table Section -->
+            <section class="allergy-table-section">
+                <h2 class="table-title">
+                    <i class="fas fa-table"></i>
+                    Tabela de Alergias Alimentares Comuns
+                </h2>
+                
+                <table class="allergy-table" id="allergyTable">
+                    <thead>
+                        <tr>
+                            <th>Alergênio</th>
+                            <th>Fontes Comuns</th>
+                            <th>Sintomas</th>
+                            <th>Gravidade</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allergyTableBody">
+                        <!-- Table content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="allergy-scanner.js"></script>
+</body>
+</html>

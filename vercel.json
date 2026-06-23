@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "name": "safe-bite",
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard.html"
+    },
+    {
+      "src": "/settings",
+      "dest": "/settings.html"
+    },
+    {
+      "src": "/scanner",
+      "dest": "/scanner.html"
+    },
+    {
+      "src": "/history",
+      "dest": "/history.html"
+    },
+    {
+      "src": "/help",
+      "dest": "/help.html"
+    },
+    {
+      "src": "/payment",
+      "dest": "/payment.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/login.html"
+    },
+    {
+      "src": "/signup",
+      "dest": "/signup.html"
+    },
+    {
+      "src": "/privacy",
+      "dest": "/privacy.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

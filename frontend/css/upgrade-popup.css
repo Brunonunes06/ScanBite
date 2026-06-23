@@ -1,0 +1,295 @@
+/* Estilos para Popup de Upgrade Premium */
+
+/* Overlay principal */
+.upgrade-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.upgrade-popup-overlay[style*="flex"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Conteúdo do popup */
+.upgrade-popup-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.upgrade-popup-overlay[style*="flex"] .upgrade-popup-content {
+  transform: scale(1);
+}
+
+/* Header do popup */
+.popup-header {
+  text-align: center;
+  padding: 2.5rem 2rem 1.5rem;
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+  border-radius: 20px 20px 0 0;
+}
+
+.popup-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 2s infinite;
+}
+
+.popup-header h3 {
+  margin: 0;
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+/* Corpo do popup */
+.popup-body {
+  padding: 2rem;
+}
+
+.popup-body p {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+/* Benefícios Premium */
+.premium-benefits {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.benefit-item:last-child {
+  border-bottom: none;
+}
+
+.benefit-item i {
+  color: var(--primary-green);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.benefit-item span {
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+/* Ações do popup */
+.popup-actions {
+  padding: 0 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Botões */
+.btn-cancel,
+.btn-premium,
+.btn-free {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.btn-cancel {
+  background: var(--medium-gray);
+  color: var(--text-dark);
+}
+
+.btn-cancel:hover {
+  background: var(--dark-gray);
+  transform: translateY(-2px);
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.btn-free {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-free:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Animações */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .upgrade-popup-content {
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+  
+  .popup-header {
+    padding: 2rem 1.5rem 1rem;
+  }
+  
+  .popup-icon {
+    font-size: 3rem;
+  }
+  
+  .popup-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .popup-body {
+    padding: 1.5rem;
+  }
+  
+  .popup-actions {
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .btn-cancel,
+  .btn-premium,
+  .btn-free {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-benefits {
+    padding: 1rem;
+  }
+  
+  .benefit-item {
+    padding: 0.6rem 0;
+  }
+  
+  .benefit-item i {
+    font-size: 1rem;
+  }
+  
+  .benefit-item span {
+    font-size: 0.9rem;
+  }
+}
+
+/* Estados de loading */
+.upgrade-popup-content.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.upgrade-popup-content.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 4px solid var(--primary-green);
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Focus accessibility */
+.btn-cancel:focus,
+.btn-premium:focus,
+.btn-free:focus {
+  outline: 2px solid var(--primary-green);
+  outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .upgrade-popup-content {
+    background: #2d3748;
+    color: white;
+  }
+  
+  .popup-header {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.2) 0%, rgba(39, 174, 96, 0.2) 100%);
+  }
+  
+  .popup-header h3 {
+    color: white;
+  }
+  
+  .popup-body p {
+    color: #cbd5e0;
+  }
+  
+  .premium-benefits {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+  }
+  
+  .benefit-item span {
+    color: white;
+  }
+  
+  .benefit-item {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+}

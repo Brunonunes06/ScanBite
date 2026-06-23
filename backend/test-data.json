@@ -1,0 +1,86 @@
+{
+  "users": [
+    {
+      "_id": "mobvo0fkb1yjaecxz6d",
+      "name": "Bruno Teste",
+      "email": "bruno@exemplo.com",
+      "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.",
+      "isPremium": false,
+      "dietaryRestrictions": [
+        "gluten",
+        "lactose"
+      ],
+      "preferences": {
+        "language": "pt-BR",
+        "notifications": "all"
+      },
+      "stats": {
+        "totalScans": 0,
+        "safeProducts": 0,
+        "warningProducts": 0,
+        "dangerProducts": 0
+      },
+      "createdAt": "2026-04-23T19:31:42.512Z",
+      "updatedAt": "2026-04-23T19:31:42.512Z"
+    }
+  ],
+  "scans": [],
+  "products": [
+    {
+      "_id": "mobvo0fqu8glmise7d8",
+      "name": "Biscoito Recheado Chocolate",
+      "brand": "Nestlé",
+      "barcode": "7891000123456",
+      "category": "biscoitos",
+      "ingredients": [
+        "farinha de trigo",
+        "açúcar",
+        "gordura vegetal",
+        "cacau",
+        "leite em pó"
+      ],
+      "allergens": [
+        "glúten",
+        "lactose"
+      ],
+      "nutritionalInfo": {
+        "calories": 150,
+        "protein": 2,
+        "carbs": 20,
+        "fat": 7,
+        "sodium": 50
+      },
+      "warnings": [
+        "contém glúten",
+        "contém lactose"
+      ],
+      "safetyRating": "caution",
+      "createdAt": "2026-04-23T19:31:42.518Z",
+      "updatedAt": "2026-04-23T19:31:42.518Z"
+    },
+    {
+      "_id": "mobvo0fq10v0lszcls6l",
+      "name": "Maçã Gala",
+      "brand": "Natureza",
+      "barcode": "7891000123457",
+      "category": "frutas",
+      "ingredients": [
+        "maçã"
+      ],
+      "allergens": [],
+      "nutritionalInfo": {
+        "calories": 52,
+        "protein": 0.3,
+        "carbs": 14,
+        "fat": 0.2,
+        "sodium": 1
+      },
+      "warnings": [],
+      "safetyRating": "safe",
+      "createdAt": "2026-04-23T19:31:42.518Z",
+      "updatedAt": "2026-04-23T19:31:42.518Z"
+    }
+  ],
+  "payments": [],
+  "subscriptions": []
+}

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Safe-Bite</title>
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="../frontend/Pages/style.css">
+  <link rel="stylesheet" href="css/upgrade-popup.css">
+  <link rel="stylesheet" href="css/auth-indicators.css">
+  <link rel="stylesheet" href="css/dark-mode.css">
+  <link rel="stylesheet" href="css/keyboard-shortcuts.css">
+  <link rel="stylesheet" href="css/actions-popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('../style.css');
+
+
+    .login-container {
+      min-height: 100vh;
+      background: var(--gradient-hero);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      min-height: 600px;
+    }
+
+    .login-left {
+      flex: 1;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(52, 152, 219, 0.1) 100%);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .login-right {
+      flex: 1;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background-color: var(--secondary-dark);
+    }
+
+    .login-logo {
+      font-size: 3rem;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
+    }
+
+    .login-title {
+      font-size: 2rem;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
+      font-weight: 700;
+      
+    }
+
+    .login-subtitle {
+      color: var(--dark-gray);
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .login-form {
+      width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--light-gray);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--secondary-dark);
+
+      /* Linha adicionada para pintar a letra de branco */
+      color: var(--white);
+    }
+
+    .divider span {
+      background: var(--secondary-dark);
+      /* Alinhado ao fundo do seu card de login */
+      padding: 0 1rem;
+      color: var(--text-light);
+    }
+
+
+    .remember-me input[type="checkbox"] {
+      width: auto;
+    }
+
+    .forgot-password {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .forgot-password:hover {
+      text-decoration: underline;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 2rem 0;
+      position: relative;
+      width: 100%;
+
+      background: var(--light-gray);  
+      padding: 0;
+      top: -20px;
+    }
+
+    .divider span {
+      background: transparent;
+      padding: 0 1rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      border-radius: 100%;
+    }
+
+    .google-login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: white;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .google-login-btn:hover {
+      background: #f8f9fa;
+      border-color: #4285f4;
+      transform: translateY(-2px);
+    }
+
+    .google-login-btn img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .signup-link {
+      text-align: center;
+      color: var(--text-light);
+    }
+
+    .signup-link a {
+      color: var(--primary-green);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 2rem 0;
+    }
+
+    .features-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .features-list i {
+      color: var(--primary-green);
+      font-size: 1.2rem;
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(231, 76, 60, 0.3);
+      display: none;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .login-card {
+        flex-direction: column;
+        max-width: 400px;
+      }
+
+      .login-left,
+      .login-right {
+        padding: 2rem;
+      }
+
+      .login-left {
+        border-bottom: 1px solid var(--light-gray);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Lado esquerdo - Informações -->
+      <div class="login-left">
+        <div class="login-logo">
+          <i class="fas fa-leaf"></i>
+        </div>
+        <h2 class="login-title">Safe-Bite</h2>
+        <p class="login-subtitle">Seu assistente de segurança alimentar</p>
+
+        <ul class="features-list">
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Scan de produtos com IA</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Verificação de alérgenos</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Histórico completo</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Relatórios personalizados</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Lado direito - Formulário -->
+      <div class="login-right">
+        <h2 class="login-title">Bem-vindo de volta!</h2>
+        <p class="login-subtitle">Faça login para continuar</p>
+
+        <!-- Mensagens -->
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <!-- Formulário de Login -->
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" placeholder="Sua senha" required>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe" name="rememberMe">
+              <span>Lembrar-me</span>
+            </label>
+            <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">Esqueceu a senha?</a>
+          </div>
+
+          <button type="submit" class="login-btn" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i>
+            Entrar
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>ou</span>
+        </div>
+
+        <!-- Login com Google -->
+        <button class="google-login-btn" onclick="handleGoogleLogin()">
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
+          <span>Continuar com Google</span>
+        </button>
+
+        <!-- Link para cadastro -->
+        <div class="signup-link">
+          <p>Não tem uma conta? <a href="#" onclick="handleSignup(event)">Cadastre-se gratuitamente</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/api-config.js"></script>
+  <script src="../js/login-system.js"></script>
+  <script src="../js/user-manager.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Safe-Bite</title>
+    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos do Sidebar */
+    .profile-container {
+      display: flex;
+      min-height: 100vh;
+      background: #f8f9fa;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      color: white;
+      padding: 2rem 0;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-header {
+      padding: 0 2rem 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+    }
+
+    .sidebar-nav li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-nav .nav-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .sidebar-nav .nav-link.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-left-color: white;
+    }
+
+    .sidebar-nav .nav-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-header {
+      background: white;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #e9ecef;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .user-details h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #333;
+    }
+
+    .user-details p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .profile-main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .profile-header-card {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 700;
+      position: relative;
+    }
+
+    .avatar-upload {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: var(--primary-green);
+      color: white;
+      border: 3px solid white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .profile-info h2 {
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .profile-info p {
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-badge {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section h3 {
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .dietary-restrictions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .restriction-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .restriction-item:hover {
+      border-color: var(--primary-green);
+    }
+
+    .restriction-item.selected {
+      background: rgba(46, 204, 113, 0.1);
+      border-color: var(--primary-green);
+    }
+
+    .restriction-item input[type="checkbox"] {
+      display: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--light-gray);
+      color: var(--text-dark);
+      border: 2px solid var(--medium-gray);
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-secondary:hover {
+      background: var(--medium-gray);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--medium-gray);
+      border-top: 4px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .profile-main {
+        padding: 1rem;
+      }
+
+      .profile-card {
+        padding: 1.5rem;
+      }
+
+      .profile-header-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dietary-restrictions {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <i class="fas fa-leaf"></i>
+          <span>Safe-Bite</span>
+        </div>
+      </div>
+      
+      <nav>
+        <ul class="sidebar-nav">
+          <li>
+            <a href="dashboard.html" class="nav-link">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="allergy-scanner.html" class="nav-link">
+              <i class="fas fa-camera"></i>
+              <span>Scanner</span>
+            </a>
+          </li>
+          <li>
+            <a href="history.html" class="nav-link">
+              <i class="fas fa-history"></i>
+              <span>Histórico</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="settings.html" class="nav-link">
+              <i class="fas fa-cog"></i>
+              <span>Configurações</span>
+            </a>
+          </li>
+          <li>
+            <a href="payment.html" class="nav-link">
+              <i class="fas fa-crown"></i>
+              <span>Assinatura</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-link" id="logoutBtn">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Sair</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <div class="user-info">
+          <div class="user-avatar" id="userAvatar">JD</div>
+          <div class="user-details">
+            <h3 id="userName">Bruno Teste</h3>
+            <p id="userEmail">bruno@exemplo.com</p>
+          </div>
+        </div>
+      </header>
+
+      <div class="profile-main">
+      <!-- Loading State -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- Profile Form -->
+      <div class="profile-card" id="profileForm" style="display: none;">
+        <!-- Profile Header -->
+        <div class="profile-header-card">
+          <div class="profile-avatar" id="profileAvatar">
+            JD
+            <div class="avatar-upload" onclick="document.getElementById('profileImageInput').click()">
+              <i class="fas fa-camera"></i>
+            </div>
+            <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
+          </div>
+          <div class="profile-info">
+            <h2 id="profileName">Bruno Teste</h2>
+            <p id="profileEmail">bruno@exemplo.com</p>
+            <span class="profile-badge" id="profileBadge">Free</span>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3>
+            <i class="fas fa-user"></i>
+            Informações Pessoais
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Nome Completo</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dietary Restrictions -->
+        <div class="form-section">
+          <h3>
+            <i class="fas fa-exclamation-triangle"></i>
+            Restrições Alimentares
+          </h3>
+          <div class="dietary-restrictions" id="dietaryRestrictions">
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="gluten">
+              <span>Glúten</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="lactose">
+              <span>Lactose</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="peanuts">
+              <span>Amendoim</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="tree_nuts">
+              <span>Nozes</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="shellfish">
+              <span>Frutos do mar</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="fish">
+              <span>Peixe</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="eggs">
+              <span>Ovos</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="soy">
+              <span>Soja</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="diabetes">
+              <span>Diabetes</span>
+            </label>
+            <label class="restriction-item">
+              <input type="checkbox" name="restrictions" value="hypertension">
+              <span>Hipertensão</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="form-section">
+          <h3>
+            <i class="fas fa-cog"></i>
+            Preferências
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="language">Idioma</label>
+              <select id="language" name="language">
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="en-US">English</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="notifications">Notificações</label>
+              <select id="notifications" name="notifications">
+                <option value="all">Todas</option>
+                <option value="important">Apenas importantes</option>
+                <option value="none">Nenhuma</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button type="button" class="btn btn-secondary" onclick="cancelChanges()">
+            Cancelar
+          </button>
+          <button type="button" class="btn btn-primary" onclick="saveProfile()">
+            Salvar Alterações
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="api-config.js"></script>
+  <script>
+    // Profile JavaScript
+    class NutriScanProfile {
+      constructor() {
+        this.token = localStorage.getItem('nutriScanToken');
+        this.user = null;
+        this.originalData = null;
+        this.init();
+      }
+
+      async init() {
+        if (!this.token) {
+          APIUtils.redirectToLogin();
+          return;
+        }
+
+        this.setupEventListeners();
+        await this.loadProfile();
+      }
+
+      setupEventListeners() {
+        // Dietary restrictions checkboxes
+        document.querySelectorAll('.restriction-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const checkbox = item.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            item.classList.toggle('selected', checkbox.checked);
+          });
+        });
+
+        // Profile image upload
+        const profileImageInput = document.getElementById('profileImageInput');
+        if (profileImageInput) {
+          profileImageInput.addEventListener('change', (e) => {
+            this.handleProfileImageUpload(e);
+          });
+        }
+      }
+
+      async loadProfile() {
+        try {
+          this.showLoading(true);
+          
+          // Load user from localStorage first
+          const savedUser = localStorage.getItem('nutriScanUser');
+          if (savedUser) {
+            this.user = JSON.parse(savedUser);
+            this.originalData = JSON.parse(JSON.stringify(this.user));
+            
+            // Load profile image if exists
+            if (this.user.profileImage) {
+              this.updateProfileImage(this.user.profileImage);
+            }
+          }
+          
+          // Try to load from API
+          try {
+            const response = await api.getProfile();
+            this.user = response.user;
+            this.originalData = JSON.parse(JSON.stringify(response.user));
+            
+            // Load profile image from API if exists
+            if (this.user.profileImage) {
+              this.updateProfileImage(this.user.profileImage);
+              // Save to localStorage
+              localStorage.setItem('nutriScanUser', JSON.stringify(this.user));
+            }
+          } catch (apiError) {
+            console.log('Using localStorage data as fallback');
+          }
+          
+          this.populateForm();
+          this.hideLoading();
+        } catch (error) {
+          console.error('Error loading profile:', error);
+          this.showError('Erro ao carregar perfil. Tente novamente.');
+          this.hideLoading();
+        }
+      }
+
+      populateForm() {
+        if (!this.user) return;
+
+        // Personal information
+        document.getElementById('name').value = this.user.name || '';
+        document.getElementById('email').value = this.user.email || '';
+
+        // Profile header
+        document.getElementById('profileName').textContent = this.user.name || '';
+        document.getElementById('profileEmail').textContent = this.user.email || '';
+        document.getElementById('profileBadge').textContent = this.user.isPremium ? 'Premium' : 'Free';
+        document.getElementById('userName').textContent = this.user.name || '';
+
+        // Avatar
+        const initials = this.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+        document.getElementById('profileAvatar').textContent = initials;
+
+        // Dietary restrictions
+        if (this.user.dietaryRestrictions) {
+          this.user.dietaryRestrictions.forEach(restriction => {
+            const checkbox = document.querySelector(`input[value="${restriction}"]`);
+            if (checkbox) {
+              checkbox.checked = true;
+              checkbox.closest('.restriction-item').classList.add('selected');
+            }
+          });
+        }
+
+        // Preferences
+        document.getElementById('language').value = this.user.preferences?.language || 'pt-BR';
+        document.getElementById('notifications').value = this.user.preferences?.notifications || 'all';
+      }
+
+      async saveProfile() {
+        try {
+          this.showLoading(true);
+          this.hideMessages();
+
+          // Collect form data
+          const formData = {
+            name: document.getElementById('name').value,
+            dietaryRestrictions: this.getSelectedRestrictions(),
+            preferences: {
+              language: document.getElementById('language').value,
+              notifications: document.getElementById('notifications').value
+            }
+          };
+
+          // Validate
+          if (!formData.name.trim()) {
+            throw new Error('Nome é obrigatório');
+          }
+
+          // Save to API
+          const response = await api.updateProfile(formData);
+          
+          this.showSuccess('Perfil atualizado com sucesso!');
+          this.user = response.user;
+          this.originalData = JSON.parse(JSON.stringify(response.user));
+          
+          this.showLoading(false);
+        } catch (error) {
+          console.error('Erro ao salvar perfil:', error);
+          this.showError(APIUtils.handleError(error));
+          this.showLoading(false);
+        }
+      }
+
+      getSelectedRestrictions() {
+        const checkboxes = document.querySelectorAll('input[name="restrictions"]:checked');
+        return Array.from(checkboxes).map(cb => cb.value);
+      }
+
+      cancelChanges() {
+        if (this.originalData) {
+          this.user = JSON.parse(JSON.stringify(this.originalData));
+          this.populateForm();
+        }
+      }
+
+      showLoading(show) {
+        document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+        document.getElementById('profileForm').style.display = show ? 'none' : 'block';
+      }
+
+      showSuccess(message) {
+        const element = document.getElementById('successMessage');
+        element.textContent = message;
+        element.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+        
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 5000);
+      }
+
+      showError(message) {
+        const element = document.getElementById('errorMessage');
+        element.textContent = message;
+        element.style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+        
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 5000);
+      }
+
+      hideMessages() {
+        document.getElementById('successMessage').style.display = 'none';
+        document.getElementById('errorMessage').style.display = 'none';
+      }
+
+      handleProfileImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('Por favor, selecione uma imagem válida.');
+          return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert('A imagem deve ter no máximo 5MB.');
+          return;
+        }
+
+        // Read and display the image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageData = e.target.result;
+          this.updateProfileImage(imageData);
+          
+          // Save to localStorage
+          if (this.user) {
+            this.user.profileImage = imageData;
+            localStorage.setItem('nutriScanUser', JSON.stringify(this.user));
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      updateProfileImage(imageData) {
+        const profileAvatar = document.getElementById('profileAvatar');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        if (profileAvatar) {
+          profileAvatar.style.backgroundImage = `url(${imageData})`;
+          profileAvatar.style.backgroundSize = 'cover';
+          profileAvatar.style.backgroundPosition = 'center';
+          profileAvatar.textContent = '';
+        }
+        
+        if (userAvatar) {
+          userAvatar.style.backgroundImage = `url(${imageData})`;
+          userAvatar.style.backgroundSize = 'cover';
+          userAvatar.style.backgroundPosition = 'center';
+          userAvatar.textContent = '';
+        }
+      }
+
+      goToDashboard() {
+        APIUtils.redirectToDashboard();
+      }
+    }
+
+    // Global functions
+    function goToDashboard() {
+      APIUtils.redirectToDashboard();
+    }
+
+    function saveProfile() {
+      window.profileInstance.saveProfile();
+    }
+
+    function cancelChanges() {
+      window.profileInstance.cancelChanges();
+    }
+
+    // Initialize profile when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      window.profileInstance = new NutriScanProfile();
+      
+      // Setup logout button
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('nutriScanToken');
+          localStorage.removeItem('nutriScanUser');
+          safeRedirect('index.html');
+        });
+      }
+    });
+  </script>
+  
+  <!-- Scripts necessários -->
+  <script src="api-config.js"></script>
+  <script src="login-system.js"></script>
+  
+  <!-- Sistema de Sincronização de Usuário -->
+  <script src="user-sync.js"></script>
+</body>
+</html>

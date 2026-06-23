@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Safe-Bite</title>
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="css/upgrade-popup.css">
+  <link rel="stylesheet" href="css/auth-indicators.css">
+  <link rel="stylesheet" href="css/dark-mode.css">
+  <link rel="stylesheet" href="css/keyboard-shortcuts.css">
+  <link rel="stylesheet" href="css/actions-popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos específicos do dashboard */
+    .dashboard-container {
+      min-height: 100vh;
+      background: var(--light-gray);
+      padding: 20px;
+      padding-top: 80px;
+    }
+
+    .dashboard-header {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .dashboard-card {
+      background: white;
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition-normal);
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .icon-green {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .icon-blue {
+      background: rgba(52, 152, 219, 0.1);
+      color: #3498db;
+    }
+
+    .icon-purple {
+      background: rgba(155, 89, 182, 0.1);
+      color: #9b59b6;
+    }
+
+    .icon-orange {
+      background: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--light-gray);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-green), var(--secondary-green));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn-dashboard {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--light-gray);
+      color: var(--text-dark);
+      border: 2px solid var(--medium-gray);
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-secondary:hover {
+      background: var(--medium-gray);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Progress Bar Styles */
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: var(--light-gray);
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      border-radius: 3px;
+      transition: width 0.5s ease, background 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Scan Items Styles */
+    .scan-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: var(--light-gray);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .scan-item:hover {
+      transform: translateX(5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .scan-image-container {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--medium-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scan-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .scan-image-placeholder {
+      color: var(--text-light);
+      font-size: 1.2rem;
+    }
+
+    .scan-info {
+      flex: 1;
+    }
+
+    .scan-product {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .scan-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .scan-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-safe {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .status-warning {
+      background: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .status-danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+    }
+
+    @keyframes particleFloat {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% + random(-30, 30)px), calc(-50% - 50px)) scale(0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes statGlow {
+      0% {
+        box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(46, 204, 113, 0.8);
+      }
+      100% {
+        box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+      }
+    }
+
+    .stat-updating {
+      position: relative;
+    }
+
+    .stat-updating::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #2ecc71, #3498db, #2ecc71);
+      border-radius: inherit;
+      z-index: -1;
+      animation: statGlow 1s ease-in-out;
+      opacity: 0.6;
+    }
+
+    .stat-value {
+      position: relative;
+      display: inline-block;
+    }
+
+    /* Scan Controls and Filters */
+    .scan-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-export, .btn-toggle-view {
+      background: var(--light-gray);
+      border: 1px solid var(--medium-gray);
+      color: var(--text-dark);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+    }
+
+    .btn-export:hover, .btn-toggle-view:hover {
+      background: var(--medium-gray);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scan-filters {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: 12px;
+    }
+
+    .filter-group {
+      position: relative;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      transition: var(--transition-fast);
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .filter-group i {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-light);
+      pointer-events: none;
+    }
+
+    /* Paginação */
+    .scan-pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding: 1rem;
+    }
+
+    .scan-pagination button {
+      background: var(--white);
+      border: 1px solid var(--medium-gray);
+      color: var(--text-dark);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scan-pagination button:hover:not(:disabled) {
+      background: var(--primary-green);
+      color: var(--white);
+      border-color: var(--primary-green);
+    }
+
+    .scan-pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #pageInfo {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    /* Grid View */
+    .scans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .scan-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-normal);
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+
+    .scan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary-green);
+    }
+
+    .scan-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .scan-card-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .scan-card-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .scan-card-body {
+      margin-bottom: 1rem;
+    }
+
+    .scan-card-title {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .scan-card-date {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .scan-card-ingredients {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+
+    .ingredient-tag {
+      background: var(--light-gray);
+      color: var(--text-light);
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .scan-card-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-scan-action {
+      flex: 1;
+      padding: 0.5rem;
+      border: 1px solid var(--medium-gray);
+      background: var(--white);
+      color: var(--text-dark);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition-fast);
+    }
+
+    .btn-scan-action:hover {
+      background: var(--primary-green);
+      color: var(--white);
+      border-color: var(--primary-green);
+    }
+
+    /* Real-time notification styles */
+    .realtime-indicator {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--success-green);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      animation: pulse 2s infinite;
+    }
+
+    .realtime-indicator.offline {
+      background: var(--danger-red);
+      animation: none;
+    }
+
+    /* Enhanced scan item styles */
+    .scan-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      border-left: 3px solid var(--primary-green);
+      transition: var(--transition-fast);
+    }
+
+    .scan-item:hover {
+      transform: translateX(5px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scan-item.warning {
+      border-left-color: var(--warning-orange);
+    }
+
+    .scan-item.danger {
+      border-left-color: var(--danger-red);
+    }
+
+    .scan-status.status-safe {
+      background: rgba(39, 174, 96, 0.1);
+      color: var(--success-green);
+    }
+
+    .scan-status.status-warning {
+      background: rgba(243, 156, 18, 0.1);
+      color: var(--warning-orange);
+    }
+
+    .scan-status.status-danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: var(--danger-red);
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .recent-scans {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .scans-list {
+      margin-top: 20px;
+    }
+
+    .scan-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      border-bottom: 1px solid var(--light-gray);
+      transition: background 0.3s ease;
+    }
+
+    .scan-item:hover {
+      background: rgba(46, 204, 113, 0.05);
+    }
+
+    .scan-info {
+      flex: 1;
+    }
+
+    .scan-product {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 5px;
+    }
+
+    .scan-date {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .scan-status {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-safe {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .status-warning {
+      background: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .status-danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-leaf"></i>
+          <span>Safe-Bite</span>
+        </div>
+        
+        <nav class="nav-menu">
+          <ul>
+            <li><a href="Pages/index.html" class="nav-link">Início</a></li>
+            <li><a href="Pages/allergy-scanner.html" class="nav-link">Scanner</a></li>
+            <!-- <li><a href="Pages/history.html" class="nav-link">Histórico</a></li> -->
+            <li><a href="Pages/settings.html" class="nav-link">Configurações</a></li>
+            <li><a href="#" class="nav-link" id="logoutBtn">Sair</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-container">
+    <div class="container">
+      <!-- Header do Dashboard -->
+      <div class="dashboard-header">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h1 style="margin-bottom: 10px;">Bem-vindo de volta!</h1>
+            <p style="color: var(--text-light);" id="userWelcome">Carregando...</p>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.9rem; color: var(--text-light);">Plano Atual</div>
+            <div style="font-size: 1.2rem; font-weight: 600; color: var(--primary-green);" id="userPlan">Carregando...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="dashboard-content">
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div>
+              <div class="stat-value" id="totalScans">0</div>
+              <div class="stat-label">Total de Scans</div>
+            </div>
+            <div class="card-icon icon-green">
+              <i class="fas fa-barcode"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div>
+              <div class="stat-value" id="safeProducts">0</div>
+              <div class="stat-label">Produtos Seguros</div>
+            </div>
+            <div class="card-icon icon-blue">
+              <i class="fas fa-check-circle"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div>
+              <div class="stat-value" id="warningsFound">0</div>
+              <div class="stat-label">Alertas</div>
+            </div>
+            <div class="card-icon icon-orange">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card">
+          <div class="card-header">
+            <div>
+              <div class="stat-value" id="planUsage">0/10</div>
+              <div class="stat-label">Uso do Plano</div>
+              <div class="progress-bar-container">
+                <div class="progress-bar" id="planProgressBar"></div>
+              </div>
+            </div>
+            <div class="card-icon icon-purple">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="dashboard-content">
+        <div class="dashboard-card">
+          <h3 class="card-title">Ações Rápidas</h3>
+          <div class="action-buttons">
+            <a href="Pages/allergy-scanner.html" class="btn-dashboard btn-primary">
+              <i class="fas fa-camera"></i> Novo Scan
+            </a>
+            <a href="Pages/history.html" class="btn-dashboard btn-secondary">
+              <i class="fas fa-history"></i> Ver Histórico
+            </a>
+            <a href="Pages/payment.html" class="btn-dashboard btn-primary">
+              <i class="fas fa-crown"></i> Upgrade Premium
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Scans -->
+      <div class="recent-scans">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 style="margin: 0;">Histórico de Scans</h3>
+          <div class="scan-controls">
+            <button class="btn-export" onclick="exportScanData()" title="Exportar dados">
+              <i class="fas fa-download"></i>
+            </button>
+            <button class="btn-toggle-view" onclick="toggleScanView()" title="Alternar visualização">
+              <i class="fas fa-th-large" id="viewToggleIcon"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Filtros e Busca -->
+        <div class="scan-filters">
+          <div class="filter-group">
+            <input type="text" id="scanSearch" placeholder="Buscar produtos..." onkeyup="filterScans()">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="filter-group">
+            <select id="statusFilter" onchange="filterScans()">
+              <option value="">Todos os status</option>
+              <option value="safe">Seguros</option>
+              <option value="warning">Alertas</option>
+              <option value="danger">Perigosos</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <select id="dateFilter" onchange="filterScans()">
+              <option value="">Todas as datas</option>
+              <option value="today">Hoje</option>
+              <option value="week">Última semana</option>
+              <option value="month">Último mês</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="scans-list" id="recentScansList">
+          <div style="text-align: center; padding: 40px; color: var(--text-light);">
+            <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+            <p>Nenhum scan realizado ainda</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Faça seu primeiro scan para começar!</p>
+          </div>
+        </div>
+        
+        <!-- Paginação -->
+        <div class="scan-pagination" id="scanPagination" style="display: none;">
+          <button onclick="previousPage()" id="prevBtn" disabled>
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <span id="pageInfo">Página 1 de 1</span>
+          <button onclick="nextPage()" id="nextBtn">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Safe-Bite</h4>
+          <p>Seu assistente de segurança alimentar</p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="Pages/allergy-scanner.html">Início</a></li>
+            <!-- <li><a href="Pages/allergy-scanner.html">Scanner</a></li> -->
+            <li><a href="Pages/help.html">Ajuda</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="Pages/privacy.html">Privacidade</a></li>
+            <li><a href="Pages/help.html">Termos</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Safe-Bite. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api-config.js"></script>
+  <script src="js/file-checker.js"></script>
+  <script src="js/auth-monitor.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/script-corrections-fixed.js"></script>
+  <script src="js/upgrade-popup.js"></script>
+  <script src="js/contact-system.js"></script>
+  <script>
+    // Enhanced Dashboard Controller with Real-time Sync
+    class DashboardController {
+      constructor() {
+        this.user = null;
+        this.scans = [];
+        this.stats = {
+          totalScans: 0,
+          safeProducts: 0,
+          warningsFound: 0,
+          planUsage: 0,
+          planLimit: 10
+        };
+        this.syncInterval = null;
+        this.init();
+      }
+
+      init() {
+        this.loadUserData();
+        this.setupEventListeners();
+        this.initializeRealtimeSync();
+        this.updateUI();
+        this.startPeriodicUpdates();
+        // Sincronizar uso do plano a partir do histórico local
+        this.syncUsageFromHistory();
+      }
+
+      loadUserData() {
+        const userStr = localStorage.getItem('nutriScanUser');
+        if (userStr) {
+          this.user = JSON.parse(userStr);
+        }
+
+        // Carregar scans do localStorage ou API
+        this.loadScansFromStorage();
+      }
+
+      loadScansFromStorage() {
+        const scansStr = localStorage.getItem('nutriScanScans');
+        if (scansStr) {
+          this.scans = JSON.parse(scansStr);
+        } else {
+          // Criar dados simulados para demonstração
+          this.scans = [
+            {
+              id: 1,
+              product: 'NutriSafe Cereal',
+              date: new Date(Date.now() - 86400000).toISOString(),
+              status: 'safe',
+              confidence: 95
+            },
+            {
+              id: 2,
+              product: 'Protein Bar X',
+              date: new Date(Date.now() - 172800000).toISOString(),
+              status: 'warning',
+              confidence: 87
+            },
+            {
+              id: 3,
+              product: 'Organic Juice',
+              date: new Date(Date.now() - 259200000).toISOString(),
+              status: 'safe',
+              confidence: 92
+            },
+            {
+              id: 4,
+              product: 'Chocolate Bar',
+              date: new Date(Date.now() - 345600000).toISOString(),
+              status: 'danger',
+              confidence: 94
+            },
+            {
+              id: 5,
+              product: 'Vegan Cookies',
+              date: new Date(Date.now() - 432000000).toISOString(),
+              status: 'safe',
+              confidence: 89
+            }
+          ];
+          localStorage.setItem('nutriScanScans', JSON.stringify(this.scans));
+        }
+        
+        this.calculateStats();
+      }
+
+      initializeRealtimeSync() {
+        // Adicionar indicador de tempo real
+        this.addRealtimeIndicator();
+        
+        // Configurar listener para atualizações em tempo real
+        if (window.realtimeSync) {
+          console.log('🔄 Real-time sync initialized');
+        }
+
+        // Ouvir eventos locais de novo scan (disparados pelo scanner)
+        document.addEventListener('scan:completed', (e) => {
+          try {
+            const scan = e.detail;
+            this.handleIncomingScan(scan);
+          } catch (err) {
+            console.warn('Erro ao processar evento scan:completed', err);
+          }
+        });
+      }
+
+      handleIncomingScan(scan) {
+        // Garantir formato mínimo
+        if (!scan || !scan.id) return;
+
+        // Adicionar no início da lista local
+        this.scans.unshift(scan);
+
+        // Limitar a 100 scans locais para compatibilidade
+        if (this.scans.length > 100) this.scans = this.scans.slice(0, 100);
+
+        // Persistir
+        try {
+          localStorage.setItem('nutriScanScans', JSON.stringify(this.scans));
+        } catch (e) {
+          console.warn('Falha ao salvar scans no localStorage:', e);
+        }
+
+        // Recalcular estatísticas e atualizar UI
+        this.calculateStats();
+        this.updateUIWithAnimation();
+
+        // Mostrar notificação local (caso realtimeSync não esteja presente)
+        try {
+          if (!window.realtimeSync) {
+            this.notifyNewScan(scan);
+          }
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      addRealtimeIndicator() {
+        // Indicador de tempo real removido
+        // O sistema de monitoramento já mostra status em tempo real
+      }
+
+      calculateStats() {
+        this.stats.totalScans = this.scans.length;
+        this.stats.safeProducts = this.scans.filter(scan => scan.status === 'safe').length;
+        this.stats.warningsFound = this.scans.filter(scan => scan.status === 'warning' || scan.status === 'danger').length;
+        // Uso do plano no mês atual
+        this.stats.planUsage = this.scans.filter(scan => this.isSameMonth(scan.date)).length;
+
+        // Obter limite do plano do usuário (verificar localStorage / escolha de plano)
+        try {
+          const planData = JSON.parse(localStorage.getItem('nutriScanPlan') || 'null');
+          if (planData && planData.plan === 'premium') {
+            this.stats.planLimit = 999999; // virtualmente ilimitado
+          } else {
+            this.stats.planLimit = 10;
+          }
+        } catch (e) {
+          this.stats.planLimit = 10;
+        }
+      }
+
+      getPlanLimit(plan) {
+        const limits = {
+          'Free': 10,
+          'Basic': 50,
+          'Premium': 200,
+          'Enterprise': 1000
+        };
+        return limits[plan] || 10;
+      }
+
+      isToday(dateString) {
+        const date = new Date(dateString);
+        const today = new Date();
+        return date.toDateString() === today.toDateString();
+      }
+
+      isSameMonth(dateString) {
+        const d = new Date(dateString);
+        const now = new Date();
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      }
+
+      setupEventListeners() {
+        // Simular novos scans para demonstração
+        this.setupDemoMode();
+      }
+
+      setupDemoMode() {
+        // Adicionar botão para simular novo scan
+        const dashboardContent = document.querySelector('.dashboard-content');
+        if (dashboardContent) {
+          const demoButton = document.createElement('button');
+          demoButton.className = 'btn-dashboard btn-secondary';
+          demoButton.innerHTML = '<i class="fas fa-plus"></i> Simular Novo Scan';
+          demoButton.style.marginTop = '1rem';
+          demoButton.onclick = () => this.simulateNewScan();
+          
+          const actionButtons = document.querySelector('.action-buttons');
+          if (actionButtons) {
+            actionButtons.appendChild(demoButton);
+            // Botão para resetar dados (apenas para desenvolvimento/testes)
+            const resetButton = document.createElement('button');
+            resetButton.className = 'btn-dashboard btn-secondary';
+            resetButton.style.background = '#e74c3c';
+            resetButton.style.color = 'white';
+            resetButton.style.marginTop = '1rem';
+            resetButton.innerHTML = '<i class="fas fa-trash"></i> Resetar Dados (Test)';
+            resetButton.onclick = () => {
+              if (confirm('Deseja realmente resetar todos os dados de teste para zero?')) {
+                this.resetAllData();
+              }
+            };
+            actionButtons.appendChild(resetButton);
+          }
+        }
+      }
+
+      simulateNewScan() {
+        const products = [
+          { name: 'Healthy Granola', status: 'safe', confidence: 96, image: 'https://via.placeholder.com/80?text=Granola' },
+          { name: 'Energy Drink', status: 'warning', confidence: 78, image: 'https://via.placeholder.com/80?text=Drink' },
+          { name: 'Nut Butter', status: 'danger', confidence: 91, image: 'https://via.placeholder.com/80?text=Butter' },
+          { name: 'Green Tea', status: 'safe', confidence: 88, image: 'https://via.placeholder.com/80?text=Tea' },
+          { name: 'Protein Shake', status: 'safe', confidence: 93, image: 'https://via.placeholder.com/80?text=Shake' }
+        ];
+        
+        const randomProduct = products[Math.floor(Math.random() * products.length)];
+        
+        const newScan = {
+          id: this.scans.length + 1,
+          product: randomProduct.name,
+          date: new Date().toISOString(),
+          status: randomProduct.status,
+          confidence: randomProduct.confidence,
+          image: randomProduct.image || 'https://via.placeholder.com/80?text=Produto'
+        };
+        
+        // Adicionar ao início da lista
+        this.scans.unshift(newScan);
+        
+        // Manter apenas os 20 mais recentes
+        if (this.scans.length > 20) {
+          this.scans = this.scans.slice(0, 20);
+        }
+        
+        // Salvar no localStorage
+        localStorage.setItem('nutriScanScans', JSON.stringify(this.scans));
+        
+        // Recalcular estatísticas
+        this.calculateStats();
+        
+        // Atualizar UI com animação
+        this.updateUIWithAnimation();
+        
+        // Notificar em tempo real
+        this.notifyNewScan(newScan);
+
+        // Sincronizar uso do plano após novo scan
+        this.syncUsageFromHistory();
+      }
+
+      // Sincroniza estatísticas e uso do plano a partir do histórico local
+      syncUsageFromHistory() {
+        try {
+          const history = JSON.parse(localStorage.getItem('allergyAnalysisHistory') || '[]');
+          const scans = JSON.parse(localStorage.getItem('nutriScanScans') || '[]');
+
+          // Total de scans
+          this.scans = scans;
+
+          // Contagens derivadas
+          const total = scans.length;
+          const safe = scans.filter(s => s.status === 'safe').length;
+          const alerts = scans.filter(s => s.status === 'warning' || s.status === 'danger').length;
+
+          // Uso do plano no mês atual (contar por timestamp em allergyAnalysisHistory quando disponível)
+          const now = new Date();
+          const monthlyUsage = history.filter(h => {
+            const d = new Date(h.timestamp || h.date || h.id);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+          }).length;
+
+          // Atualizar usuário local
+          const userStr = localStorage.getItem('nutriScanUser');
+          if (userStr) {
+            const user = JSON.parse(userStr);
+            user.subscription = user.subscription || {};
+            user.subscription.scansUsed = monthlyUsage;
+            // manter scansLimit conforme plano salvo
+            const planData = JSON.parse(localStorage.getItem('nutriScanPlan') || 'null');
+            if (planData && planData.plan === 'premium') {
+              user.subscription.scansLimit = 999999;
+            } else {
+              user.subscription.scansLimit = 10;
+            }
+            localStorage.setItem('nutriScanUser', JSON.stringify(user));
+          }
+
+          // Atualizar dados locais e UI
+          this.scans = scans;
+          this.stats.totalScans = total;
+          this.stats.safeProducts = safe;
+          this.stats.warningsFound = alerts;
+          this.stats.planUsage = monthlyUsage;
+          this.stats.planLimit = (JSON.parse(localStorage.getItem('nutriScanPlan') || 'null') || {}).plan === 'premium' ? 999999 : 10;
+          this.updateUI();
+        } catch (e) {
+          console.warn('Erro ao sincronizar uso do histórico:', e);
+        }
+      }
+
+      // Zera os dados relevantes para testes
+      resetAllData() {
+        try {
+          // Limpar arrays de armazenamento
+          localStorage.setItem('nutriScanScans', JSON.stringify([]));
+          localStorage.setItem('allergyAnalysisHistory', JSON.stringify([]));
+
+          // Resetar plano para gratuito
+          const planData = { plan: 'free', date: new Date().toISOString() };
+          localStorage.setItem('nutriScanPlan', JSON.stringify(planData));
+
+          // Resetar usuário local com subscription zerada
+          const user = { name: 'Usuário Teste', subscription: { plan: 'free', scansLimit: 10, scansUsed: 0 } };
+          localStorage.setItem('nutriScanUser', JSON.stringify(user));
+
+          // Atualizar estado interno e UI
+          this.scans = [];
+          this.stats = { totalScans: 0, safeProducts: 0, warningsFound: 0, planUsage: 0, planLimit: 10 };
+          this.updateUI();
+
+          alert('Dados resetados com sucesso. Tudo zerado para testes.');
+        } catch (e) {
+          console.error('Erro ao resetar dados:', e);
+          alert('Falha ao resetar dados. Veja o console para detalhes.');
+        }
+      }
+
+      // Função de auxílio: popula dados de exemplo e mantém uso do plano em zero
+      seedDemoData() {
+        try {
+          const now = new Date();
+          const scans = [
+            { id: 1001, product: 'Produto A', date: new Date(now.getTime() - 1 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 95 },
+            { id: 1002, product: 'Produto B', date: new Date(now.getTime() - 2 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 92 },
+            { id: 1003, product: 'Produto C', date: new Date(now.getTime() - 3 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 90 },
+            { id: 1004, product: 'Produto D', date: new Date(now.getTime() - 4 * 24*60*60*1000).toISOString(), status: 'warning', confidence: 80 },
+            { id: 1005, product: 'Produto E', date: new Date(now.getTime() - 5 * 24*60*60*1000).toISOString(), status: 'other', confidence: 70 }
+          ];
+
+          // Gravar scans locais
+          localStorage.setItem('nutriScanScans', JSON.stringify(scans));
+
+          // Limpar allergyAnalysisHistory para que uso do plano permaneça 0
+          localStorage.setItem('allergyAnalysisHistory', JSON.stringify([]));
+
+          // Garantir nutriScanPlan e nutriScanUser com scansUsed = 0
+          const planData = JSON.parse(localStorage.getItem('nutriScanPlan') || 'null') || { plan: 'free', date: new Date().toISOString() };
+          localStorage.setItem('nutriScanPlan', JSON.stringify(planData));
+
+          const userStr = localStorage.getItem('nutriScanUser');
+          let user = userStr ? JSON.parse(userStr) : { name: 'Você' };
+          user.subscription = user.subscription || {};
+          user.subscription.scansUsed = 0;
+          user.subscription.scansLimit = planData.plan === 'premium' ? 999999 : 10;
+          localStorage.setItem('nutriScanUser', JSON.stringify(user));
+
+          // Re-sincronizar e atualizar UI
+          this.syncUsageFromHistory();
+          alert('Dados de demonstração inseridos. Verifique o dashboard (uso do plano permanece 0/10).');
+        } catch (e) {
+          console.error('Erro ao semear dados de demo:', e);
+          alert('Falha ao semear dados de demonstração. Veja o console.');
+        }
+      }
+
+      notifyNewScan(scanData) {
+        // Criar notificação em tempo real
+        const notification = document.createElement('div');
+        notification.className = 'realtime-notification';
+        notification.innerHTML = `
+          <div class="notification-content" style="display:flex;align-items:center;gap:10px;">
+            <img src="${scanData.image || 'https://via.placeholder.com/48?text=Img'}" alt="thumb" style="width:48px;height:48px;border-radius:8px;object-fit:cover;"/>
+            <div style="display:flex;flex-direction:column;">
+              <strong style="font-size:0.95rem">${scanData.product}</strong>
+              <small style="color:var(--text-light)">${this.getStatusText(scanData.status)}</small>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remover após 5 segundos
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => notification.remove(), 500);
+        }, 5000);
+      }
+
+      getStatusText(status) {
+        const texts = {
+          'safe': 'Seguro',
+          'warning': 'Atenção',
+          'danger': 'Perigo'
+        };
+        return texts[status] || 'Desconhecido';
+      }
+
+      updateUIWithAnimation() {
+        // Atualizar contadores com animação
+        this.animateCounter('totalScans', this.stats.totalScans);
+        this.animateCounter('safeProducts', this.stats.safeProducts);
+        this.animateCounter('warningsFound', this.stats.warningsFound);
+        this.animateCounter('planUsage', `${this.stats.planUsage}/${this.stats.planLimit}`);
+        
+        // Atualizar barra de progresso
+        this.updateProgressBar();
+        
+        // Atualizar lista de scans recentes
+        this.updateRecentScans();
+      }
+
+      animateCounter(elementId, endValue) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        const startValue = parseInt(element.textContent) || 0;
+        const duration = 1000;
+        const startTime = performance.now();
+        
+        // Adicionar classe de animação
+        element.classList.add('stat-updating');
+        
+        const animate = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          const current = Math.floor(startValue + (endValue - startValue) * progress);
+          element.textContent = typeof endValue === 'string' ? endValue : current;
+          
+          // Adicionar efeito de pulse e brilho
+          if (progress === 1) {
+            element.style.transform = 'scale(1.2)';
+            element.style.transition = 'transform 0.3s ease';
+            element.style.color = '#2ecc71';
+            
+            // Criar efeito de partículas
+            this.createStatParticles(element);
+            
+            setTimeout(() => {
+              element.style.transform = 'scale(1)';
+              element.style.color = '';
+              element.classList.remove('stat-updating');
+            }, 300);
+          }
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        
+        requestAnimationFrame(animate);
+      }
+
+      createStatParticles(element) {
+        const rect = element.getBoundingClientRect();
+        const particles = 5;
+        
+        for (let i = 0; i < particles; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'stat-particle';
+          particle.style.cssText = `
+            position: fixed;
+            left: ${rect.left + rect.width / 2}px;
+            top: ${rect.top + rect.height / 2}px;
+            width: 4px;
+            height: 4px;
+            background: #2ecc71;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: particleFloat 1s ease-out forwards;
+            animation-delay: ${i * 0.1}s;
+          `;
+          
+          document.body.appendChild(particle);
+          setTimeout(() => particle.remove(), 1000);
+        }
+      }
+
+      updateProgressBar() {
+        const progressBar = document.getElementById('planProgressBar');
+        if (!progressBar) return;
+        
+        const percentage = (this.stats.planUsage / this.stats.planLimit) * 100;
+        progressBar.style.width = `${Math.min(percentage, 100)}%`;
+        
+        // Mudar cor baseado no uso
+        if (percentage >= 90) {
+          progressBar.style.background = 'linear-gradient(135deg, #e74c3c, #c0392b)';
+        } else if (percentage >= 70) {
+          progressBar.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+        } else {
+          progressBar.style.background = 'linear-gradient(135deg, #2ecc71, #27ae60)';
+        }
+      }
+
+      updateRecentScans() {
+        const recentScansList = document.getElementById('recentScansList');
+        if (!recentScansList) return;
+        
+        recentScansList.innerHTML = '';
+        
+        if (this.scans.length === 0) {
+          recentScansList.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-light);">
+              <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+              <p>Nenhum scan realizado ainda</p>
+              <p style="font-size: 0.9rem; margin-top: 10px;">Faça seu primeiro scan para começar!</p>
+            </div>
+          `;
+          return;
+        }
+        
+        this.scans.slice(0, 5).forEach((scan, index) => {
+          const scanItem = document.createElement('div');
+          scanItem.className = `scan-item ${scan.status}`;
+          scanItem.innerHTML = `
+            <div class="scan-image-container">
+              ${scan.image ? `<img src="${scan.image}" alt="${scan.product}" class="scan-image">` : 
+                '<div class="scan-image-placeholder"><i class="fas fa-camera"></i></div>'}
+            </div>
+            <div class="scan-info">
+              <div class="scan-product">${scan.product}</div>
+              <div class="scan-date">${new Date(scan.date).toLocaleString('pt-BR')}</div>
+            </div>
+            <div class="scan-status status-${scan.status}">
+              <i class="fas fa-${this.getStatusIcon(scan.status)}"></i>
+              ${this.getStatusText(scan.status)}
+            </div>
+          `;
+          
+          // Adicionar animação de entrada
+          scanItem.style.animation = `slideInLeft 0.5s ease ${index * 0.1}s both`;
+          
+          recentScansList.appendChild(scanItem);
+        });
+      }
+
+      getStatusIcon(status) {
+        const icons = {
+          'safe': 'check-circle',
+          'warning': 'exclamation-triangle',
+          'danger': 'times-circle'
+        };
+        return icons[status] || 'question-circle';
+      }
+
+      startPeriodicUpdates() {
+        // Sincronizar com servidor a cada 30 segundos (apenas se backend estiver disponível)
+        this.syncInterval = setInterval(() => {
+          this.syncWithServer();
+        }, 30000);
+      }
+
+      async syncWithServer() {
+        try {
+          // Tentar sincronizar com servidor, mas não falhar se indisponível
+          const response = await fetch('/api/dashboard/stats', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('nutriScanToken') || ''}`,
+              'Content-Type': 'application/json'
+            },
+            timeout: 5000 // Timeout de 5 segundos
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            console.log('✅ Dados sincronizados do servidor');
+            this.updateFromServer(data);
+          } else {
+            console.log(`⚠️ Sincronização falhou (${response.status}), usando dados locais`);
+          }
+        } catch (error) {
+          // Erro esperado se servidor/API não estiver disponível
+          console.log('ℹ️ API indisponível - usando dados locais do dashboard');
+          // Continuar usando dados locais - não é um erro crítico
+        }
+      }
+
+      updateFromServer(data) {
+        // Atualizar dados do servidor apenas se disponíveis
+        try {
+          if (data && data.stats) {
+            this.stats = { ...this.stats, ...data.stats };
+            this.updateUI();
+            console.log('✅ UI atualizada com dados do servidor');
+          }
+        } catch (error) {
+          console.warn('⚠️ Erro ao atualizar dados do servidor:', error);
+        }
+      }
+
+      addNewScan(product, status, imageData = null) {
+        const newScan = {
+          id: Date.now(),
+          product: product,
+          status: status,
+          date: new Date().toISOString(),
+          image: imageData
+        };
+        
+        // Adicionar ao início da lista
+        this.scans.unshift(newScan);
+        
+        // Manter apenas os 10 mais recentes
+        if (this.scans.length > 10) {
+          this.scans = this.scans.slice(0, 10);
+        }
+        
+        // Salvar no localStorage
+        this.saveToLocalStorage();
+        
+        // Atualizar estatísticas
+        this.stats.totalScans++;
+        if (status === 'safe') {
+          this.stats.safeProducts++;
+        } else if (status === 'warning' || status === 'danger') {
+          this.stats.warningsFound++;
+        }
+        this.stats.planUsage++;
+        
+        // Salvar estatísticas no localStorage
+        localStorage.setItem('dashboardStats', JSON.stringify(this.stats));
+        
+        // Salvar scans no localStorage
+        localStorage.setItem('dashboardScans', JSON.stringify(this.scans));
+        
+        // Atualizar UI
+        this.updateUI();
+        
+        // Atualizar filtros
+        if (typeof filterScans === 'function') {
+          filterScans();
+        }
+        
+        // Mostrar notificação
+        this.showScanNotification(newScan);
+      }
+
+      showScanNotification(scan) {
+        const notification = document.createElement('div');
+        notification.className = 'scan-notification';
+        notification.innerHTML = `
+          <div class="notification-content">
+            <i class="fas fa-${this.getStatusIcon(scan.status)}"></i>
+            <span>Novo scan: ${scan.product}</span>
+          </div>
+        `;
+        
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: white;
+          padding: 1rem 1.5rem;
+          border-radius: 10px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+          z-index: 1000;
+          animation: slideInRight 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.3s ease';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      updateUI() {
+        // Atualizar contadores
+        document.getElementById('totalScans').textContent = this.stats.totalScans;
+        document.getElementById('safeProducts').textContent = this.stats.safeProducts;
+        document.getElementById('warningsFound').textContent = this.stats.warningsFound;
+        document.getElementById('planUsage').textContent = `${this.stats.planUsage}/${this.stats.planLimit}`;
+        
+        // Atualizar barra de progresso
+        this.updateProgressBar();
+        
+        // Atualizar scans recentes
+        this.updateRecentScans();
+      }
+
+      setupEventListeners() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+          logoutBtn.addEventListener('click', () => this.logout());
+        }
+      }
+
+      updateUI() {
+        if (!this.user) {
+          this.redirectToLogin();
+          return;
+        }
+
+        // Atualizar informações do usuário
+        const welcomeEl = document.getElementById('userWelcome');
+        const planEl = document.getElementById('userPlan');
+        
+        if (welcomeEl) {
+          welcomeEl.textContent = `Olá, ${this.user.name}!`;
+        }
+        
+        if (planEl) {
+          const plan = this.user.subscription?.plan || 'free';
+          planEl.textContent = plan === 'premium' ? 'Premium' : 'Gratuito';
+        }
+
+        // Atualizar estatísticas
+        this.updateStats();
+        this.updateRecentScans();
+      }
+
+      updateStats() {
+        const totalScansEl = document.getElementById('totalScans');
+        const safeProductsEl = document.getElementById('safeProducts');
+        const warningsFoundEl = document.getElementById('warningsFound');
+        const planUsageEl = document.getElementById('planUsage');
+        const usageProgressEl = document.getElementById('usageProgress');
+
+        if (totalScansEl) {
+          totalScansEl.textContent = this.scans.length;
+        }
+
+        const safeCount = this.scans.filter(s => s.status === 'safe').length;
+        if (safeProductsEl) {
+          safeProductsEl.textContent = safeCount;
+        }
+
+        const warningCount = this.scans.filter(s => s.status === 'warning').length;
+        if (warningsFoundEl) {
+          warningsFoundEl.textContent = warningCount;
+        }
+
+        // Atualizar uso do plano
+        const limit = this.user.subscription?.scansLimit || 10;
+        const used = this.user.subscription?.scansUsed || this.scans.length;
+        
+        if (planUsageEl) {
+          planUsageEl.textContent = `${used}/${limit}`;
+        }
+
+        if (usageProgressEl) {
+          const percentage = Math.min((used / limit) * 100, 100);
+          usageProgressEl.style.width = `${percentage}%`;
+        }
+      }
+
+      updateRecentScans() {
+        const recentScansEl = document.getElementById('recentScansList');
+        if (!recentScansEl) return;
+
+        recentScansEl.innerHTML = '';
+
+        const recentScans = this.scans.slice(0, 5);
+        if (recentScans.length === 0) {
+          recentScansEl.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: var(--text-light);">
+              <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+              <p>Nenhum scan realizado ainda</p>
+              <p style="font-size: 0.9rem; margin-top: 10px;">Faça seu primeiro scan para começar!</p>
+            </div>
+          `;
+          return;
+        }
+
+        recentScans.forEach((scan, index) => {
+          const scanItem = document.createElement('div');
+          scanItem.className = `scan-item ${scan.status}`;
+          scanItem.style.display = 'flex';
+          scanItem.style.alignItems = 'center';
+          scanItem.style.justifyContent = 'space-between';
+
+          const left = document.createElement('div');
+          left.style.display = 'flex';
+          left.style.alignItems = 'center';
+
+          const img = document.createElement('img');
+          img.src = scan.image || 'https://via.placeholder.com/80?text=Img';
+          img.alt = scan.product;
+          img.style.width = '56px';
+          img.style.height = '56px';
+          img.style.borderRadius = '8px';
+          img.style.objectFit = 'cover';
+          img.style.marginRight = '12px';
+
+          const info = document.createElement('div');
+          info.className = 'scan-info';
+          info.innerHTML = `<div class="scan-product">${scan.product}</div><div class="scan-date">${new Date(scan.date).toLocaleDateString('pt-BR')}</div>`;
+
+          left.appendChild(img);
+          left.appendChild(info);
+
+          const status = document.createElement('div');
+          status.className = `scan-status status-${scan.status}`;
+          status.innerHTML = scan.status === 'safe' ? 'Seguro' : scan.status === 'warning' ? 'Alerta' : 'Perigoso';
+
+          scanItem.appendChild(left);
+          scanItem.appendChild(status);
+
+          scanItem.style.animation = `slideInLeft 0.45s ease ${index * 0.08}s both`;
+
+          recentScansEl.appendChild(scanItem);
+        });
+      }
+
+      logout() {
+        localStorage.removeItem('nutriScanToken');
+        localStorage.removeItem('nutriScanUser');
+        safeRedirect('index.html');
+      }
+
+      redirectToLogin() {
+        safeRedirect('login.html');
+      }
+    }
+
+    // Inicializar dashboard
+    let dashboardController;
+    document.addEventListener('DOMContentLoaded', () => {
+      dashboardController = new DashboardController();
+      
+      // Carregar estatísticas do localStorage
+      loadStatsFromStorage();
+      
+      // Sincronizar scans pendentes
+      syncPendingScans();
+      
+      // Tornar a função addNewScan global
+      window.addScanToDashboard = function(product, status, imageData = null) {
+        if (dashboardController) {
+          dashboardController.addNewScan(product, status, imageData);
+        }
+      };
+      
+      // Tornar função de atualização de UI global
+      window.updateDashboardUI = function(stats) {
+        if (dashboardController) {
+          dashboardController.stats = { ...dashboardController.stats, ...stats };
+          dashboardController.updateUI();
+        }
+      };
+    });
+
+    // Carregar estatísticas do localStorage
+    function loadStatsFromStorage() {
+      const savedStats = JSON.parse(localStorage.getItem('dashboardStats') || '{}');
+      
+      if (dashboardController && Object.keys(savedStats).length > 0) {
+        dashboardController.stats = { ...dashboardController.stats, ...savedStats };
+        dashboardController.updateUI();
+      }
+      
+      // Inicializar sistema de filtros
+      initializeFilters();
+    }
+
+    // Inicializar filtros
+    function initializeFilters() {
+      if (!dashboardController) return;
+      
+      // Carregar scans do localStorage
+      const savedScans = JSON.parse(localStorage.getItem('dashboardScans') || '[]');
+      if (savedScans.length > 0) {
+        dashboardController.scans = savedScans;
+      }
+      
+      // Inicializar filteredScans com todos os scans
+      filteredScans = [...dashboardController.scans];
+      
+      // Configurar eventos dos filtros
+      const searchInput = document.getElementById('scanSearch');
+      const statusFilter = document.getElementById('statusFilter');
+      const dateFilter = document.getElementById('dateFilter');
+      
+      if (searchInput) {
+        searchInput.addEventListener('input', debounce(filterScans, 300));
+      }
+      
+      // Renderizar scans iniciais
+      renderScans();
+    }
+
+    // Debounce para otimizar busca
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Sincronizar scans pendentes do localStorage
+    function syncPendingScans() {
+      const pendingScans = JSON.parse(localStorage.getItem('pendingScans') || '[]');
+      
+      if (pendingScans.length > 0) {
+        pendingScans.forEach(scan => {
+          if (dashboardController) {
+            dashboardController.addNewScan(scan.productName, scan.status, scan.imageData);
+          }
+        });
+        
+        // Limpar scans pendentes após sincronização
+        localStorage.removeItem('pendingScans');
+        
+        // Mostrar notificação de sincronização
+        showNotification(`${pendingScans.length} scan(s) sincronizado(s) com sucesso!`, 'success');
+      }
+    }
+
+    // Variáveis globais para filtros
+    let currentView = 'list'; // 'list' or 'grid'
+    let currentPage = 1;
+    let itemsPerPage = 5;
+    let filteredScans = [];
+
+    // Alternar visualização (lista/grid)
+    function toggleScanView() {
+      currentView = currentView === 'list' ? 'grid' : 'list';
+      const icon = document.getElementById('viewToggleIcon');
+      icon.className = currentView === 'list' ? 'fas fa-th-large' : 'fas fa-list';
+      
+      renderScans();
+    }
+
+    // Filtrar scans
+    function filterScans() {
+      if (!dashboardController) return;
+      
+      const searchTerm = document.getElementById('scanSearch').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const dateFilter = document.getElementById('dateFilter').value;
+      
+      filteredScans = dashboardController.scans.filter(scan => {
+        // Filtro de busca
+        const matchesSearch = scan.product.toLowerCase().includes(searchTerm);
+        
+        // Filtro de status
+        const matchesStatus = !statusFilter || scan.status === statusFilter;
+        
+        // Filtro de data
+        let matchesDate = true;
+        if (dateFilter) {
+          const scanDate = new Date(scan.date);
+          const now = new Date();
+          
+          switch(dateFilter) {
+            case 'today':
+              matchesDate = scanDate.toDateString() === now.toDateString();
+              break;
+            case 'week':
+              const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+              matchesDate = scanDate >= weekAgo;
+              break;
+            case 'month':
+              const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+              matchesDate = scanDate >= monthAgo;
+              break;
+          }
+        }
+        
+        return matchesSearch && matchesStatus && matchesDate;
+      });
+      
+      currentPage = 1;
+      renderScans();
+    }
+
+    // Renderizar scans
+    function renderScans() {
+      const container = document.getElementById('recentScansList');
+      const pagination = document.getElementById('scanPagination');
+      
+      if (!container) return;
+      
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const pageScans = filteredScans.slice(startIndex, endIndex);
+      
+      if (pageScans.length === 0 && filteredScans.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px; color: var(--text-light);">
+            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+            <p>Nenhum scan encontrado</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Tente ajustar os filtros</p>
+          </div>
+        `;
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      if (currentView === 'grid') {
+        renderGridView(pageScans, container);
+      } else {
+        renderListView(pageScans, container);
+      }
+      
+      // Atualizar paginação
+      updatePagination();
+    }
+
+    // Renderizar visualização em lista
+    function renderListView(scans, container) {
+      container.className = 'scans-list';
+      container.innerHTML = '';
+      
+      scans.forEach((scan, index) => {
+        const scanItem = document.createElement('div');
+        scanItem.className = `scan-item ${scan.status}`;
+        scanItem.innerHTML = `
+          <div class="scan-image-container">
+            ${scan.image ? `<img src="${scan.image}" alt="${scan.product}" class="scan-image">` : 
+              '<div class="scan-image-placeholder"><i class="fas fa-camera"></i></div>'}
+          </div>
+          <div class="scan-info">
+            <div class="scan-product">${scan.product}</div>
+            <div class="scan-date">${new Date(scan.date).toLocaleString('pt-BR')}</div>
+          </div>
+          <div class="scan-status status-${scan.status}">
+            <i class="fas fa-${getStatusIcon(scan.status)}"></i>
+            ${getStatusText(scan.status)}
+          </div>
+        `;
+        
+        scanItem.style.animation = `slideInLeft 0.5s ease ${index * 0.1}s both`;
+        container.appendChild(scanItem);
+      });
+    }
+
+    // Renderizar visualização em grid
+    function renderGridView(scans, container) {
+      container.className = 'scans-grid';
+      container.innerHTML = '';
+      
+      scans.forEach((scan, index) => {
+        const scanCard = document.createElement('div');
+        scanCard.className = 'scan-card';
+        scanCard.innerHTML = `
+          <div class="scan-card-header">
+            ${scan.image ? `<img src="${scan.image}" alt="${scan.product}" class="scan-card-image">` : 
+              '<div class="scan-image-placeholder" style="width: 80px; height: 80px;"><i class="fas fa-camera"></i></div>'}
+            <div class="scan-card-status status-${scan.status}">
+              ${getStatusText(scan.status)}
+            </div>
+          </div>
+          <div class="scan-card-body">
+            <div class="scan-card-title">${scan.product}</div>
+            <div class="scan-card-date">${new Date(scan.date).toLocaleString('pt-BR')}</div>
+          </div>
+          <div class="scan-card-actions">
+            <button class="btn-scan-action" onclick="viewScanDetails(${scan.id})">
+              <i class="fas fa-eye"></i> Detalhes
+            </button>
+            <button class="btn-scan-action" onclick="shareScan(${scan.id})">
+              <i class="fas fa-share"></i> Compartilhar
+            </button>
+          </div>
+        `;
+        
+        scanCard.style.animation = `fadeInUp 0.5s ease ${index * 0.1}s both`;
+        container.appendChild(scanCard);
+      });
+    }
+
+    // Atualizar paginação
+    function updatePagination() {
+      const pagination = document.getElementById('scanPagination');
+      const pageInfo = document.getElementById('pageInfo');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      const totalPages = Math.ceil(filteredScans.length / itemsPerPage);
+      
+      if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+      }
+      
+      pagination.style.display = 'flex';
+      pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+      
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+    }
+
+    // Navegação de página
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderScans();
+      }
+    }
+
+    function nextPage() {
+      const totalPages = Math.ceil(filteredScans.length / itemsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderScans();
+      }
+    }
+
+    // Ver detalhes do scan
+    function viewScanDetails(scanId) {
+      const scan = dashboardController.scans.find(s => s.id === scanId);
+      if (!scan) return;
+      
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 15px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0; color: var(--text-dark);">Detalhes do Scan</h3>
+            <button onclick="this.closest('div').parentElement.remove()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          ${scan.image ? `<img src="${scan.image}" alt="${scan.product}" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin-bottom: 1.5rem;">` : ''}
+          
+          <div style="margin-bottom: 1rem;">
+            <h4 style="color: var(--text-dark); margin-bottom: 0.5rem;">${scan.product}</h4>
+            <p style="color: var(--text-light); margin: 0;">${new Date(scan.date).toLocaleString('pt-BR')}</p>
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <span class="scan-card-status status-${scan.status}" style="padding: 0.5rem 1rem; font-size: 1rem;">
+              <i class="fas fa-${getStatusIcon(scan.status)}"></i>
+              ${getStatusText(scan.status)}
+            </span>
+          </div>
+          
+          <div style="display: flex; gap: 1rem;">
+            <button onclick="this.closest('div').parentElement.remove()" style="flex: 1; padding: 0.8rem; background: var(--medium-gray); color: var(--text-dark); border: none; border-radius: 8px; cursor: pointer;">
+              Fechar
+            </button>
+            <button onclick="deleteScan(${scan.id}); this.closest('div').parentElement.remove();" style="flex: 1; padding: 0.8rem; background: #e74c3c; color: white; border: none; border-radius: 8px; cursor: pointer;">
+              Excluir
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      });
+    }
+
+    // Excluir scan
+    function deleteScan(scanId) {
+      if (!confirm('Tem certeza que deseja excluir este scan?')) return;
+      
+      const index = dashboardController.scans.findIndex(s => s.id === scanId);
+      if (index > -1) {
+        dashboardController.scans.splice(index, 1);
+        dashboardController.saveToLocalStorage();
+        filterScans();
+        showNotification('Scan excluído com sucesso', 'success');
+      }
+    }
+
+    // Compartilhar scan
+    function shareScan(scanId) {
+      const scan = dashboardController.scans.find(s => s.id === scanId);
+      if (!scan) return;
+      
+      const shareText = `Safe-Bite Scan: ${scan.product} - Status: ${getStatusText(scan.status)}`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Safe-Bite Scan',
+          text: shareText,
+          url: window.location.href
+        });
+      } else {
+        // Fallback: copiar para área de transferência
+        navigator.clipboard.writeText(shareText).then(() => {
+          showNotification('Link copiado para a área de transferência', 'success');
+        });
+      }
+    }
+
+    // Exportar dados
+    function exportScanData() {
+      if (!dashboardController || dashboardController.scans.length === 0) {
+        showNotification('Nenhum dado para exportar', 'warning');
+        return;
+      }
+      
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        totalScans: dashboardController.stats.totalScans,
+        scans: dashboardController.scans.map(scan => ({
+          produto: scan.product,
+          status: getStatusText(scan.status),
+          data: new Date(scan.date).toLocaleString('pt-BR'),
+          imagem: scan.image ? 'Sim' : 'Não'
+        }))
+      };
+      
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `safe-bite-scans-${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      
+      URL.revokeObjectURL(url);
+      showNotification('Dados exportados com sucesso', 'success');
+    }
+
+    // Funções auxiliares
+    function getStatusIcon(status) {
+      const icons = {
+        'safe': 'check-circle',
+        'warning': 'exclamation-triangle',
+        'danger': 'times-circle'
+      };
+      return icons[status] || 'question-circle';
+    }
+
+    function getStatusText(status) {
+      const texts = {
+        'safe': 'Seguro',
+        'warning': 'Atenção',
+        'danger': 'Perigo'
+      };
+      return texts[status] || 'Desconhecido';
+    }
+
+    // ===== FUNÇÃO GLOBAL: ZERAR TUDO DO DASHBOARD =====
+    /**
+     * Função para zerar completamente todo o dashboard
+     * Limpa localStorage, reseta dados, e recarrega a página
+     * Uso: window.zeroDashboard() ou zeroDashboard()
+     */
+    window.zeroDashboard = function() {
+      const confirmation = confirm(
+        '⚠️ ATENÇÃO!\n\n' +
+        'Isso vai DELETAR TODOS os dados do dashboard:\n' +
+        '• Histórico de scans\n' +
+        '• Análises de alergias\n' +
+        '• Configurações do plano\n' +
+        '• Dados do usuário local\n\n' +
+        'Essa ação é irreversível!\n\n' +
+        'Deseja continuar?'
+      );
+
+      if (!confirmation) {
+        console.log('❌ Operação de zero cancelada pelo usuário');
+        return false;
+      }
+
+      try {
+        console.log('🧹 Iniciando limpeza completa do dashboard...');
+        
+        // Limpar todos os dados do localStorage
+        console.log('  → Limpando scans...');
+        localStorage.setItem('nutriScanScans', JSON.stringify([]));
+        
+        console.log('  → Limpando histórico de análises...');
+        localStorage.setItem('allergyAnalysisHistory', JSON.stringify([]));
+        
+        console.log('  → Ressetando plano para gratuito...');
+        localStorage.setItem('nutriScanPlan', JSON.stringify({ 
+          plan: 'free', 
+          date: new Date().toISOString() 
+        }));
+        
+        console.log('  → Resetando dados do usuário...');
+        localStorage.setItem('nutriScanUser', JSON.stringify({ 
+          name: 'Usuário Teste', 
+          subscription: { 
+            plan: 'free', 
+            scansLimit: 10, 
+            scansUsed: 0 
+          } 
+        }));
+        
+        console.log('  → Limpando cache local...');
+        if (window.dashboardController) {
+          window.dashboardController.scans = [];
+          window.dashboardController.stats = {
+            totalScans: 0,
+            safeProducts: 0,
+            warningsFound: 0,
+            planUsage: 0,
+            planLimit: 10
+          };
+        }
+        
+        console.log('✅ Limpeza concluída com sucesso!');
+        console.log('🔄 Recarregando a página em 2 segundos...');
+        
+        showNotification('✅ Todos os dados foram zerados com sucesso!', 'success');
+        
+        // Recarregar página após 2 segundos
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+        
+        return true;
+      } catch (error) {
+        console.error('❌ ERRO ao zerar dados:', error);
+        alert('Erro ao tentar zerar os dados. Verifique o console para detalhes.');
+        return false;
+      }
+    };
+
+    // ===== ATALHO DE TECLADO PARA ZERAR TUDO =====
+    /**
+     * Atalhos disponíveis:
+     * Ctrl+Shift+Delete = Zerar tudo do dashboard
+     * Ctrl+Shift+Backspace = Alternativa para zerar tudo
+     */
+    document.addEventListener('keydown', function(event) {
+      // Ctrl+Shift+Delete (Windows/Linux) ou Cmd+Shift+Delete (Mac)
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'Delete') {
+        event.preventDefault();
+        console.log('🔑 Atalho Ctrl+Shift+Delete detectado');
+        window.zeroDashboard();
+      }
+      
+      // Ctrl+Shift+Backspace como alternativa
+      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'Backspace') {
+        event.preventDefault();
+        console.log('🔑 Atalho Ctrl+Shift+Backspace detectado');
+        window.zeroDashboard();
+      }
+    });
+
+    // ===== COMANDO CONSOLE AMIGÁVEL =====
+    /**
+     * Comandos de console disponíveis:
+     * zero() - Zera tudo do dashboard
+     * clearDash() - Alias para zero()
+     * help() - Mostra ajuda
+     */
+    window.zero = window.zeroDashboard;
+    window.clearDash = window.zeroDashboard;
+    
+    window.dashboardHelp = function() {
+      const help = `
+╔══════════════════════════════════════════════════════════╗
+║           COMANDOS DISPONÍVEIS DO DASHBOARD              ║
+╠══════════════════════════════════════════════════════════╣
+║                                                          ║
+║  🧹 ZERAR TUDO:                                          ║
+║     zero()                                               ║
+║     clearDash()                                          ║
+║     zeroDashboard()                                      ║
+║                                                          ║
+║  ⌨️  ATALHOS DE TECLADO:                                ║
+║     Ctrl+Shift+Delete    → Zera tudo                    ║
+║     Ctrl+Shift+Backspace → Zera tudo (alternativa)     ║
+║                                                          ║
+║  📊 OUTRAS FUNÇÕES:                                     ║
+║     help()               → Mostra esta mensagem         ║
+║                                                          ║
+╠══════════════════════════════════════════════════════════╣
+║  ⚠️  AVISO: A operação de zero é IRREVERSÍVEL!          ║
+║     Todos os dados serão deletados permanentemente.    ║
+╚══════════════════════════════════════════════════════════╝
+      `;
+      console.log(help);
+    };
+    
+    window.help = window.dashboardHelp;
+
+    // Exibir mensagem de boas-vindas no console
+    console.log('%c🎉 Safe-Bite Dashboard Carregado', 'font-size: 20px; color: #2ecc71; font-weight: bold;');
+    console.log('%cDigite help() para ver comandos disponíveis', 'font-size: 12px; color: #7f8c8d;');
+  </script>
+</body>
+</html>

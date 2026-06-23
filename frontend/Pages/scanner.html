@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scanner - Safe-Bite</title>
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Estilos específicos do Scanner */
+    .scanner-container {
+      min-height: 100vh;
+      background: var(--gradient-hero);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scanner-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .scanner-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--primary-green);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .scanner-logo i {
+      font-size: 1.5rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-dark);
+    }
+
+    .user-avatar {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+    }
+
+    .scanner-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .scanner-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .scanner-header-card {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .scanner-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .scanner-subtitle {
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .scanner-body {
+      padding: 2rem;
+    }
+
+    .upload-area {
+      border: 3px dashed var(--medium-gray);
+      border-radius: 15px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background: var(--light-gray);
+    }
+
+    .upload-area:hover,
+    .upload-area.dragover {
+      border-color: var(--primary-green);
+      background: rgba(46, 204, 113, 0.05);
+    }
+
+    .upload-area.processing {
+      border-color: var(--primary-blue);
+      background: rgba(52, 152, 219, 0.05);
+    }
+
+    .upload-icon {
+      font-size: 4rem;
+      color: var(--primary-green);
+      margin-bottom: 1rem;
+    }
+
+    .upload-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .upload-text {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-button {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .upload-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .upload-options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .camera-button {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .gallery-button {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+
+    .drag-drop-area {
+      border: 2px dashed var(--medium-gray);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .drag-drop-area:hover,
+    .drag-drop-area.dragover {
+      border-color: var(--primary-green);
+      background: rgba(46, 204, 113, 0.1);
+    }
+
+    .drag-text {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .processing-steps {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .processing-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.3s ease;
+    }
+
+    .processing-step.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .processing-step.completed {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .step-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .step-icon.waiting {
+      background: var(--medium-gray);
+      color: var(--text-light);
+    }
+
+    .step-icon.processing {
+      background: var(--primary-blue);
+      color: white;
+      animation: pulse 1.5s infinite;
+    }
+
+    .step-icon.completed {
+      background: var(--primary-green);
+      color: white;
+    }
+
+    .step-text {
+      flex: 1;
+    }
+
+    .step-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .step-description {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .result-container {
+      display: none;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .result-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .confidence-badge {
+      display: inline-block;
+      background: var(--primary-green);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .product-info {
+      background: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+    }
+
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .product-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .analysis-results {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ingredient-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .ingredient-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      background: var(--light-gray);
+    }
+
+    .ingredient-item.safe {
+      border-left: 4px solid var(--primary-green);
+    }
+
+    .ingredient-item.warning {
+      border-left: 4px solid #f39c12;
+    }
+
+    .ingredient-item.danger {
+      border-left: 4px solid #e74c3c;
+    }
+
+    .ingredient-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .ingredient-icon.safe {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .ingredient-icon.warning {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f39c12;
+    }
+
+    .ingredient-icon.danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    .ingredient-details {
+      flex: 1;
+    }
+
+    .ingredient-name {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .ingredient-amount {
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .ingredient-confidence {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .alerts-section {
+      margin-bottom: 2rem;
+    }
+
+    .alert-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 0.8rem;
+    }
+
+    .alert-item.warning {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f39c12;
+    }
+
+    .alert-item.danger {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    .alert-icon {
+      font-size: 1.2rem;
+    }
+
+    .alert-message {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .recommendations {
+      margin-bottom: 2rem;
+    }
+
+    .recommendation-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 10px;
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+      margin-bottom: 0.8rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--light-gray);
+      color: var(--text-dark);
+      border: 2px solid var(--medium-gray);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .scanner-main {
+        padding: 1rem;
+      }
+
+      .scanner-card {
+        margin: 0 1rem;
+      }
+
+      .scanner-header,
+      .scanner-body {
+        padding: 1.5rem;
+      }
+
+      .upload-icon {
+        font-size: 3rem;
+      }
+
+      .upload-area {
+        padding: 2rem 1rem;
+      }
+
+      .upload-options {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .upload-button {
+        width: 100%;
+        padding: 1rem;
+      }
+
+      .drag-drop-area {
+        padding: 1rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanner-container">
+    <!-- Header -->
+    <header class="scanner-header">
+      <div class="scanner-logo">
+        <i class="fas fa-leaf"></i>
+        <span>Safe-Bite</span>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">JD</div>
+        <span id="userName">Bruno Teste</span>
+        <button class="btn-secondary" onclick="goToDashboard()" style="padding: 0.5rem 1rem;">
+          <i class="fas fa-home"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="scanner-main">
+      <div class="scanner-card">
+        <!-- Scanner Header -->
+        <div class="scanner-header-card">
+          <h1 class="scanner-title">Scanner de Produtos</h1>
+          <p class="scanner-subtitle">Aponte a câmera para o rótulo e receba análise instantânea</p>
+        </div>
+
+        <!-- Scanner Body -->
+        <div class="scanner-body">
+          <!-- Error/Success Messages -->
+          <div id="errorMessage" class="error-message" style="display: none;"></div>
+          <div id="successMessage" class="success-message" style="display: none;"></div>
+
+          <!-- Upload Area -->
+          <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+              <i class="fas fa-camera"></i>
+            </div>
+            <h3 class="upload-title">Escolha como adicionar a foto</h3>
+            <p class="upload-text">Selecione uma das opções abaixo</p>
+            
+            <div class="upload-options">
+              <button class="upload-button camera-button" id="cameraButton">
+                <i class="fas fa-camera"></i>
+                Tirar Foto
+              </button>
+              <button class="upload-button gallery-button" id="galleryButton">
+                <i class="fas fa-image"></i>
+                Selecionar do Dispositivo
+              </button>
+            </div>
+            
+            <input type="file" id="cameraInput" class="file-input" accept="image/*" capture="environment">
+            <input type="file" id="galleryInput" class="file-input" accept="image/*">
+            
+            <div class="drag-drop-area" id="dragDropArea">
+              <p class="drag-text">Ou arraste uma imagem para cá</p>
+            </div>
+          </div>
+
+          <!-- Processing Steps -->
+          <div class="processing-steps" id="processingSteps">
+            <div class="processing-step" id="step1">
+              <div class="step-icon waiting">
+                <i class="fas fa-camera"></i>
+              </div>
+              <div class="step-text">
+                <div class="step-title">Capturando imagem</div>
+                <div class="step-description">Obtendo foto do rótulo...</div>
+              </div>
+            </div>
+            <div class="processing-step" id="step2">
+              <div class="step-icon waiting">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="step-text">
+                <div class="step-title">Analisando com IA</div>
+                <div class="step-description">Processando ingredientes...</div>
+              </div>
+            </div>
+            <div class="processing-step" id="step3">
+              <div class="step-icon waiting">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="step-text">
+                <div class="step-title">Verificando segurança</div>
+                <div class="step-description">Identificando riscos...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div class="result-container" id="resultContainer">
+            <div class="result-header">
+              <h2 class="result-title">Análise Concluída</h2>
+              <span class="confidence-badge" id="confidenceBadge">95% confiança</span>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+              <div class="product-name" id="productName">Nome do Produto</div>
+              <div class="product-details">
+                <span id="productBrand">Marca</span>
+                <span id="scanTime">Análise em 3.2s</span>
+              </div>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="analysis-results">
+              <h3 class="section-title">
+                <i class="fas fa-list"></i>
+                Ingredientes Detectados
+              </h3>
+              <div class="ingredient-list" id="ingredientList">
+                <!-- Ingredients will be populated here -->
+              </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="alerts-section" id="alertsSection" style="display: none;">
+              <h3 class="section-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                Alertas de Segurança
+              </h3>
+              <div id="alertsList">
+                <!-- Alerts will be populated here -->
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="recommendations">
+              <h3 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                Recomendações
+              </h3>
+              <div id="recommendationsList">
+                <!-- Recommendations will be populated here -->
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <button class="btn btn-primary" onclick="saveScan()">
+                <i class="fas fa-save"></i>
+                Salvar Scan
+              </button>
+              <button class="btn btn-secondary" onclick="newScan()">
+                <i class="fas fa-redo"></i>
+                Novo Scan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="api-config.js"></script>
+  <script src="scanner-corrections.js"></script>
+  <script>
+    // Scanner JavaScript
+    class NutriScanScanner {
+      constructor() {
+        this.token = localStorage.getItem('nutriScanToken');
+        this.user = null;
+        this.currentFile = null;
+        this.currentResult = null;
+        this.init();
+      }
+
+      async init() {
+        if (!this.token) {
+          this.redirectToLogin();
+          return;
+        }
+
+        this.setupEventListeners();
+        await this.loadUserData();
+      }
+
+      setupEventListeners() {
+        const uploadArea = document.getElementById('uploadArea');
+        const cameraInput = document.getElementById('cameraInput');
+        const galleryInput = document.getElementById('galleryInput');
+        const cameraButton = document.getElementById('cameraButton');
+        const galleryButton = document.getElementById('galleryButton');
+        const dragDropArea = document.getElementById('dragDropArea');
+
+        // Camera button click
+        cameraButton.addEventListener('click', () => {
+          cameraInput.click();
+        });
+
+        // Gallery button click
+        galleryButton.addEventListener('click', () => {
+          galleryInput.click();
+        });
+
+        // Camera input change
+        cameraInput.addEventListener('change', (e) => {
+          const files = e.target.files;
+          if (files.length > 0) {
+            this.handleFileSelect(files[0]);
+          }
+        });
+
+        // Gallery input change
+        galleryInput.addEventListener('change', (e) => {
+          const files = e.target.files;
+          if (files.length > 0) {
+            this.handleFileSelect(files[0]);
+          }
+        });
+
+        // Drag and drop area
+        dragDropArea.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          dragDropArea.classList.add('dragover');
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+          dragDropArea.classList.remove('dragover');
+        });
+
+        dragDropArea.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dragDropArea.classList.remove('dragover');
+          
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            this.handleFileSelect(files[0]);
+          }
+        });
+
+        // Make drag drop area clickable
+        dragDropArea.addEventListener('click', () => {
+          galleryInput.click();
+        });
+      }
+
+      async loadUserData() {
+        try {
+          const response = await fetch('/api/auth/me', {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('Usuário não encontrado');
+          }
+
+          const data = await response.json();
+          this.user = data.user;
+          this.updateUserInfo();
+        } catch (error) {
+          console.error('Erro ao carregar usuário:', error);
+          this.redirectToLogin();
+        }
+      }
+
+      updateUserInfo() {
+        if (!this.user) return;
+
+        const initials = this.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+        document.getElementById('userName').textContent = this.user.name;
+      }
+
+      async handleFileSelect(file) {
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+          this.showError('Por favor, selecione uma imagem válida.');
+          return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+          this.showError('A imagem deve ter menos de 5MB.');
+          return;
+        }
+
+        this.currentFile = file;
+        this.hideMessages();
+        this.startProcessing();
+      }
+
+      async startProcessing() {
+        const uploadArea = document.getElementById('uploadArea');
+        const processingSteps = document.getElementById('processingSteps');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // Hide upload, show processing
+        uploadArea.style.display = 'none';
+        processingSteps.style.display = 'block';
+        resultContainer.style.display = 'none';
+
+        // Step 1: Capturing image
+        await this.animateStep('step1', 1000);
+
+        // Step 2: Analyzing with AI
+        await this.animateStep('step2', 2000);
+
+        // Step 3: Checking safety
+        await this.animateStep('step3', 1500);
+
+        // Process the image
+        await this.processImage();
+      }
+
+      async animateStep(stepId, duration) {
+        const step = document.getElementById(stepId);
+        const icon = step.querySelector('.step-icon');
+        
+        step.classList.add('active');
+        icon.classList.remove('waiting');
+        icon.classList.add('processing');
+
+        await new Promise(resolve => setTimeout(resolve, duration));
+
+        icon.classList.remove('processing');
+        icon.classList.add('completed');
+        step.classList.remove('active');
+        step.classList.add('completed');
+      }
+
+      async processImage() {
+        try {
+          const formData = new FormData();
+          formData.append('image', this.currentFile);
+
+          const response = await fetch('/api/scans', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            body: formData
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Erro ao processar imagem');
+          }
+
+          const result = await response.json();
+          this.currentResult = result;
+          this.showResults(result);
+          
+        } catch (error) {
+          console.error('Erro ao processar imagem:', error);
+          this.showError(error.message);
+          this.resetScanner();
+        }
+      }
+
+      showResults(result) {
+        const processingSteps = document.getElementById('processingSteps');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // Hide processing, show results
+        processingSteps.style.display = 'none';
+        resultContainer.style.display = 'block';
+
+        // Update product info
+        document.getElementById('productName').textContent = result.product.name;
+        document.getElementById('productBrand').textContent = result.product.brand;
+        document.getElementById('scanTime').textContent = `Análise em ${result.analysis.processingTime}s`;
+        document.getElementById('confidenceBadge').textContent = `${result.analysis.confidence}% confiança`;
+
+        // Render ingredients
+        this.renderIngredients(result.analysis.ingredients);
+
+        // Render alerts
+        this.renderAlerts(result.alerts);
+
+        // Render recommendations
+        this.renderRecommendations(result.recommendations);
+
+        // Show success message
+        this.showSuccess('Análise concluída com sucesso!');
+      }
+
+      renderIngredients(ingredients) {
+        const container = document.getElementById('ingredientList');
+        
+        container.innerHTML = ingredients.map(ingredient => {
+          const riskClass = ingredient.risk;
+          const icon = riskClass === 'safe' ? 'check' : 
+                        riskClass === 'warning' ? 'exclamation' : 'times';
+          
+          return `
+            <div class="ingredient-item ${riskClass}">
+              <div class="ingredient-icon ${riskClass}">
+                <i class="fas fa-${icon}"></i>
+              </div>
+              <div class="ingredient-details">
+                <div class="ingredient-name">${ingredient.name}</div>
+                ${ingredient.amount ? 
+                  `<div class="ingredient-amount">${ingredient.amount} ${ingredient.unit || ''}</div>` : 
+                  '<div class="ingredient-amount">Quantidade não especificada</div>'
+                }
+              </div>
+              <div class="ingredient-confidence">${ingredient.confidence}%</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderAlerts(alerts) {
+        const alertsSection = document.getElementById('alertsSection');
+        const alertsList = document.getElementById('alertsList');
+
+        if (alerts.length === 0) {
+          alertsSection.style.display = 'none';
+          return;
+        }
+
+        alertsSection.style.display = 'block';
+        alertsList.innerHTML = alerts.map(alert => `
+          <div class="alert-item ${alert.severity}">
+            <div class="alert-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="alert-message">${alert.message}</div>
+          </div>
+        `).join('');
+      }
+
+      renderRecommendations(recommendations) {
+        const container = document.getElementById('recommendationsList');
+        
+        container.innerHTML = recommendations.map(rec => `
+          <div class="recommendation-item">
+            <div class="alert-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="alert-message">${rec.message}</div>
+          </div>
+        `).join('');
+      }
+
+      async saveScan() {
+        if (!this.currentResult) {
+          this.showError('Nenhum resultado para salvar.');
+          return;
+        }
+
+        try {
+          this.showSuccess('Scan salvo com sucesso!');
+          setTimeout(() => {
+            this.goToDashboard();
+          }, 1500);
+        } catch (error) {
+          console.error('Erro ao salvar scan:', error);
+          this.showError('Erro ao salvar scan.');
+        }
+      }
+
+      newScan() {
+        this.resetScanner();
+      }
+
+      resetScanner() {
+        const uploadArea = document.getElementById('uploadArea');
+        const processingSteps = document.getElementById('processingSteps');
+        const resultContainer = document.getElementById('resultContainer');
+        const cameraInput = document.getElementById('cameraInput');
+        const galleryInput = document.getElementById('galleryInput');
+
+        // Reset all states
+        uploadArea.style.display = 'block';
+        processingSteps.style.display = 'none';
+        resultContainer.style.display = 'none';
+
+        // Reset processing steps
+        document.querySelectorAll('.processing-step').forEach(step => {
+          step.classList.remove('active', 'completed');
+          const icon = step.querySelector('.step-icon');
+          icon.classList.remove('processing', 'completed');
+          icon.classList.add('waiting');
+        });
+
+        // Clear file inputs
+        cameraInput.value = '';
+        galleryInput.value = '';
+        this.currentFile = null;
+        this.currentResult = null;
+        this.hideMessages();
+      }
+
+      showError(message) {
+        const errorElement = document.getElementById('errorMessage');
+        errorElement.textContent = message;
+        errorElement.style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+      }
+
+      showSuccess(message) {
+        const successElement = document.getElementById('successMessage');
+        successElement.textContent = message;
+        successElement.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+      }
+
+      hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+      }
+
+      goToHome() {
+        safeRedirect('index.html');
+      }
+
+      goToDashboard() {
+        safeRedirect('dashboard.html');
+      }
+    }
+
+    // Global functions
+    function goToDashboard() {
+      window.location.href = 'dashboard.html';
+    }
+
+    function newScan() {
+      window.location.reload();
+    }
+
+    function saveScan() {
+      // This will be handled by the scanner instance
+    }
+
+    // Initialize scanner when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      new NutriScanScanner();
+    });
+  </script>
+  
+  <!-- Sistema de Sincronização de Usuário -->
+  <script src="user-sync.js"></script>
+</body>
+</html>

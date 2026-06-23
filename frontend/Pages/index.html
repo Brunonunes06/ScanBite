@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safe-Bite - O Assistente de Segurança Alimentar</title>
+  <link rel="stylesheet" href="../frontend/Pages/style.css">
+  <link rel="stylesheet" href="../frontend/Pages/css/upgrade-popup.css">
+  <link rel="stylesheet" href="../frontend/Pages/css/auth-indicators.css">
+  <link rel="stylesheet" href="../frontend/Pages/css/dark-mode.css">
+  <link rel="stylesheet" href="../frontend/Pages/css/keyboard-shortcuts.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <!-- Logo -->
+        <div class="logo">
+          <i class="fas fa-leaf"></i>
+          <span>Safe-Bite</span>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+          <ul>
+            <li><a href="./Pages/index.html" class="nav-link">Início</a></li>
+            <li><a href="#sobre" class="nav-link">Sobre</a></li>
+            <li><a href="#contato" class="nav-link">Contato</a></li>
+            <li><a href="Pages/dashboard.html" class="nav-link" id="dashboardLink" style="color: rgb(231, 76, 60);"><i class="fas fa-lock"></i> Dashboard</a></li>
+          </ul>
+        </nav>
+        
+        <!-- Controls Container -->
+        <div class="header-controls">
+          <div class="auth-status-container">
+            <span class="auth-status offline" id="authStatus">Desconectado</span>
+            <div class="user-info" id="userInfo">
+              <div class="login-prompt" style="cursor: pointer;">
+                <i class="fas fa-user-slash"></i>
+                <span>Faça login para continuar</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <div class="mobile-menu-toggle">
+          <i class="fas fa-bars"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          Sua segurança alimentar com <span>inteligência artificial</span>
+        </h1>
+        <p class="hero-subtitle">
+          Proteja sua saúde e evite alimentos perigosos com tecnologia inteligente
+        </p>
+        <button class="btn-hero" onclick="handleHeroStartFree()">
+          Começar grátis
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+      <div class="hero-image">
+        <div class="phone-mockup">
+          <div class="screen">
+            <div class="app-interface">
+              <div class="scan-area">
+                <i class="fas fa-camera"></i>
+                <p>Aponte para o rótulo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre Section -->
+  <section id="sobre" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Sobre a Safe-Bite</h2>
+        <p class="section-subtitle">
+          Promovemos saúde pública e inclusão através da tecnologia
+        </p>
+      </div>
+      
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            A Safe-Bite é uma startup tecnológica dedicada a revolucionar a segurança alimentar 
+            através da inteligência artificial. Nossa missão é ajudar pessoas com restrições 
+            alimentares a tomar decisões mais seguras e informadas sobre o que consomem.
+          </p>
+          <p>
+            Com tecnologia avançada de reconhecimento de imagem e análise nutricional, 
+            oferecemos uma solução acessível que coloca o poder da informação nas mãos dos consumidores.
+          </p>
+          <div class="stats">
+            <div class="stat">
+              <h3>95%</h3>
+              <p>Precisão na análise</p>
+            </div>
+            <div class="stat">
+              <h3>10k+</h3>
+              <p>Produtos analisados</p>
+            </div>
+            <div class="stat">
+              <h3>24/7</h3>
+              <p>Disponibilidade</p>
+            </div>
+          </div>
+        </div>
+        <div class="about-image">
+          <div class="illustration">
+            <i class="fas fa-shield-alt"></i>
+            <div class="pulse-ring"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona Section -->
+  <section id="como-funciona" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Como Funciona</h2>
+        <p class="section-subtitle">
+          Análise inteligente em 3 passos simples
+        </p>
+      </div>
+      
+      <div class="steps">
+        <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-camera"></i>
+          </div>
+          <h3>1. Escaneie o rótulo</h3>
+          <p>
+            Use seu celular para capturar a imagem do rótulo do produto. 
+            Nossa tecnologia reconhece automaticamente as informações.
+          </p>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>2. IA analisa ingredientes</h3>
+          <p>
+            Nossa inteligência artificial processa os ingredientes, 
+            identificando potenciais riscos e alérgenos.
+          </p>
+        </div>
+        
+        <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h3>3. Receba alertas de risco</h3>
+          <p>
+            Obtenha recomendações personalizadas e alertas sobre 
+            componentes que podem afetar sua saúde.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Planos Section -->
+  <section id="planos" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Nossos Planos</h2>
+        <p class="section-subtitle">
+          Escolha o plano ideal para suas necessidades
+        </p>
+      </div>
+      
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Gratuito</h3>
+            <div class="price">
+              <span class="currency">R$</span>
+              <span class="amount">0</span>
+              <span class="period">/mês</span>
+            </div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="fas fa-check"></i> Até 10 scans por mês</li>
+              <li><i class="fas fa-check"></i> Análise básica</li>
+              <li><i class="fas fa-check"></i> Suporte por email</li>
+            </ul>
+          </div>
+          <div class="pricing-action">
+            <button class="btn-pricing" onclick="selectPlan('free')">Começar grátis</button>
+          </div>
+        </div>
+        
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Mais popular</div>
+          <div class="pricing-header">
+            <h3>Profissional</h3>
+            <div class="price">
+              <span class="currency">R$</span>
+              <span class="amount">9,90</span>
+              <span class="period">/mês</span>
+            </div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="fas fa-check"></i> Scans ilimitados</li>
+              <li><i class="fas fa-check"></i> Análise avançada</li>
+              <li><i class="fas fa-check"></i> Histórico completo</li>
+              <li><i class="fas fa-check"></i> Suporte prioritário</li>
+            </ul>
+          </div>
+          <div class="pricing-action">
+            <button class="btn-pricing" onclick="selectPlan('professional')">Assinar agora</button>
+          </div>
+        </div>
+        
+        <!-- <div class="pricing-card">
+          <div class="pricing-header">
+            <h3>Empresarial</h3>
+            <div class="price">
+              <span class="currency">R$</span>
+              <span class="amount">99</span>
+              <span class="period">/mês</span>
+            </div>
+          </div>
+          <div class="pricing-features">
+            <ul>
+              <li><i class="fas fa-check"></i> Tudo do Profissional</li>
+              <li><i class="fas fa-check"></i> Multi-usuários</li>
+              <li><i class="fas fa-check"></i> API access</li>
+              <li><i class="fas fa-check"></i> Relatórios customizados</li>
+            </ul>
+          </div>
+          <div class="pricing-action">
+            <button class="btn-pricing" onclick="selectPlan('enterprise')">Fale conosco</button>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Contato Section -->
+  <section id="contato" class="section section-alt">
+    <div class="container">
+      <div class="section-header">
+        <h2>Entre em Contato</h2>
+        <p class="section-subtitle">
+          Tem dúvidas? Estamos aqui para ajudar
+        </p>
+      </div>
+      
+      <div class="contact-content">
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+              <h4>Email</h4>
+              <p>contato@safebite.com.br</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <div>
+              <h4>Telefone</h4>
+              <p>(11) 3000-0000</p>
+            </div>
+          </div>
+          
+          <div class="contact-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <h4>Endereço</h4>
+              <p>São Paulo, SP - Brasil</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="contact-form">
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="name">Nome</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="message">Mensagem</label>
+              <textarea id="message" name="message" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-submit">
+              Enviar mensagem
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>Safe-Bite</h4>
+          <p>Seu assistente de segurança alimentar</p>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Links Úteis</h4>
+          <ul>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#como-funciona">Como Funciona</a></li>
+            <li><a href="#planos">Planos</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy.html">Privacidade</a></li>
+            <li><a href="terms.html">Termos</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 Safe-Bite. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/api-config.js"></script>
+  <script src="js/file-checker.js"></script>
+  <script src="js/auth-monitor.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/keyboard-shortcuts.js"></script>
+  <script src="js/script-corrections-fixed.js"></script>
+  <script src="js/upgrade-popup.js"></script>
+  <script src="js/contact-system.js"></script>
+  <script src="js/actions-popup.js"></script>
+  <script src="js/user-sync.js"></script>
+  <script src="js/user-sync-integration.js"></script>
+
+</body>
+</html>

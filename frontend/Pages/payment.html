@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assinatura - Safe-Bite</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="upgrade-popup.css">
+  <link rel="stylesheet" href="auth-indicators.css">
+  <link rel="stylesheet" href="dark-mode.css">
+  <link rel="stylesheet" href="keyboard-shortcuts.css">
+  <link rel="stylesheet" href="actions-popup.css">
+  <link rel="stylesheet" href="payment-brazil.css">
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    .payment-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .payment-header {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 100;
+    }
+
+    .payment-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--primary-green);
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .payment-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .payment-logo i {
+      font-size: 1.5rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: var(--text-dark);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+      font-size: 0.9rem;
+    }
+
+    .payment-main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .payment-card {
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+      max-width: 1000px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .payment-header-card {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 2.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .payment-header-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1), transparent),
+                  radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05), transparent);
+      pointer-events: none;
+    }
+
+    .payment-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .payment-subtitle {
+      opacity: 0.95;
+      font-size: 1.05rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .payment-body {
+      padding: 3rem;
+    }
+
+    .plans-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .plan-card {
+      border: 4px solid var(--medium-gray);
+      border-radius: 18px;
+      padding: 2.5rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      background: white;
+      overflow: hidden;
+    }
+
+    .plan-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    }
+
+    .plan-card:hover::before {
+      left: 100%;
+    }
+
+    .plan-card.current {
+      border-color: var(--primary-green);
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.03), rgba(46, 204, 113, 0.01));
+    }
+
+    .plan-card.recommended {
+      border-color: var(--primary-blue);
+      transform: scale(1.08);
+      box-shadow: 0 15px 50px rgba(52, 152, 219, 0.25);
+    }
+
+    .plan-card.recommended:hover {
+      transform: scale(1.08) translateY(-8px);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--primary-blue), #2980b9);
+      color: white;
+      padding: 0.6rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+      z-index: 2;
+    }
+
+    .plan-name {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin: 2rem 0;
+      text-align: left;
+    }
+
+    .plan-features li {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--medium-gray);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .plan-features li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-icon {
+      color: var(--primary-green);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .feature-icon.disabled {
+      color: var(--text-light);
+    }
+
+    .plan-button {
+      width: 100%;
+      padding: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      position: relative;
+      z-index: 1;
+      margin-top: 1rem;
+    }
+
+    .plan-button.current {
+      background: var(--medium-gray);
+      color: var(--text-dark);
+      cursor: default;
+      border: 2px solid var(--medium-gray);
+    }
+
+    .plan-button.upgrade {
+      background: var(--gradient-primary);
+      color: white;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-button.upgrade::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    .plan-button.upgrade:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(46, 204, 113, 0.4);
+    }
+
+    .plan-button.upgrade:hover::before {
+      left: 100%;
+    }
+
+    .checkout-form {
+      display: none;
+      margin-top: 2rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--light-gray), white);
+      border-radius: 18px;
+      border: 1px solid var(--medium-gray);
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from { 
+        opacity: 0; 
+        transform: translateY(-20px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+
+    .checkout-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.7rem;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15);
+      background: rgba(46, 204, 113, 0.02);
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .security-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(46, 204, 113, 0.05));
+      border-radius: 12px;
+      color: var(--primary-green);
+      border-left: 4px solid var(--primary-green);
+    }
+
+    .security-info i {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .checkout-button {
+      width: 100%;
+      padding: 1.3rem;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+
+    .checkout-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: left 0.5s ease;
+    }
+
+    .checkout-button:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(46, 204, 113, 0.4);
+    }
+
+    .checkout-button:hover:not(:disabled)::before {
+      left: 100%;
+    }
+
+    .checkout-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(46, 204, 113, 0.05));
+      color: var(--primary-green);
+      padding: 1.2rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+      border-left: 4px solid var(--primary-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .error-message {
+      background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(231, 76, 60, 0.05));
+      color: #e74c3c;
+      padding: 1.2rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      text-align: center;
+      border-left: 4px solid #e74c3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--primary-green);
+      border: 2px solid var(--primary-green);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 1.3rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+    }
+
+    .back-button:hover {
+      background: var(--primary-green);
+      color: white;
+      transform: scale(1.15) translateX(-3px);
+      box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .back-button:active {
+      transform: scale(1.05) translateX(-1px);
+      box-shadow: 0 2px 10px rgba(46, 204, 113, 0.3);
+    }
+
+    .summary-card {
+      background: linear-gradient(135deg, white, var(--light-gray));
+      border-radius: 15px;
+      padding: 1.8rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border: 1px solid var(--medium-gray);
+      position: sticky;
+      top: 100px;
+    }
+
+    .method-row {
+      padding: 1.1rem !important;
+      border: 2px solid var(--medium-gray) !important;
+      border-radius: 12px !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .method-row:hover {
+      border-color: var(--primary-green) !important;
+      background: rgba(46, 204, 113, 0.03) !important;
+    }
+
+    .method-row input[type="radio"]:checked {
+      accent-color: var(--primary-green);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 900px) {
+      .payment-body {
+        padding: 2rem;
+      }
+
+      .plans-container {
+        gap: 1.5rem;
+      }
+
+      .plan-card {
+        padding: 1.8rem;
+      }
+
+      .plan-card.recommended {
+        transform: scale(1.05);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .payment-main {
+        padding: 2rem 1rem;
+      }
+
+      .payment-card {
+        border-radius: 20px;
+      }
+
+      .payment-header-card {
+        padding: 2rem;
+      }
+
+      .payment-title {
+        font-size: 1.6rem;
+      }
+
+      .payment-body {
+        padding: 1.5rem;
+      }
+
+      .plans-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .plan-card.recommended {
+        transform: scale(1);
+        box-shadow: 0 10px 30px rgba(52, 152, 219, 0.15);
+      }
+
+      .plan-card {
+        padding: 1.5rem;
+      }
+
+      .plan-price {
+        font-size: 2.2rem;
+      }
+
+      .card-row {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        position: static;
+        margin-top: 2rem;
+      }
+
+      .user-info {
+        gap: 0.5rem;
+      }
+
+      .user-info span {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .payment-header {
+        padding: 1rem;
+      }
+
+      .payment-title {
+        font-size: 1.3rem;
+      }
+
+      .plan-card {
+        padding: 1.2rem;
+      }
+
+      .plan-price {
+        font-size: 1.8rem;
+      }
+
+      .checkout-button {
+        padding: 1rem;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <title>Pagamento - Safe-Bite</title>
+    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+    <header class="payment-header">
+      <button class="back-button" onclick="goToDashboard()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div class="payment-logo">
+        <i class="fas fa-leaf" href="./dashboard.html"></i>
+        <span>Safe-Bite</span>
+      </div>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">JD</div>
+        <span id="userName">Bruno Teste</span>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="payment-main">
+      <div class="payment-card">
+        <!-- Payment Header -->
+        <div class="payment-header-card">
+          <h1 class="payment-title">Escolha seu Plano</h1>
+          <p class="payment-subtitle">Desbloqueie todos os recursos do Safe-Bite</p>
+        </div>
+
+        <!-- Payment Body -->
+        <div class="payment-body">
+          <!-- Messages -->
+          <div id="successMessage" class="success-message" style="display: none;"></div>
+          <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+          <!-- Plans -->
+          <div class="plans-and-summary" style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap;">
+            <div style="flex:1;min-width:260px;">
+              <div class="plans-container">
+            <!-- Free Plan -->
+            <div class="plan-card current">
+              <h3 class="plan-name">Free</h3>
+              <div class="plan-price">
+                R$ 0
+                <span>/mês</span>
+              </div>
+              <ul class="plan-features">
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Até 10 scans por mês</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Análises básicas</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>1 perfil de usuário</span>
+                </li>
+                <li>
+                  <i class="fas fa-times feature-icon disabled"></i>
+                  <span>Scans ilimitados</span>
+                </li>
+                <li>
+                  <i class="fas fa-times feature-icon disabled"></i>
+                  <span>Análises avançadas</span>
+                </li>
+                <li>
+                  <i class="fas fa-times feature-icon disabled"></i>
+                  <span>Relatórios mensais</span>
+                </li>
+              </ul>
+              <button class="plan-button current" disabled>
+                Plano Atual
+              </button>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="plan-card recommended">
+              <div class="plan-badge">Mais Popular</div>
+              <h3 class="plan-name">Premium</h3>
+              <div class="plan-price">
+                R$ 9,90
+                <span>/mês</span>
+              </div>
+              <ul class="plan-features">
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Scans ilimitados</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Análises avançadas</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Múltiplos perfis familiares</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Histórico completo</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Alertas personalizados</span>
+                </li>
+                <li>
+                  <i class="fas fa-check feature-icon"></i>
+                  <span>Relatórios mensais</span>
+                </li>
+              </ul>
+              <button class="plan-button upgrade" id="upgradeButton">
+                Fazer Upgrade
+              </button>
+            </div>
+              </div>
+            </div>
+
+            <!-- Summary / Checkout column -->
+            <div style="width:360px;min-width:280px;">
+              <div class="summary-card" style="background:white;border-radius:12px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.08);">
+                <h4 style="margin:0 0 8px 0;font-size: 25px;">Resumo do pedido</h4>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0;">
+                  <div>
+                    <strong>Plano Premium</strong>
+                    <div style="font-size:0.9rem;color:var(--text-light);">Mensal</div>
+                  </div>
+                  <div style="text-align:right;color:var(--primary-green);font-weight:700;">R$ 9,90</div>
+                </div>
+                <ul style="list-style:none;padding:0;margin:8px 0 16px 0;color:var(--text-dark);">
+                  <li style="margin-bottom:8px;"><i class="fas fa-check" style="color:var(--primary-green);margin-right:8px"></i>Scans ilimitados</li>
+                  <li style="margin-bottom:8px;"><i class="fas fa-check" style="color:var(--primary-green);margin-right:8px"></i>Análise avançada</li>
+                  <li style="margin-bottom:8px;"><i class="fas fa-check" style="color:var(--primary-green);margin-right:8px"></i>Histórico completo</li>
+                </ul>
+                <div style="border-top:1px solid var(--medium-gray);padding-top:12px;display:flex;justify-content:space-between;align-items:center;">
+                  <div style="color:var(--text-light);">Total</div>
+                  <div style="font-weight:700;color:var(--text-dark);">R$ 9,90</div>
+                </div>
+                
+                <div style="margin-top:16px">
+                  <div style="font-size:0.95rem;margin-bottom:8px;font-weight:600">Formas de pagamento</div>
+                  <div id="methodsList" style="display:flex;flex-direction:column;gap:10px">
+                    <label class="method-row" data-method="card" style="display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--medium-gray);border-radius:10px;cursor:pointer">
+                      <input type="radio" name="method" value="card" checked style="margin:0">
+                      <div style="flex:1">Cartão de crédito <span style="color:var(--text-light);font-size:0.9rem;margin-left:6px">(Stripe)</span></div>
+                      <div style="display:flex;gap:6px;align-items:center"><img src="Logos/visa.jpeg" alt="visa" style="height:18px"><img src="Logos/master.png" alt="mc" style="height:18px"></div>
+                    </label>
+
+                    <label class="method-row" data-method="pix" style="display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--medium-gray);border-radius:10px;cursor:pointer">
+                      <input type="radio" name="method" value="pix" style="margin:0">
+                      <div style="flex:1">PIX <span style="color:var(--text-light);font-size:0.9rem;margin-left:6px">(Pagamento instantâneo)</span></div>
+                      <i class="fas fa-qrcode" style="color:var(--primary-green)"></i>
+                    </label>
+
+                    <label class="method-row" data-method="boleto" style="display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--medium-gray);border-radius:10px;cursor:pointer">
+                      <input type="radio" name="method" value="boleto" style="margin:0">
+                      <div style="flex:1">Boleto bancário <span style="color:var(--text-light);font-size:0.9rem;margin-left:6px">(3 dias úteis)</span></div>
+                      <i class="fas fa-barcode" style="color:var(--text-dark)"></i>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Checkout Form -->
+          <div class="checkout-form" id="checkoutForm">
+            <h3 style="margin: 0 0 1.5rem 0; color: var(--text-dark); font-size: 1.3rem;">Dados do Cartão</h3>
+            <form id="paymentForm">
+              <div class="form-group">
+                <label for="cardNumber"><i class="fas fa-credit-card" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Número do Cartão</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="cardName"><i class="fas fa-user" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Nome no Cartão</label>
+                <input type="text" id="cardName" placeholder="Bruno Teste" required>
+              </div>
+              
+              <div class="card-row">
+                <div class="form-group">
+                  <label for="cardExpiry"><i class="fas fa-calendar" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Validade</label>
+                  <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="cardCvc"><i class="fas fa-lock" style="margin-right: 0.5rem; color: var(--primary-green);"></i>CVV</label>
+                  <input type="text" id="cardCvc" placeholder="123" maxlength="4" required>
+                </div>
+              </div>
+
+              <div class="security-info">
+                <i class="fas fa-shield-alt"></i>
+                <span>Pagamento 100% seguro criptografado com Stripe</span>
+              </div>
+
+              <button type="submit" class="checkout-button" id="checkoutButton">
+                <i class="fas fa-lock"></i>
+                <span>Assinar Agora - R$ 9,90/mês</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="api-config.js"></script>
+  <script src="qr-code-generator.js"></script>
+  <script src="payment-manager.js"></script>
+  <script src="payment-mock.js"></script>
+  <script src="payment-integration.js"></script>
+  <script>
+    class NutriScanPayment {
+      constructor() {
+        this.token = localStorage.getItem('nutriScanToken');
+        this.user = null;
+        this.selectedMethod = 'card';
+        this.amount = 9.90; // Preço do Premium
+        this.paymentData = null;
+        this.init();
+      }
+
+      async init() {
+        if (!this.token) {
+          this.redirectToLogin();
+          return;
+        }
+
+        this.setupEventListeners();
+        await this.loadUserData();
+      }
+
+      setupEventListeners() {
+        // Payment methods
+        // legacy payment-method elements
+        document.querySelectorAll('.payment-method').forEach(method => {
+          method.addEventListener('click', () => {
+            this.selectPaymentMethod(method.dataset.method);
+          });
+        });
+
+        // new method rows in summary column
+        document.querySelectorAll('#methodsList .method-row').forEach(row => {
+          row.addEventListener('click', (e) => {
+            const method = row.getAttribute('data-method');
+            // set radio
+            const input = row.querySelector('input[type="radio"]');
+            if (input) input.checked = true;
+            this.selectPaymentMethod(method);
+          });
+        });
+
+        // Payment form
+        const paymentForm = document.getElementById('paymentForm');
+        if (paymentForm) {
+          paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.processPayment();
+          });
+        }
+
+        // Card formatting
+        const cardNumber = document.getElementById('cardNumber');
+        if (cardNumber) {
+          cardNumber.addEventListener('input', (e) => {
+            this.formatCardNumber(e.target);
+          });
+        }
+
+        const cardExpiry = document.getElementById('cardExpiry');
+        if (cardExpiry) {
+          cardExpiry.addEventListener('input', (e) => {
+            this.formatExpiry(e.target);
+          });
+        }
+
+        const cardCvc = document.getElementById('cardCvc');
+        if (cardCvc) {
+          cardCvc.addEventListener('input', (e) => {
+            this.formatCvc(e.target);
+          });
+        }
+      }
+
+      // Finalize purchase flow
+      async finalizePurchase() {
+        const methodInput = document.querySelector('#methodsList input[name="method"]:checked');
+        const method = methodInput ? methodInput.value : this.selectedMethod;
+        this.selectPaymentMethod(method);
+
+        if (method === 'pix') {
+          await this.generatePIX();
+        } else if (method === 'boleto') {
+          await this.generateBoleto();
+        } else if (method === 'card') {
+          this.showPaymentForm();
+          // scroll to form
+          document.getElementById('checkoutForm').scrollIntoView({behavior:'smooth'});
+        }
+      }
+
+      async loadUserData() {
+        try {
+          if (!paymentIntegration) {
+            throw new Error('PaymentIntegration não inicializado');
+          }
+
+          await paymentIntegration.ensureInitialized();
+          this.user = await paymentIntegration.getCustomerInfo();
+          this.updateUserInfo();
+
+          // Mostrar status do sistema
+          const status = await paymentIntegration.getStatus();
+          if (status.usingMockData) {
+            console.warn('⚠ Modo teste: ', status.message);
+          }
+        } catch (error) {
+          console.error('Erro ao carregar usuário:', error);
+          // Usar dados fictícios
+          this.user = {
+            name: 'Usuário',
+            email: 'usuario@example.com',
+            cpf: ''
+          };
+          this.updateUserInfo();
+        }
+      }
+
+      updateUserInfo() {
+        if (!this.user) return;
+
+        const initials = this.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials || 'U';
+        document.getElementById('userName').textContent = this.user.name;
+      }
+
+      showPaymentForm() {
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (!checkoutForm) return;
+
+        checkoutForm.classList.add('active');
+        checkoutForm.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      selectPaymentMethod(method) {
+        this.selectedMethod = method;
+        
+        // Update UI
+        document.querySelectorAll('.payment-method').forEach(m => {
+          m.style.borderColor = 'var(--medium-gray)';
+        });
+        
+        document.querySelectorAll('#methodsList .method-row').forEach(row => {
+          row.style.borderColor = 'var(--medium-gray)';
+        });
+        
+        const selected = document.querySelector(`[data-method="${method}"]`);
+        if (selected) {
+          selected.style.borderColor = 'var(--primary-green)';
+        }
+
+        // Atualizar checkout form automaticamente
+        this.showMethodForm(method);
+      }
+
+      async showMethodForm(method) {
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (!checkoutForm) return;
+
+        // Resetar formulário
+        checkoutForm.classList.remove('active');
+        checkoutForm.innerHTML = '';
+
+        if (method === 'pix') {
+          this.showInfo('Gerando PIX... Por favor aguarde.');
+          await this.generatePIX();
+        } else if (method === 'boleto') {
+          this.showInfo('Gerando Boleto... Por favor aguarde.');
+          await this.generateBoleto();
+        } else if (method === 'card') {
+          // Mostrar formulário de cartão com estilo igual ao PIX
+          checkoutForm.innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+              <h3 style="margin-bottom: 1rem; color: var(--primary-green);">Cartão de Crédito</h3>
+              
+              <div style="background: white; border: 2px solid var(--medium-gray); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; text-align: left;">
+                <form id="paymentForm">
+                  <div class="form-group">
+                    <label for="cardNumber"><i class="fas fa-credit-card" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Número do Cartão</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="cardName"><i class="fas fa-user" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Nome no Cartão</label>
+                    <input type="text" id="cardName" placeholder="NOME COMO ESTÁ NO CARTÃO" required>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="cardExpiry"><i class="fas fa-calendar" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Validade</label>
+                      <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="cardCvc"><i class="fas fa-lock" style="margin-right: 0.5rem; color: var(--primary-green);"></i>CVC</label>
+                      <input type="text" id="cardCvc" placeholder="123" maxlength="3" required>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="installments"><i class="fas fa-list-ol" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Parcelas</label>
+                    <select id="installments">
+                      <option value="1">1x de R$ 9,90</option>
+                      <option value="2">2x de R$ 4,95</option>
+                      <option value="3">3x de R$ 3,30</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+
+              <div style="background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+                <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-green);">Valor: R$ 9,90</p>
+                <p style="color: var(--text-light); font-size: 0.9rem;">Processamento seguro com Stripe</p>
+              </div>
+
+              <button style="width: 100%; padding: 1rem; background: var(--primary-green); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="document.getElementById('paymentForm').dispatchEvent(new Event('submit'))">Pagar R$ 9,90</button>
+
+              <button style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; background: var(--medium-gray); color: var(--text-dark); border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="nutriScanPayment.selectPaymentMethod('pix')">Usar Outro Método</button>
+            </div>
+          `;
+          checkoutForm.classList.add('active');
+          this.showInfo('Preencha os dados do cartão');
+          
+          // Reconfigurar event listeners do formulário
+          this.setupCardFormListeners();
+        }
+      }
+
+      setupCardFormListeners() {
+        const paymentForm = document.getElementById('paymentForm');
+        if (paymentForm) {
+          paymentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.processPayment();
+          });
+        }
+
+        const cardNumber = document.getElementById('cardNumber');
+        if (cardNumber) {
+          cardNumber.addEventListener('input', (e) => {
+            this.formatCardNumber(e.target);
+          });
+        }
+
+        const cardExpiry = document.getElementById('cardExpiry');
+        if (cardExpiry) {
+          cardExpiry.addEventListener('input', (e) => {
+            this.formatCardExpiry(e.target);
+          });
+        }
+      }
+
+      async generatePIX() {
+        try {
+          if (!paymentIntegration) throw new Error('PaymentIntegration não disponível');
+
+          const pixPayment = await paymentIntegration.generatePIX(this.amount, 'Assinatura Premium Safe-Bite');
+          this.paymentData = pixPayment;
+
+          this.displayPIXPayment(pixPayment);
+        } catch (error) {
+          console.error('Erro ao gerar PIX:', error);
+          this.showError('Erro ao gerar PIX. Tente novamente mais tarde.');
+        }
+      }
+
+      async generateBoleto() {
+        try {
+          if (!paymentIntegration) throw new Error('PaymentIntegration não disponível');
+
+          // Mostrar formulário de endereço no checkout form
+          const checkoutForm = document.getElementById('checkoutForm');
+          checkoutForm.innerHTML = `
+            <h3 style="margin: 0 0 1.5rem 0; color: var(--text-dark); font-size: 1.3rem;">Dados para Boleto</h3>
+            <form id="boletoForm">
+              <div class="form-group">
+                <label for="address"><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem; color: var(--primary-green);"></i>Endereço Completo</label>
+                <input type="text" id="address" placeholder="Rua, número, bairro, cidade - UF" required>
+              </div>
+              <button type="submit" class="checkout-button">Gerar Boleto</button>
+            </form>
+          `;
+          checkoutForm.classList.add('active');
+
+          // Configurar event listener do formulário
+          document.getElementById('boletoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const address = document.getElementById('address').value;
+            
+            if (!address) {
+              this.showError('Endereço é obrigatório para boleto');
+              return;
+            }
+
+            this.showInfo('Gerando Boleto... Por favor aguarde.');
+            
+            try {
+              const boletoPayment = await paymentIntegration.generateBoleto(this.amount, address);
+              this.paymentData = boletoPayment;
+              this.displayBoletoPayment(boletoPayment);
+            } catch (error) {
+              console.error('Erro ao gerar boleto:', error);
+              // Usar mock como fallback
+              const mockBoletoPayment = await paymentMockService.generateMockBoleto(this.amount, { name: this.user?.name, email: this.user?.email, address });
+              this.paymentData = mockBoletoPayment;
+              this.displayBoletoPayment(mockBoletoPayment);
+            }
+          });
+
+        } catch (error) {
+          console.error('Erro ao gerar boleto:', error);
+          this.showError('Erro ao gerar boleto. Tente novamente mais tarde.');
+        }
+      }
+
+      displayPIXPayment(pixData) {
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (!checkoutForm) return;
+
+        const pixHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-green);">PIX - Pagamento Instantâneo</h3>
+            
+            <div style="background: white; border: 2px solid var(--medium-gray); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem;">
+              <p style="margin-bottom: 1rem; font-weight: 600;">Escaneie o código QR:</p>
+              ${pixData.qrCode ? `<img src="${pixData.qrCode}" alt="PIX QR Code" style="max-width: 300px; height: auto; border-radius: 10px;">` : 'QR Code indisponível'}
+            </div>
+
+            <div style="background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="margin-bottom: 0.5rem;">Código PIX:</p>
+              <code style="word-break: break-all; display: block; padding: 0.5rem; background: white; border-radius: 5px; font-size: 0.85rem;">${pixData.pixCode}</code>
+              <button style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: var(--primary-green); color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="copyToClipboard('${pixData.pixCode}')">Copiar Código</button>
+            </div>
+
+            <p style="color: var(--text-light); margin-bottom: 1rem;">Expira em: ${new Date(pixData.expiresAt).toLocaleString('pt-BR')}</p>
+
+            <div style="background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-green);">Valor: R$ ${pixData.amount.toFixed(2)}</p>
+              <p style="color: var(--text-light); font-size: 0.9rem;">Processamento instantâneo</p>
+            </div>
+
+            <button style="width: 100%; padding: 1rem; background: var(--primary-green); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="nutriScanPayment.verifyPayment('${pixData.id}')">Verificar Pagamento</button>
+
+            <button style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; background: var(--medium-gray); color: var(--text-dark); border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="nutriScanPayment.selectPaymentMethod('card')">Usar Outro Método</button>
+          </div>
+        `;
+
+        checkoutForm.innerHTML = pixHTML;
+        checkoutForm.classList.add('active');
+      }
+
+      displayBoletoPayment(boletoData) {
+        const checkoutForm = document.getElementById('checkoutForm');
+        if (!checkoutForm) return;
+
+        const boletoHTML = `
+          <div style="text-align: center; padding: 2rem;">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-green);">Boleto - Pagamento em até 3 dias</h3>
+
+            <div style="background: white; border: 2px solid var(--medium-gray); border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; text-align: left;">
+              <p style="margin-bottom: 0.5rem; font-weight: 600;">Código de Barras:</p>
+              <code style="word-break: break-all; display: block; padding: 0.5rem; background: #f5f5f5; border-radius: 5px; font-size: 0.9rem;">${boletoData.barcodeNumber}</code>
+              <button style="width: 100%; margin-top: 0.5rem; padding: 0.5rem 1rem; background: var(--primary-green); color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="copyToClipboard('${boletoData.barcodeNumber}')">Copiar Código de Barras</button>
+            </div>
+
+            <div style="background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; text-align: left;">
+              <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-green);">Instruções:</p>
+              <ul style="text-align: left; padding-left: 1.5rem; color: var(--text-dark);">
+                ${boletoData.instructions.map(instruction => `<li style="margin-bottom: 0.5rem;">${instruction}</li>`).join('')}
+              </ul>
+            </div>
+
+            <div style="background: rgba(46, 204, 113, 0.1); border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
+              <p style="font-weight: 600; margin-bottom: 0.5rem; color: var(--primary-green);">Valor: R$ ${boletoData.amount.toFixed(2)}</p>
+              <p style="color: var(--text-light); font-size: 0.9rem;">Vencimento: ${new Date(boletoData.dueDate).toLocaleDateString('pt-BR')}</p>
+              <p style="color: var(--text-light); font-size: 0.9rem;">Beneficiário: ${boletoData.beneficiary.name}</p>
+            </div>
+
+            <button style="width: 100%; padding: 1rem; background: var(--primary-green); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="nutriScanPayment.verifyPayment('${boletoData.id}')">Verificar Pagamento</button>
+
+            <button style="width: 100%; padding: 0.8rem; margin-top: 0.5rem; background: var(--medium-gray); color: var(--text-dark); border: none; border-radius: 10px; font-weight: 600; cursor: pointer;" onclick="nutriScanPayment.selectPaymentMethod('card')">Usar Outro Método</button>
+          </div>
+        `;
+
+        checkoutForm.innerHTML = boletoHTML;
+        checkoutForm.classList.add('active');
+      }
+
+      async verifyPayment(paymentId) {
+        try {
+          this.showInfo('Verificando pagamento...');
+          const status = await paymentIntegration.getPaymentStatus(paymentId);
+          
+          if (status.status === 'approved' || status.status === 'paid') {
+            this.showSuccess('Pagamento confirmado com sucesso! Você será redirecionado em breve.');
+            setTimeout(() => this.redirectToDashboard(), 2000);
+          } else if (status.status === 'pending') {
+            this.showInfo('Pagamento ainda pendente. Aguarde a confirmação.');
+          } else {
+            this.showError(`Pagamento não confirmado: ${status.statusDetail}`);
+          }
+        } catch (error) {
+          console.error('Erro ao verificar pagamento:', error);
+          this.showError('Erro ao verificar pagamento');
+        }
+      }
+
+      formatCardNumber(input) {
+        let value = input.value.replace(/\s/g, '');
+        let formattedValue = '';
+        
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        
+        input.value = formattedValue;
+      }
+
+      formatExpiry(input) {
+        let value = input.value.replace(/\D/g, '');
+        
+        if (value.length >= 2) {
+          value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+        
+        input.value = value;
+      }
+
+      formatCvc(input) {
+        input.value = input.value.replace(/\D/g, '').slice(0, 4);
+      }
+
+      async processPayment() {
+        const button = document.getElementById('checkoutButton');
+        const originalContent = button.innerHTML;
+        
+        try {
+          button.disabled = true;
+          button.innerHTML = '<div class="loading-spinner"></div> Processando...';
+
+          const token = 'tok_visa'; // Token fictício ou do Stripe
+
+          const cardPayment = await paymentIntegration.processCardPayment(token, this.amount, 1);
+          this.paymentData = cardPayment;
+
+          if (cardPayment.status === 'approved') {
+            this.showSuccess('Pagamento aprovado! Você será redirecionado em breve.');
+            setTimeout(() => this.redirectToDashboard(), 2000);
+          } else {
+            this.showError(`Pagamento não aprovado: ${cardPayment.statusDetail}`);
+            button.disabled = false;
+            button.innerHTML = originalContent;
+          }
+        } catch (error) {
+          console.error('Erro ao processar pagamento:', error);
+          
+          // Usar mock como fallback
+          const mockCard = await paymentMockService.processMockCardPayment(token, this.amount, 1);
+          if (mockCard.status === 'approved') {
+            this.showSuccess('Pagamento processado (modo teste). Você será redirecionado em breve.');
+            setTimeout(() => this.redirectToDashboard(), 2000);
+          } else {
+            this.showError('Pagamento recusado. Tente novamente.');
+            button.disabled = false;
+            button.innerHTML = originalContent;
+          }
+        }
+      }
+
+      showInfo(message) {
+        this.showMessage(message, 'info');
+      }
+
+      showError(message) {
+        this.showMessage(message, 'error');
+      }
+
+      showSuccess(message) {
+        this.showMessage(message, 'success');
+      }
+
+      showMessage(message, type) {
+        const errorElement = document.getElementById('errorMessage');
+        const successElement = document.getElementById('successMessage');
+        
+        errorElement.style.display = 'none';
+        successElement.style.display = 'none';
+        
+        if (type === 'error') {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        } else if (type === 'success') {
+          successElement.textContent = message;
+          successElement.style.display = 'block';
+        } else {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+        }
+        
+        setTimeout(() => {
+          errorElement.style.display = 'none';
+          successElement.style.display = 'none';
+        }, 5000);
+      }
+
+      redirectToDashboard() {
+        safeRedirect('dashboard.html');
+      }
+
+      redirectToLogin() {
+        safeRedirect('index.html');
+      }
+    }
+
+    // Global variables
+    let nutriScanPayment;
+
+    // Global functions
+    function goToDashboard() {
+      safeRedirect('dashboard.html');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copiado para a área de transferência!');
+      }).catch(err => {
+        console.error('Erro ao copiar:', err);
+      });
+    }
+
+    // Initialize payment when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      nutriScanPayment = new NutriScanPayment();
+    });
+  </script>
+  
+  <!-- Sistema de Sincronização de Usuário -->
+  <script src="user-sync.js"></script>
+</body>
+</html>

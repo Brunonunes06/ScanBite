@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Safe-Bite</title>
+    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      background: var(--light-gray);
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition-fast);
+    }
+
+    .btn-back:hover {
+      background: var(--medium-gray);
+      transform: translateY(-1px);
+    }
+
+    .btn-back i {
+      font-size: 1.2rem;
+    }
+
+    .settings-container {
+      min-height: 100vh;
+      background: var(--gradient-hero);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .settings-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .settings-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--primary-green);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .settings-logo i {
+      font-size: 1.5rem;
+    }
+
+    .settings-main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .settings-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: var(--shadow-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    .settings-header-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .settings-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .settings-section {
+      margin-bottom: 2rem;
+    }
+
+    .settings-section h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--light-gray);
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .setting-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .setting-item:hover::before {
+      left: 100%;
+    }
+
+    .setting-item:hover {
+      background-color: rgba(46, 204, 113, 0.05);
+      margin: 0 -1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      transform: translateX(5px);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .setting-item.disabled:hover {
+      background-color: transparent;
+      transform: none;
+    }
+
+    .setting-item.disabled .setting-label i {
+      color: var(--medium-gray);
+    }
+
+    .setting-item.disabled .btn-setting {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .setting-label {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .setting-label i {
+      color: var(--primary-green);
+      font-size: 1.2rem;
+      width: 30px;
+    }
+
+    .setting-text {
+      flex: 1;
+    }
+
+    .setting-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      color: var(--text-dark);
+    }
+
+    .setting-description {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .setting-control {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Toggle Switch Modern */
+    .toggle-switch {
+      position: relative;
+      width: 60px;
+      height: 30px;
+      background: var(--medium-gray);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .toggle-switch.active {
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+      animation: switchOn 0.4s ease;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      z-index: 2;
+    }
+
+    .toggle-switch.active::after {
+      left: 33px;
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.5);
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    }
+
+    @keyframes switchOn {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Select Modern */
+    .setting-select {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--light-gray);
+      border-radius: 8px;
+      background: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      min-width: 150px;
+      position: relative;
+    }
+
+    .setting-select:hover {
+      border-color: var(--primary-green);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .setting-select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+      animation: pulse 0.3s ease;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.8);
+      }
+      20% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+      80% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.8);
+      }
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    @keyframes buttonPulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes emailNotification {
+      0% {
+        transform: translateY(-20px) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translateY(0) scale(1.1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Button Modern */
+    .btn-setting {
+      padding: 0.6rem 1.5rem;
+      background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .btn-setting::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+      z-index: 1;
+    }
+
+    .btn-setting::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+      z-index: 2;
+    }
+
+    .btn-setting:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-setting:hover::after {
+      transform: translateX(100%);
+    }
+
+    .btn-setting:hover {
+      transform: translateY(-3px) rotateX(5deg);
+      box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+    }
+
+    .btn-setting:active {
+      transform: translateY(-1px) rotateX(2deg) scale(0.98);
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-setting.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .btn-setting.loading::before {
+      animation: buttonPulse 1.5s infinite;
+    }
+
+    .btn-setting:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+    }
+
+    /* Button Variants */
+    .btn-setting.danger {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+
+    .btn-setting.danger:hover {
+      box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+    }
+
+    /* Email Notification Styles */
+    .email-active {
+      background: linear-gradient(90deg, rgba(46, 204, 113, 0.05), transparent);
+      border-left: 3px solid var(--primary-green);
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: var(--shadow-xl);
+      animation: slideUp 0.4s ease;
+    }
+
+    .modal-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--gradient-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: emailNotification 0.6s ease;
+    }
+
+    .modal-icon i {
+      font-size: 2rem;
+      color: white;
+    }
+
+    .modal-content h3 {
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .modal-content p {
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .btn-modal-primary {
+      padding: 0.8rem 1.5rem;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-modal-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-modal-secondary {
+      padding: 0.8rem 1.5rem;
+      background: var(--light-gray);
+      color: var(--text-dark);
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-modal-secondary:hover {
+      background: var(--medium-gray);
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .btn-setting.danger:active {
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-setting.warning {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+
+    .btn-setting.warning:hover {
+      box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+    }
+
+    .btn-setting.warning:active {
+      box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+    }
+
+    /* Loading state for buttons */
+    .btn-setting.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-setting.loading::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Interactive feedback */
+    .btn-setting {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-setting::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-setting.ripple::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    /* Pulse animation for important buttons */
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+      }
+    }
+
+    .btn-setting.pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Shake animation for errors */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    .btn-setting.shake {
+      animation: shake 0.5s;
+    }
+
+    /* Animações de deslize para os botões */
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Classe para animação de deslize */
+    .btn-setting.slide-out-right {
+      animation: slideOutRight 0.4s ease forwards;
+    }
+
+    /* Alert Box */
+    .alert-box {
+      background: linear-gradient(135deg, #fff3cd, #fef5e7);
+      border-left: 4px solid #ffc107;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .alert-box i {
+      color: #ffc107;
+      font-size: 1.2rem;
+    }
+
+    /* Success Message */
+    .success-message {
+      background: linear-gradient(135deg, #d4edda, #c3e6cb);
+      border-left: 4px solid #28a745;
+      color: #155724;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    /* Animations */
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .settings-main {
+        padding: 1rem;
+      }
+
+      .settings-card {
+        padding: 1.5rem;
+      }
+
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .setting-control {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+
+    .setting-select:focus {
+      outline: none;
+      border-color: var(--primary-green);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    /* Danger Zone */
+    .danger-zone {
+      border: 2px solid #e74c3c;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .danger-zone h3 {
+      color: #e74c3c;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .danger-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--light-gray);
+      color: var(--text-dark);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--medium-gray);
+      transform: translateY(-2px);
+    }
+
+    /* Messages */
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    /* Loading */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--medium-gray);
+      border-top: 4px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .settings-main {
+        padding: 1rem;
+      }
+
+      .settings-card {
+        padding: 1.5rem;
+      }
+
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .setting-control {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .danger-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Header -->
+    <header class="settings-header">
+      <div class="settings-logo">
+        <i class="fas fa-leaf"></i>
+        <span>Safe-Bite</span>
+      </div>
+      <h1>
+        <i class="fas fa-cog"></i>
+        Configurações
+      </h1>
+      <button class="btn-back" onclick="window.location.href='dashboard.html'">
+        <i class="fas fa-arrow-left"></i>
+        Voltar
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="settings-main">
+      <div class="settings-card">
+        <!-- Header Card -->
+        <div class="settings-header-card">
+          <div class="settings-title">
+            <i class="fas fa-user-cog"></i>
+            Configurações da Conta
+          </div>
+        </div>
+
+        <!-- Alert Box -->
+        <div class="alert-box">
+          <i class="fas fa-info-circle"></i>
+          <div>
+            <strong>Importante:</strong> As alterações serão salvas automaticamente e aplicadas imediatamente.
+          </div>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="settings-section">
+          <h3>
+            <i class="fas fa-sliders-h"></i>
+            Preferências
+          </h3>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-envelope"></i>
+              <div class="setting-text">
+                <div class="setting-title">Notificações por Email</div>
+                <div class="setting-description">Receba alertas e atualizações por email</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="emailNotifications" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-mobile-alt"></i>
+              <div class="setting-text">
+                <div class="setting-title">Notificações Push</div>
+                <div class="setting-description">Notificações no navegador</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="pushNotifications" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-chart-line"></i>
+              <div class="setting-text">
+                <div class="setting-title">Relatórios Mensais</div>
+                <div class="setting-description">Resumo mensal das suas análises</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="monthlyReports" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+          <h3>
+            <i class="fas fa-shield-alt"></i>
+            Privacidade
+          </h3>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-history"></i>
+              <div class="setting-text">
+                <div class="setting-title">Salvar Histórico</div>
+                <div class="setting-description">Mantenha registro de todas as análises</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="saveHistory" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-share-alt"></i>
+              <div class="setting-text">
+                <div class="setting-title">Compartilhar Dados Anônimos</div>
+                <div class="setting-description">Ajude a melhorar nosso algoritmo</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="shareData" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Display Settings -->
+        <div class="settings-section">
+          <h3>
+            <i class="fas fa-palette"></i>
+            Exibição
+          </h3>
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-language"></i>
+              <div class="setting-text">
+                <div class="setting-title">Idioma</div>
+                <div class="setting-description">Escolha o idioma da interface</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <select class="setting-select" id="languageSelect">
+                <option value="pt-BR">Português (Brasil)</option>
+                <option value="en-US">English</option>
+              </select>
+            </div>
+          </div>
+          <!-- <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-moon"></i>
+              <div class="setting-text">
+                <div class="setting-title">Modo Escuro</div>
+                <div class="setting-description">Interface escura para seus olhos</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <div class="toggle-switch" id="darkMode" onclick="toggleSwitch(this)">
+              </div>
+            </div>
+          </div> -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="setting-item">
+          <div class="setting-label">
+            <i class="fas fa-save"></i>
+            <div class="setting-text">
+              <div class="setting-title">Salvar Alterações</div>
+              <div class="setting-description">Aplicar todas as configurações</div>
+            </div>
+          </div>
+          <div class="setting-control">
+            <button class="btn-setting" onclick="saveSettings()">
+              <i class="fas fa-save"></i>
+              Salvar
+            </button>
+          </div>
+        </div>
+
+        <!-- Account Actions -->
+        <div class="settings-section">
+          <h3>
+            <i class="fas fa-user-cog"></i>
+            Ações da Conta
+          </h3>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-download"></i>
+              <div class="setting-text">
+                <div class="setting-title">Exportar Dados</div>
+                <div class="setting-description">Baixar todos os seus dados em formato JSON</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <button class="btn-setting" onclick="exportData()">
+                <i class="fas fa-download"></i>
+                Exportar
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-history"></i>
+              <div class="setting-text">
+                <div class="setting-title">Limpar Histórico</div>
+                <div class="setting-description">Remover todos os dados de scans anteriores</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <button class="btn-setting" onclick="clearHistory()">
+                <i class="fas fa-trash"></i>
+                Limpar
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-sign-out-alt"></i>
+              <div class="setting-text">
+                <div class="setting-title">Sair da Conta</div>
+                <div class="setting-description">Encerrar sessão atual</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <button class="btn-setting danger" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Advanced Settings -->
+        <div class="settings-section">
+          <h3>
+            <i class="fas fa-cogs"></i>
+            Configurações Avançadas
+          </h3>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-broom"></i>
+              <div class="setting-text">
+                <div class="setting-title">Limpar Cache</div>
+                <div class="setting-description">Remover dados temporários do navegador</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <button class="btn-setting" onclick="clearCache()">
+                <i class="fas fa-broom"></i>
+                Limpar
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-label">
+              <i class="fas fa-undo"></i>
+              <div class="setting-text">
+                <div class="setting-title">Restaurar Padrão</div>
+                <div class="setting-description">Voltar todas as configurações ao padrão</div>
+              </div>
+            </div>
+            <div class="setting-control">
+              <button class="btn-setting warning" onclick="resetSettings()">
+                <i class="fas fa-undo"></i>
+                Restaurar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Message (Hidden by default) -->
+      <div id="successMessage" class="success-message" style="display: none;">
+        <i class="fas fa-check-circle"></i>
+        <span id="successText">Configurações salvas com sucesso!</span>
+      </div>
+    </main>
+  </div>
+
+  <!-- Success Message (Hidden by default) -->
+  <div id="successMessage" class="success-message" style="display: none;">
+    <i class="fas fa-check-circle"></i>
+    <span id="successText">Configurações salvas com sucesso!</span>
+  </div>
+  </main>
+  </div>
+
+  <script>
+    // Settings Manager
+    class SettingsManager {
+      constructor() {
+        this.settings = this.loadSettings();
+        this.initializeSettings();
+      }
+
+      loadSettings() {
+        const saved = localStorage.getItem('nutriscan_settings');
+        return saved ? JSON.parse(saved) : {
+          emailNotifications: true,
+          pushNotifications: false,
+          monthlyReports: true,
+          saveHistory: true,
+          shareData: false,
+          language: 'pt-BR',
+          darkMode: false
+        };
+      }
+
+      saveSettings() {
+        localStorage.setItem('nutriscan_settings', JSON.stringify(this.settings));
+        this.showSuccess('Configurações salvas com sucesso!');
+      }
+
+      initializeSettings() {
+        // Apply saved settings
+        Object.keys(this.settings).forEach(key => {
+          const element = document.getElementById(key);
+          if (element) {
+            if (element.type === 'checkbox') {
+              element.checked = this.settings[key];
+            } else if (element.classList.contains('toggle-switch')) {
+              if (this.settings[key]) {
+                element.classList.add('active');
+                this.addRippleEffect(element);
+              } else {
+                element.classList.remove('active');
+              }
+            } else if (element.tagName === 'SELECT') {
+              element.value = this.settings[key];
+            }
+          }
+        });
+
+        // Apply dark mode
+        if (this.settings.darkMode) {
+          document.body.classList.add('dark-mode');
+        }
+      }
+
+      toggleSetting(setting) {
+        this.settings[setting] = !this.settings[setting];
+        const toggle = document.getElementById(setting);
+        
+        // Adicionar animação e feedback
+        this.addRippleEffect(toggle);
+        
+        if (this.settings[setting]) {
+          toggle.classList.add('active');
+          this.showSettingFeedback(setting, 'ativado');
+          
+          // Configuração especial para Notificações por Email
+          if (setting === 'emailNotifications') {
+            this.configureEmailNotifications();
+          }
+        } else {
+          toggle.classList.remove('active');
+          this.showSettingFeedback(setting, 'desativado');
+          
+          // Limpar configurações de email quando desativado
+          if (setting === 'emailNotifications') {
+            this.disableEmailNotifications();
+          }
+        }
+
+        this.saveSettings();
+
+        // Apply specific setting
+        if (setting === 'darkMode') {
+          document.body.classList.toggle('dark-mode');
+          this.animateThemeChange();
+        }
+        
+        // Apply notification settings
+        if (setting === 'pushNotifications' && this.settings[setting]) {
+          this.requestNotificationPermission();
+        }
+      }
+
+      changeLanguage(language) {
+        this.settings.language = language;
+        this.saveSettings();
+        console.log('Idioma alterado para:', language);
+      }
+
+      clearHistory() {
+        if (confirm('Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.')) {
+          localStorage.removeItem('nutriscan_scans');
+          localStorage.removeItem('nutriscan_history');
+          this.showSuccess('Histórico limpo com sucesso!');
+        }
+      }
+
+      exportData() {
+        const data = {
+          settings: this.settings,
+          scans: JSON.parse(localStorage.getItem('nutriscan_scans') || '[]'),
+          history: JSON.parse(localStorage.getItem('nutriscan_history') || '[]'),
+          exportDate: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `nutriscan_data_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        this.showSuccess('Dados exportados com sucesso!');
+      }
+
+      logout() {
+        if (confirm('Tem certeza que deseja sair da sua conta?')) {
+          localStorage.removeItem('nutriScanToken');
+          localStorage.removeItem('nutriScanUser');
+          safeRedirect('index.html');
+        }
+      }
+
+      showSuccess(message) {
+        const successEl = document.getElementById('successMessage');
+        const textEl = document.getElementById('successText');
+        textEl.textContent = message;
+        successEl.style.display = 'flex';
+        successEl.style.animation = 'slideInRight 0.5s ease';
+        
+        setTimeout(() => {
+          successEl.style.animation = 'slideOutRight 0.5s ease';
+          setTimeout(() => {
+            successEl.style.display = 'none';
+          }, 500);
+        }, 3000);
+      }
+
+      addRippleEffect(element) {
+        // Criar efeito de ripple
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple-effect';
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(46, 204, 113, 0.3);
+          transform: scale(0);
+          animation: ripple 0.6s ease-out;
+          pointer-events: none;
+        `;
+        
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = '50%';
+        ripple.style.top = '50%';
+        ripple.style.marginLeft = -size/2 + 'px';
+        ripple.style.marginTop = -size/2 + 'px';
+        
+        element.style.position = 'relative';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      }
+
+      showSettingFeedback(setting, action) {
+        const settingItem = document.getElementById(setting).closest('.setting-item');
+        const feedback = document.createElement('div');
+        feedback.className = 'setting-feedback';
+        feedback.textContent = `${this.getSettingName(setting)} ${action}`;
+        feedback.style.cssText = `
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: var(--primary-green);
+          color: white;
+          padding: 0.3rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          animation: fadeInOut 2s ease;
+          pointer-events: none;
+          z-index: 10;
+        `;
+        
+        settingItem.style.position = 'relative';
+        settingItem.appendChild(feedback);
+        
+        setTimeout(() => {
+          feedback.remove();
+        }, 2000);
+      }
+
+      getSettingName(setting) {
+        const names = {
+          emailNotifications: 'Notificações por e-mail',
+          pushNotifications: 'Notificações push',
+          monthlyReports: 'Relatórios mensais',
+          saveHistory: 'Salvar histórico',
+          shareData: 'Compartilhar dados',
+          darkMode: 'Modo escuro'
+        };
+        return names[setting] || setting;
+      }
+
+      animateThemeChange() {
+        document.body.style.transition = 'background-color 0.3s ease';
+        setTimeout(() => {
+          document.body.style.transition = '';
+        }, 300);
+      }
+
+      requestNotificationPermission() {
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              this.showSuccess('Notificações push habilitadas!');
+            } else {
+              this.showSuccess('Permissão de notificações negada');
+            }
+          });
+        }
+      }
+
+      configureEmailNotifications() {
+        // Adicionar classe especial ao item de email
+        const emailItem = document.getElementById('emailNotifications').closest('.setting-item');
+        emailItem.classList.add('email-active');
+        
+        // Criar indicador visual especial
+        this.createEmailNotificationIndicator(emailItem);
+        
+        // Simular configuração de email
+        setTimeout(() => {
+          this.showEmailConfigSuccess();
+        }, 1000);
+      }
+
+      disableEmailNotifications() {
+        // Remover classe especial do item de email
+        const emailItem = document.getElementById('emailNotifications').closest('.setting-item');
+        emailItem.classList.remove('email-active');
+        
+        // Remover indicador visual
+        const indicator = emailItem.querySelector('.email-indicator');
+        if (indicator) {
+          indicator.remove();
+        }
+      }
+
+      createEmailNotificationIndicator(container) {
+        const indicator = document.createElement('div');
+        indicator.className = 'email-indicator';
+        indicator.innerHTML = `
+          <i class="fas fa-envelope"></i>
+          <span>Configurado</span>
+        `;
+        indicator.style.cssText = `
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+          color: white;
+          padding: 0.4rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          animation: emailNotification 0.6s ease;
+          z-index: 10;
+          box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        `;
+        
+        container.style.position = 'relative';
+        container.appendChild(indicator);
+      }
+
+      showEmailConfigSuccess() {
+        // Criar modal de sucesso para configuração de email
+        const modal = document.createElement('div');
+        modal.className = 'email-config-modal';
+        modal.innerHTML = `
+          <div class="modal-content">
+            <div class="modal-icon">
+              <i class="fas fa-envelope-open-text"></i>
+            </div>
+            <h3>Notificações por Email Configuradas!</h3>
+            <p>Você receberá atualizações importantes sobre seus scans e análises no seu email cadastrado.</p>
+            <div class="modal-buttons">
+              <button class="btn-modal-primary" onclick="this.closest('.email-config-modal').remove()">
+                Entendido
+              </button>
+              <button class="btn-modal-secondary" onclick="settingsManager.showEmailPreferences()">
+                Preferências
+              </button>
+            </div>
+          </div>
+        `;
+        
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(modal);
+      }
+
+      showEmailPreferences() {
+        // Remover modal atual
+        document.querySelector('.email-config-modal')?.remove();
+        
+        // Mostrar opções de preferências de email
+        this.showSuccess('Abrindo preferências de email...');
+        
+        // Simular abertura de configurações detalhadas
+        setTimeout(() => {
+          alert('Preferências de email:\n\n✅ Relatórios semanais\n✅ Alertas de segurança\n✅ Novas funcionalidades\n\nVocê pode personalizar estas opções a qualquer momento.');
+        }, 500);
+      }
+    }
+
+    // Initialize settings manager
+    const settingsManager = new SettingsManager();
+    
+    // Call populateSettings after initialization
+    if (settingsManager.user) {
+      settingsManager.populateSettings();
+    }
+
+    // Add ripple effect to buttons
+    function addRippleEffect() {
+      const buttons = document.querySelectorAll('.btn-setting');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          // Create ripple effect
+          const ripple = document.createElement('span');
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+          
+          ripple.style.width = ripple.style.height = size + 'px';
+          ripple.style.left = x + 'px';
+          ripple.style.top = y + 'px';
+          ripple.classList.add('ripple');
+          
+          // Add ripple styles
+          ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+          `;
+          
+          // Add CSS animation if not exists
+          if (!document.querySelector('#ripple-styles')) {
+            const style = document.createElement('style');
+            style.id = 'ripple-styles';
+            style.textContent = `
+              @keyframes ripple-animation {
+                to {
+                  transform: scale(4);
+                  opacity: 0;
+                }
+              }
+            `;
+            document.head.appendChild(style);
+          }
+          
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
+    }
+
+    // Add haptic feedback simulation
+    function addHapticFeedback() {
+      const buttons = document.querySelectorAll('.btn-setting');
+      
+      buttons.forEach(button => {
+        button.addEventListener('mousedown', function() {
+          // Simulate haptic feedback with visual feedback
+          this.style.transform = 'scale(0.95)';
+        });
+        
+        button.addEventListener('mouseup', function() {
+          this.style.transform = '';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+          this.style.transform = '';
+        });
+      });
+    }
+
+    // Add keyboard support
+    function addKeyboardSupport() {
+      const buttons = document.querySelectorAll('.btn-setting');
+      
+      buttons.forEach(button => {
+        button.setAttribute('tabindex', '0');
+        
+        button.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    }
+
+    // Initialize all interactive effects
+    document.addEventListener('DOMContentLoaded', function() {
+      addRippleEffect();
+      addHapticFeedback();
+      addKeyboardSupport();
+    });
+
+    // Global functions for onclick handlers
+    function toggleSwitch(element) {
+      const setting = element.id;
+      
+      // Adicionar animação imediata ao elemento
+      element.style.transition = 'all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      
+      // Alternar classe active para animação da bola
+      if (element.classList.contains('active')) {
+        element.classList.remove('active');
+        // Adicionar efeito de clique para esquerda
+        element.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          element.style.transform = 'scale(1)';
+        }, 100);
+      } else {
+        element.classList.add('active');
+        // Adicionar efeito de clique para direita
+        element.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          element.style.transform = 'scale(1)';
+        }, 100);
+      }
+      
+      // Chamar o gerenciador de configurações
+      settingsManager.toggleSetting(setting);
+    }
+
+    function changeLanguage() {
+      const select = document.getElementById('languageSelect');
+      settingsManager.changeLanguage(select.value);
+    }
+
+    function clearHistory() {
+      settingsManager.clearHistory();
+    }
+
+    function exportData() {
+      settingsManager.exportData();
+    }
+
+    function logout() {
+      settingsManager.logout();
+    }
+
+    function saveSettings() {
+      settingsManager.saveSettings();
+    }
+
+    function clearCache() {
+      if (confirm('Tem certeza que deseja limpar o cache? Isso pode melhorar o desempenho do aplicativo.')) {
+        // Limpar localStorage não essencial
+        const keysToKeep = ['nutriscan_settings', 'nutriscan_token', 'nutriscan_user'];
+        const allKeys = Object.keys(localStorage);
+        
+        allKeys.forEach(key => {
+          if (!keysToKeep.includes(key)) {
+            localStorage.removeItem(key);
+          }
+        });
+
+        // Limpar sessionStorage
+        sessionStorage.clear();
+
+        settingsManager.showSuccess('Cache limpo com sucesso! O desempenho foi otimizado.');
+      }
+    }
+
+    function resetSettings() {
+      if (confirm('Tem certeza que deseja restaurar as configurações padrão? Todas as suas preferências serão perdidas.')) {
+        // Restaurar configurações padrão
+        const defaultSettings = {
+          emailNotifications: true,
+          pushNotifications: false,
+          monthlyReports: true,
+          saveHistory: true,
+          shareData: false,
+          language: 'pt-BR',
+          darkMode: false
+        };
+
+        localStorage.setItem('nutriscan_settings', JSON.stringify(defaultSettings));
+        
+        // Recarregar a página para aplicar as configurações
+        settingsManager.showSuccess('Configurações restauradas ao padrão! Recarregando...');
+        setTimeout(() => {
+          location.reload();
+        }, 2000);
+      }
+    }
+
+    function deleteAccount() {
+      const confirmation = prompt('Para excluir sua conta, digite "EXCLUIR" para confirmar esta ação irreversível:');
+      
+      if (confirmation === 'EXCLUIR') {
+        settingsManager.showSuccess('Solicitação de exclusão enviada! Você receberá um email com instruções finais.');
+        
+        // Simulação - em um app real, isso chamaria uma API
+        setTimeout(() => {
+          localStorage.clear();
+          safeRedirect('index.html');
+        }, 2000);
+      } else if (confirmation !== null) {
+        alert('Texto de confirmação incorreto. Ação cancelada.');
+      }
+    }
+  </script>
+  
+  <!-- Sistema de Sincronização de Usuário -->
+  <script src="user-sync.js"></script>
+  
+  <!-- Gerenciador de Funções dos Botões com Animações -->
+  <script src="settings-buttons.js"></script>
+</body>
+</html>

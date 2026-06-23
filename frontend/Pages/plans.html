@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Planos - Safe-Bite</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="upgrade-popup.css">
+  <link rel="stylesheet" href="auth-indicators.css">
+  <link rel="stylesheet" href="dark-mode.css">
+  <link rel="stylesheet" href="keyboard-shortcuts.css">
+  <link rel="stylesheet" href="actions-popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .plans-container {
+      max-width: 1100px;
+      margin: 6rem auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem
+    }
+
+    .plan-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--medium-gray);
+      box-shadow: var(--shadow-sm)
+    }
+
+    .plan-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .plan-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary-green)
+    }
+
+    .plan-features {
+      margin: 1rem 0 1.25rem;
+      padding-left: 1rem
+    }
+
+    .plan-features li {
+      margin: 0.5rem 0
+    }
+
+    .btn-choose {
+      padding: 0.8rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700
+    }
+
+    .btn-primary {
+      background: var(--primary-green);
+      color: white
+    }
+
+    .badge-popular {
+      background: var(--gradient-primary);
+      color: white;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      font-weight: 700
+    }
+
+    @media(max-width:800px) {
+      .plans-container {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="plans-container">
+    <title>Planos - Safe-Bite</title>
+    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+    <div class="plan-header">
+      <div>
+        <h2>Começar grátis</h2>
+        <div class="plan-price">Até 10 scans / mês</div>
+      </div>
+      <div>
+        <span class="badge-popular">Mais Popular</span>
+      </div>
+    </div>
+
+    <ul class="plan-features">
+      <li>Análises básicas</li>
+      <li>1 perfil de usuário</li>
+      <li>Histórico ilimitado</li>
+      <li>Alertas personalizados</li>
+    </ul>
+
+    <button class="btn-choose btn-primary" data-plan="free">Selecionar Grátis</button>
+    </section>
+
+    <section class="plan-card" id="plan-premium">
+      <div class="plan-header">
+        <div>
+          <h2>Premium</h2>
+          <div class="plan-price">R$ 9,90 / mês</div>
+        </div>
+      </div>
+
+      <ul class="plan-features">
+        <li>Scans ilimitados</li>
+        <li>Análises avançadas</li>
+        <li>Múltiplos perfis familiares</li>
+        <li>Histórico completo</li>
+        <li>Alertas personalizados</li>
+        <li>Relatórios mensais</li>
+      </ul>
+
+      <button class="btn-choose" data-plan="premium">Assinar Premium</button>
+    </section>
+  </main>
+
+  <script>
+    // Lógica simples: salvar escolha no localStorage e em nutriScanUser
+    function savePlanSelection(plan) {
+      const planData = { plan, date: new Date().toISOString() };
+      localStorage.setItem('nutriScanPlan', JSON.stringify(planData));
+
+      // Atualizar usuário local (se existir) com subscription
+      try {
+        const userStr = localStorage.getItem('nutriScanUser');
+        let user = userStr ? JSON.parse(userStr) : { name: 'Você' };
+        user.subscription = user.subscription || {};
+        if (plan === 'premium') {
+          user.subscription.plan = 'premium';
+          user.subscription.scansLimit = 999999;
+          user.subscription.scansUsed = user.subscription.scansUsed || 0;
+        } else {
+          user.subscription.plan = 'free';
+          user.subscription.scansLimit = 10;
+          user.subscription.scansUsed = user.subscription.scansUsed || 0;
+        }
+        localStorage.setItem('nutriScanUser', JSON.stringify(user));
+      } catch (e) {
+        console.warn('Não foi possível salvar plano no usuário local:', e);
+      }
+    }
+
+    document.querySelectorAll('.btn-choose').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const plan = btn.getAttribute('data-plan');
+        savePlanSelection(plan);
+        if (plan === 'premium') {
+          alert('Obrigado! Você selecionou o plano Premium. Em um sistema real, redirecionaríamos para pagamento.');
+        } else {
+          alert('Plano Grátis ativado. Aproveite!');
+        }
+      });
+    });
+
+    // Mostrar plano atual
+    const current = JSON.parse(localStorage.getItem('nutriScanPlan') || 'null');
+    if (current) {
+      const el = document.querySelector(`[data-plan="${current.plan}"]`);
+      if (el) el.textContent = current.plan === 'premium' ? 'Selecionado (Premium)' : 'Selecionado (Grátis)';
+    }
+  </script>
+</body>
+
+</html>

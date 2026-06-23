@@ -1,0 +1,2083 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Histórico - Safe-Bite</title>
+  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .history-container {
+      min-height: 100vh;
+      background: var(--light-gray);
+      display: flex;
+      flex-direction: column;
+      padding-top: 80px;
+    }
+
+    .history-header {
+      background: white;
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .history-nav {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--light-gray);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .nav-btn:hover {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+      transform: translateY(-1px);
+    }
+
+    .nav-btn.active {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-btn i {
+      font-size: 0.85rem;
+    }
+
+    .user-details {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .scan-filename {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 220px;
+    }
+
+    .btn-small.btn-edit {
+      background: transparent;
+      border: 1px dashed rgba(0,0,0,0.06);
+      color: #444;
+      padding: 6px;
+      border-radius: 6px;
+      margin-left: 6px;
+      cursor: pointer;
+    }
+    .btn-small.btn-edit i { color: #2c3e50; }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .history-main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .history-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .history-header-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .history-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .filter-group label {
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .filter-group select,
+    .filter-group input {
+      padding: 0.5rem 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: var(--primary-green);
+    }
+
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .history-list {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid var(--light-gray);
+      border-radius: 10px;
+      background: white;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .export-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .export-card {
+      background: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: 15px;
+    }
+
+    .export-card h3 {
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .export-card p {
+      margin-bottom: 1.5rem;
+      color: var(--text-light);
+    }
+
+    .export-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-export {
+      flex: 1;
+      padding: 1rem;
+      background: white;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-weight: 500;
+    }
+
+    .btn-export:hover {
+      background: var(--primary-green);
+      color: white;
+      border-color: var(--primary-green);
+      transform: translateY(-2px);
+    }
+
+    .btn-export i {
+      font-size: 1rem;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .setting-card {
+      background: var(--light-gray);
+      padding: 1.5rem;
+      border-radius: 15px;
+    }
+
+    .setting-card h3 {
+      margin-bottom: 1rem;
+      color: var(--text-dark);
+    }
+
+    .setting-option {
+      margin-bottom: 1rem;
+    }
+
+    .setting-option label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .setting-option select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      background: white;
+    }
+
+    .setting-option input[type="checkbox"] {
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-right: 0.5rem;
+    }
+
+    .scan-item {
+      background: white;
+      border: 1px solid var(--medium-gray);
+      border-radius: 15px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .scan-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .scan-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      background: var(--light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--primary-green);
+    }
+
+    .scan-details {
+      flex: 1;
+    }
+
+    .scan-product {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-dark);
+    }
+
+    .scan-brand {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .scan-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.8rem;
+      color: var(--text-light);
+    }
+
+    .scan-date {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .scan-risk {
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .scan-risk.safe {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .scan-risk.caution {
+      background: rgba(241, 196, 15, 0.1);
+      color: #f39c12;
+    }
+
+    .scan-risk.avoid {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    .scan-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-view {
+      background: var(--primary-green);
+      color: white;
+    }
+
+    .btn-view:hover {
+      background: #27ae60;
+    }
+
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .pagination button {
+      padding: 0.8rem 1.2rem;
+      border: 2px solid var(--medium-gray);
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .pagination button:hover:not(:disabled) {
+      border-color: var(--primary-green);
+      color: var(--primary-green);
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .pagination .current {
+      background: var(--primary-green);
+      color: white;
+      border-color: var(--primary-green);
+    }
+
+    .export-section {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .btn-export {
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    .btn-export:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Loading and Messages */
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--medium-gray);
+      border-top: 4px solid var(--primary-green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--text-light);
+      margin-bottom: 1rem;
+    }
+
+    .empty-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .empty-text {
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+    }
+
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .success-message {
+      background: rgba(46, 204, 113, 0.1);
+      color: var(--primary-green);
+    }
+
+    .error-message {
+      background: rgba(231, 76, 60, 0.1);
+      color: #e74c3c;
+    }
+
+    @media (max-width: 768px) {
+      .history-main {
+        padding: 1rem;
+      }
+
+      .history-card {
+        padding: 1.5rem;
+      }
+
+      .history-header-card {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filters {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        justify-content: space-between;
+      }
+
+      .stats-overview {
+        grid-template-columns: 1fr;
+      }
+
+      .scan-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .scan-image {
+        width: 60px;
+        height: 60px;
+      }
+
+      .scan-actions {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="history-container">
+    <!-- Header -->
+    <header class="history-header">
+      <a class="history-logo" href="index.html" title="Voltar para Início">
+        <i class="fas fa-leaf"></i>
+        <span>Safe-Bite</span>
+      </a>
+      <nav class="history-nav">
+        <button class="nav-btn active" onclick="showSection('history')" data-section="history">
+          <i class="fas fa-history"></i>
+          <span>Histórico</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('stats')" data-section="stats">
+          <i class="fas fa-chart-bar"></i>
+          <span>Estatísticas</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('export')" data-section="export">
+          <i class="fas fa-download"></i>
+          <span>Exportar</span>
+        </button>
+        <button class="nav-btn"  onclick="window.location.href='dashboard.html'">
+          <i class="fas fa-cog"></i>
+          <span>Configurações</span>
+        </button>
+      </nav>
+      <div class="user-info">
+        <div class="user-avatar" id="userAvatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="user-details">
+          <span id="userName">Carregando...</span>
+          <button class="btn-secondary" onclick="goToDashboard()" title="Ir para Dashboard">
+            <i class="fas fa-home"></i>
+          </button>
+          <button class="btn-secondary" onclick="goToScanner()" title="Novo Scan">
+            <i class="fas fa-camera"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="history-main">
+      <div id="historyCard">
+      <!-- Loading State -->
+      <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+      </div>
+
+      <!-- History Section -->
+      <div class="history-card" id="historySection" style="display: block;">
+        <!-- Header with Filters -->
+        <div class="history-header-card">
+          <h1 class="history-title">
+            <i class="fas fa-history"></i>
+            Histórico de Scans
+          </h1>
+          <div class="filters">
+            <div class="filter-group">
+              <label for="categoryFilter">Categoria:</label>
+              <select id="categoryFilter" onchange="filterHistory()">
+                <option value="">Todas</option>
+                <option value="biscoitos">Biscoitos</option>
+                <option value="chocolates">Chocolates</option>
+                <option value="doces">Doces</option>
+                <option value="salgados">Salgados</option>
+                <option value="bebidas">Bebidas</option>
+                <option value="laticinios">Laticínios</option>
+                <option value="carnes">Carnes</option>
+                <option value="frutas">Frutas</option>
+                <option value="vegetais">Vegetais</option>
+                <option value="graos">Grãos</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="riskFilter">Risco:</label>
+              <select id="riskFilter" onchange="filterHistory()">
+                <option value="">Todos</option>
+                <option value="safe">Seguro</option>
+                <option value="caution">Cuidado</option>
+                <option value="avoid">Evitar</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="dateFilter">Período:</label>
+              <select id="dateFilter" onchange="filterHistory()">
+                <option value="">Todos</option>
+                <option value="7">Últimos 7 dias</option>
+                <option value="30">Últimos 30 dias</option>
+                <option value="90">Últimos 90 dias</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- Stats Overview -->
+        <div class="stats-overview" id="statsOverview">
+          <div class="stat-card">
+            <div class="stat-value" id="totalScans">0</div>
+            <div class="stat-label">Total de Scans</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="safeScans">0</div>
+            <div class="stat-label">Seguros</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="warningScans">0</div>
+            <div class="stat-label">Com Cuidado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="dangerScans">0</div>
+            <div class="stat-label">Evitar</div>
+          </div>
+        </div>
+
+        <!-- History List -->
+        <div class="history-list" id="historyList">
+          <!-- Scan items will be populated here -->
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="history-card" id="statsSection" style="display: none;">
+        <div class="history-header-card">
+          <h1 class="history-title">
+            <i class="fas fa-chart-bar"></i>
+            Estatísticas Detalhadas
+          </h1>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+          <!-- Detailed stats will be populated here -->
+        </div>
+      </div>
+
+      <!-- Export Section -->
+      <div class="history-card" id="exportSection" style="display: none;">
+        <div class="history-header-card">
+          <h1 class="history-title">
+            <i class="fas fa-download"></i>
+            Exportar Dados
+          </h1>
+        </div>
+        
+        <div class="export-options">
+          <div class="export-card">
+            <h3>Exportar Histórico</h3>
+            <p>Exporte seu histórico de scans em diferentes formatos</p>
+            <div class="export-buttons">
+              <button class="btn-export" onclick="exportToCSV()" data-format="csv">
+                <i class="fas fa-file-csv"></i>
+                CSV
+              </button>
+              <button class="btn-export" onclick="exportToJSON()" data-format="json">
+                <i class="fas fa-file-code"></i>
+                JSON
+              </button>
+              <button class="btn-export" onclick="exportToPDF()" data-format="pdf">
+                <i class="fas fa-file-pdf"></i>
+                PDF
+              </button>
+            </div>
+          </div>
+          
+          <div class="export-card">
+            <h3>Exportar Estatísticas</h3>
+            <p>Exporte suas estatísticas detalhadas</p>
+            <div class="export-buttons">
+              <button class="btn-export" onclick="exportStatsToCSV()" data-format="csv">
+                <i class="fas fa-file-csv"></i>
+                CSV
+              </button>
+              <button class="btn-export" onclick="exportStatsToJSON()" data-format="json">
+                <i class="fas fa-file-code"></i>
+                JSON
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="history-card" id="settingsSection" style="display: none;">
+        <div class="history-header-card">
+          <h1 class="history-title">
+            <i class="fas fa-cog"></i>
+            Configurações do Histórico
+          </h1>
+        </div>
+        
+        <div class="settings-grid">
+          <div class="setting-card">
+            <h3>Exibição</h3>
+            <div class="setting-option">
+              <label for="itemsPerPage">Itens por página:</label>
+              <select id="itemsPerPage" onchange="updateSettings()">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="setting-card">
+            <h3>Ordenação</h3>
+            <div class="setting-option">
+              <label for="sortBy">Ordenar por:</label>
+              <select id="sortBy" onchange="updateSettings()">
+                <option value="date">Data</option>
+                <option value="product">Produto</option>
+                <option value="risk">Risco</option>
+                <option value="confidence">Confiança</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="setting-card">
+            <h3>Filtros</h3>
+            <div class="setting-option">
+              <label>
+                <input type="checkbox" id="autoRefresh" onchange="updateSettings()">
+                <span>Atualizar automaticamente</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+        <!-- Messages -->
+        <div id="successMessage" class="success-message" style="display: none;"></div>
+        <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+        <!-- Stats Overview -->
+        <!-- <div class="stats-overview" id="statsOverview">
+          <div class="stat-card">
+            <div class="stat-value" id="totalScans">0</div>
+            <div class="stat-label">Total de Scans</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="safeScans">0</div>
+            <div class="stat-label">Seguros</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="warningScans">0</div>
+            <div class="stat-label">Com Cuidado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="dangerScans">0</div>
+            <div class="stat-label">Evitar</div>
+          </div>
+        </div> -->
+
+        <!-- History List -->
+        <div class="history-list" id="historyList">
+          <!-- Scan items will be populated here -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+          <!-- Pagination will be populated here -->
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+          <button class="btn-export" onclick="exportHistory()">
+            <i class="fas fa-download"></i>
+            Exportar Histórico
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">
+          <i class="fas fa-history"></i>
+        </div>
+        <h2 class="empty-title">Nenhum scan encontrado</h2>
+        <p class="empty-text">
+          Comece a usar o Safe-Bite para analisar produtos e proteger sua saúde!
+        </p>
+        <button class="btn-primary" onclick="goToScanner()">
+          <i class="fas fa-camera"></i>
+          Fazer Primeiro Scan
+        </button>
+      </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <!-- Carregar dependências essenciais apenas uma vez -->
+  <script src="api-config.js"></script>
+  <script>
+    // History JavaScript
+    class NutriScanHistory {
+      constructor() {
+        this.token = localStorage.getItem('nutriScanToken');
+        this.user = null;
+        this.scans = [];
+        this.filteredScans = [];
+        this.currentPage = 1;
+        this.pageSize = 10;
+        this.totalPages = 1;
+        this.filters = {
+          category: '',
+          risk: '',
+          date: ''
+        };
+        this.init();
+      }
+
+      async init() {
+        if (!this.token) {
+          APIUtils.redirectToLogin();
+          return;
+        }
+
+        await this.loadUserData();
+        await this.loadHistory();
+        // Ouvir atualizações locais (quando análises são feitas ou excluídas em outra aba)
+        window.addEventListener('storage', (e) => {
+          if (!e.key) return;
+          if (e.key === 'allergyAnalysisLastUpdate' || e.key === 'allergyAnalysisLast' || e.key === 'allergyAnalysisDeleted') {
+            // Recarregar histórico local para refletir mudanças
+            this.loadHistory().catch(() => {});
+          }
+        });
+      }
+
+      async loadUserData() {
+        try {
+          const response = await api.getCurrentUser();
+          this.user = response.user;
+          this.updateUserInfo();
+        } catch (error) {
+          console.error('Erro ao carregar usuário:', error);
+          APIUtils.redirectToLogin();
+        }
+      }
+
+      updateUserInfo() {
+        if (!this.user) return;
+
+        const initials = this.user.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        document.getElementById('userAvatar').textContent = initials;
+        document.getElementById('userName').textContent = this.user.name;
+      }
+
+      async loadHistory() {
+        try {
+          this.showLoading(true);
+          
+          // Primeiro tentar obter do servidor
+          let scans = [];
+          try {
+            const response = await api.getScans(this.currentPage, this.pageSize);
+            scans = response.scans || [];
+            this.totalPages = response.pages || 1;
+          } catch (err) {
+            // Se API falhar, carregar do armazenamento local
+            const localScans = JSON.parse(localStorage.getItem('nutriScanScans') || '[]');
+            scans = localScans.map(s => ({
+              _id: s.id || s._id || Date.now().toString(),
+              product: { name: s.product || 'Imagem analisada', brand: s.brand || '' },
+              createdAt: s.date || s.createdAt || new Date().toISOString(),
+              analysis: { overallRisk: s.status === 'safe' ? 'safe' : s.status === 'warning' ? 'caution' : 'avoid' },
+              image: s.image || ''
+            }));
+            this.totalPages = 1;
+          }
+
+          // Também mesclar entradas detalhadas de allergyAnalysisHistory (se existirem)
+          try {
+            const detailed = JSON.parse(localStorage.getItem('allergyAnalysisHistory') || '[]');
+            const mapped = detailed.map(d => ({
+              _id: d.id || Date.now().toString(),
+              product: { name: d.productName || 'Imagem analisada', brand: d.productBrand || '' },
+              createdAt: d.timestamp || d.date || new Date().toISOString(),
+              analysis: { overallRisk: d.overallRisk || d.analysis?.overallRisk || 'safe' },
+              raw: d,
+              image: d.image || ''
+            }));
+            // colocar as entradas detalhadas à frente
+            scans = [...mapped, ...scans];
+          } catch (e) {
+            // ignore
+          }
+
+          this.scans = scans;
+          this.filteredScans = [...this.scans];
+          
+          this.applyFilters();
+          this.renderHistory();
+          this.renderPagination();
+          this.updateStats();
+          
+          this.showLoading(false);
+        } catch (error) {
+          console.error('Erro ao carregar histórico:', error);
+          this.showError(APIUtils.handleError(error));
+          this.showLoading(false);
+        }
+      }
+
+      filterHistory() {
+        this.filters.category = document.getElementById('categoryFilter').value;
+        this.filters.risk = document.getElementById('riskFilter').value;
+        this.filters.date = document.getElementById('dateFilter').value;
+        
+        this.applyFilters();
+        this.currentPage = 1;
+        this.renderHistory();
+        this.renderPagination();
+      }
+
+      applyFilters() {
+        this.filteredScans = this.scans.filter(scan => {
+          // Category filter
+          if (this.filters.category && scan.product.category !== this.filters.category) {
+            return false;
+          }
+          
+          // Risk filter
+          if (this.filters.risk && scan.analysis.overallRisk !== this.filters.risk) {
+            return false;
+          }
+          
+          // Date filter
+          if (this.filters.date) {
+            const scanDate = new Date(scan.createdAt);
+            const daysAgo = Math.floor((Date.now() - scanDate.getTime()) / (1000 * 60 * 60 * 24));
+            
+            if (daysAgo > parseInt(this.filters.date)) {
+              return false;
+            }
+          }
+          
+          return true;
+        });
+      }
+
+      renderHistory() {
+        const container = document.getElementById('historyList');
+        const emptyState = document.getElementById('emptyState');
+        const historyCard = document.getElementById('historyCard');
+        
+        if (this.filteredScans.length === 0) {
+          container.style.display = 'none';
+          emptyState.style.display = 'block';
+          historyCard.style.display = 'none';
+          return;
+        }
+        
+        container.style.display = 'flex';
+        emptyState.style.display = 'none';
+        historyCard.style.display = 'block';
+        
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        const pageScans = this.filteredScans.slice(startIndex, endIndex);
+        
+        container.innerHTML = pageScans.map(scan => this.renderScanItem(scan)).join('');
+      }
+
+      renderScanItem(scan) {
+        const riskClass = scan.analysis.overallRisk;
+        const riskIcon = riskClass === 'safe' ? 'check' : 
+                        riskClass === 'caution' ? 'exclamation' : 'times';
+        const imgSrc = (scan.raw && scan.raw.image) ? scan.raw.image : (scan.image || '');
+        const imageHTML = imgSrc ? `<img src="${imgSrc}" alt="scan" style="width:80px;height:80px;border-radius:10px;object-fit:cover;"/>` : `<i class="fas fa-${riskIcon}"></i>`;
+
+        // tentar obter nome do arquivo de múltiplas possíveis propriedades
+        let fileName = '';
+        try {
+          fileName = scan.product?.image?.originalName || scan.product?.image?.publicId || scan.raw?.fileName || scan.raw?.filename || scan.filename || '';
+          if (!fileName && scan.product?.image?.url) {
+            const parts = scan.product.image.url.split('/');
+            fileName = parts[parts.length - 1].split('?')[0];
+          }
+        } catch (e) {
+          fileName = '';
+        }
+
+        const fileHTML = fileName ? `<div class="scan-filename" title="Nome do arquivo">${fileName}</div>` : '';
+
+        return `
+          <div class="scan-item" data-scan-id="${scan._id}" onclick="viewScan('${scan._id}')">
+            <div class="scan-image">
+              ${imageHTML}
+            </div>
+            <div class="scan-details">
+              <div class="scan-product">
+                <span class="scan-product-name" id="productName-${scan._id}">${scan.product?.name || scan.product || 'Imagem analisada'}</span>
+                <div class="inline-edit" id="inlineEdit-${scan._id}" style="display:none; margin-top:6px;">
+                  <input type="text" id="inlineInput-${scan._id}" value="${(scan.product?.name || scan.product || 'Imagem analisada').replace(/\"/g,'&quot;')}" style="padding:6px 8px;border-radius:6px;border:1px solid var(--medium-gray);width:220px;" />
+                  <button class="btn-small" onclick="event.stopPropagation(); saveInlineEdit('${scan._id}')" title="Salvar" style="margin-left:6px;background:var(--primary-green);color:white;border:none;">OK</button>
+                  <button class="btn-small" onclick="event.stopPropagation(); cancelInlineEdit('${scan._id}')" title="Cancelar" style="margin-left:6px;background:transparent;border:1px solid var(--medium-gray);">Cancelar</button>
+                </div>
+              </div>
+              ${fileHTML}
+              <div class="scan-brand">${scan.product?.brand || ''}</div>
+              <div class="scan-meta">
+                <div class="scan-date">
+                  <i class="fas fa-calendar"></i>
+                  ${APIUtils.formatDate(scan.createdAt)}
+                </div>
+                <div class="scan-date">
+                  <i class="fas fa-clock"></i>
+                  ${APIUtils.formatTime(scan.createdAt)}
+                </div>
+              </div>
+            </div>
+            <div class="scan-actions">
+              <span class="scan-risk ${riskClass}">
+                ${riskClass === 'safe' ? 'Seguro' : 
+                  riskClass === 'caution' ? 'Cuidado' : 'Evitar'}
+              </span>
+              <button class="btn-small btn-view" onclick="event.stopPropagation(); viewScan('${scan._id}')">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn-small btn-edit" title="Renomear" onclick="event.stopPropagation(); startInlineEdit('${scan._id}')">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteScan('${scan._id}')">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      renderPagination() {
+        const container = document.getElementById('pagination');
+        
+        let paginationHTML = '';
+        
+        // Previous button
+        paginationHTML += `
+          <button ${this.currentPage === 1 ? 'disabled' : ''} onclick="changePage(${this.currentPage - 1})">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+        `;
+        
+        // Page numbers
+        for (let i = 1; i <= this.totalPages; i++) {
+          if (i === this.currentPage) {
+            paginationHTML += `<button class="current">${i}</button>`;
+          } else if (Math.abs(i - this.currentPage) <= 2) {
+            paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
+          }
+        }
+        
+        // Next button
+        paginationHTML += `
+          <button ${this.currentPage === this.totalPages ? 'disabled' : ''} onclick="changePage(${this.currentPage + 1})">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        `;
+        
+        container.innerHTML = paginationHTML;
+      }
+
+      updateStats() {
+        const totalScans = this.filteredScans.length;
+        const safeScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'safe').length;
+        const warningScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'caution').length;
+        const dangerScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'avoid').length;
+        
+        document.getElementById('totalScans').textContent = totalScans;
+        document.getElementById('safeScans').textContent = safeScans;
+        document.getElementById('warningScans').textContent = warningScans;
+        document.getElementById('dangerScans').textContent = dangerScans;
+      }
+
+      async viewScan(scanId) {
+        try {
+          // Primeiro, procurar no histórico detalhado local
+          const detailed = JSON.parse(localStorage.getItem('allergyAnalysisHistory') || '[]');
+          const foundDetail = detailed.find(d => String(d.id) === String(scanId));
+          if (foundDetail) {
+            this.openScanPopup(foundDetail);
+            return;
+          }
+
+          // Procurar em nutriScanScans simplificados
+          const localScans = JSON.parse(localStorage.getItem('nutriScanScans') || '[]');
+          const foundSimple = localScans.find(s => String(s.id) === String(scanId));
+          if (foundSimple) {
+            this.openScanPopup(foundSimple);
+            return;
+          }
+
+          // Fallback: pedir ao servidor
+          const scan = await api.getScan(scanId);
+          if (scan) {
+            this.openScanPopup(scan);
+          } else {
+            this.showError('Detalhes do scan não encontrados.');
+          }
+        } catch (error) {
+          console.error('Erro ao carregar scan:', error);
+          this.showError('Erro ao carregar detalhes do scan.');
+        }
+      }
+
+      openScanPopup(scan) {
+        // Criar uma nova janela com conteúdo do scan (imagem + detalhes)
+        const image = scan.image || (scan.raw && scan.raw.image) || '';
+        const productName = (scan.product && scan.product.name) || scan.productName || scan.product || 'Imagem analisada';
+        const brand = (scan.product && scan.product.brand) || scan.productBrand || scan.brand || '';
+        const risk = (scan.analysis && scan.analysis.overallRisk) || scan.overallRisk || scan.status || 'safe';
+        const detailsHtml = `
+          <div style="font-family:Inter, Arial, sans-serif; padding:20px; max-width:800px;">
+            <h2>${productName}</h2>
+            <p style="color:#666">${brand}</p>
+            ${image ? `<img src="${image}" style="max-width:100%;height:auto;border-radius:12px;margin:10px 0;"/>` : ''}
+            <p><strong>Risco:</strong> ${risk}</p>
+            <p><strong>Data:</strong> ${APIUtils.formatDate(scan.createdAt || scan.date || new Date().toISOString())} ${APIUtils.formatTime(scan.createdAt || scan.date || new Date().toISOString())}</p>
+            <pre style="background:#f6f6f6;padding:10px;border-radius:8px;overflow:auto;">${JSON.stringify(scan.raw || scan, null, 2)}</pre>
+          </div>
+        `;
+
+        const w = window.open('', '_blank', 'width=900,height=700,scrollbars=yes');
+        if (w) {
+          w.document.write(`<!doctype html><html><head><title>Detalhes do Scan</title></head><body>${detailsHtml}</body></html>`);
+          w.document.close();
+        } else {
+          alert('Não foi possível abrir janela de detalhes. Bloqueador de popups pode estar ativo.');
+        }
+      }
+
+      async deleteScan(scanId) {
+        if (!confirm('Tem certeza que deseja excluir este scan?')) {
+          return;
+        }
+
+        // Remover localmente e notificar outras abas; tentar também remover no servidor
+        try {
+          // Remover de nutriScanScans local
+          try {
+            const scans = JSON.parse(localStorage.getItem('nutriScanScans') || '[]');
+            const filtered = scans.filter(s => String(s.id) !== String(scanId));
+            localStorage.setItem('nutriScanScans', JSON.stringify(filtered));
+          } catch (e) {
+            console.warn('Falha ao remover scan localmente:', e);
+          }
+
+          // Remover de allergyAnalysisHistory local
+          try {
+            const history = JSON.parse(localStorage.getItem('allergyAnalysisHistory') || '[]');
+            const filteredH = history.filter(h => String(h.id) !== String(scanId));
+            localStorage.setItem('allergyAnalysisHistory', JSON.stringify(filteredH));
+          } catch (e) {
+            console.warn('Falha ao remover análise detalhada localmente:', e);
+          }
+
+          // Sinalizar exclusão para outras abas
+          try {
+            localStorage.setItem('allergyAnalysisDeleted', JSON.stringify({ id: scanId, ts: Date.now() }));
+          } catch (e) {
+            console.warn('Falha ao sinalizar exclusão em localStorage:', e);
+          }
+
+          // Tentar remover no servidor (se disponível)
+          try {
+            await api.delete(`/scans/${scanId}`);
+          } catch (err) {
+            console.warn('Falha ao remover no servidor (pode estar offline):', err);
+          }
+
+          this.showSuccess('Scan excluído com sucesso!');
+          await this.loadHistory();
+        } catch (error) {
+          console.error('Erro ao excluir scan:', error);
+          this.showError('Erro ao excluir scan. Tente novamente.');
+        }
+      }
+
+      async renameScan(scanId, newName) {
+        try {
+          // localizar scan localmente
+          const scan = this.scans.find(s => String(s._id || s.id) === String(scanId));
+          const currentName = scan?.product?.name || scan?.productName || scan?.product || '';
+          if (!newName) {
+            // fallback para prompt (compatibilidade)
+            const entered = prompt('Digite o novo nome do produto:', currentName);
+            if (!entered || entered.trim() === '' || entered === currentName) return;
+            newName = entered;
+          }
+
+          // tentar atualizar no servidor
+          let updated = false;
+          try {
+            await api.patch(`/scans/${scanId}`, { product: { name: newName } });
+            updated = true;
+          } catch (err) {
+            console.warn('Falha ao atualizar no servidor (offline?):', err);
+          }
+
+          // atualizar localmente (fallback)
+          try {
+            // nutriScanScans
+            const simple = JSON.parse(localStorage.getItem('nutriScanScans') || '[]');
+            const updatedSimple = simple.map(s => {
+              if (String(s.id) === String(scanId) || String(s._id) === String(scanId)) {
+                if (s.product) s.product.name = newName;
+                else s.productName = newName;
+              }
+              return s;
+            });
+            localStorage.setItem('nutriScanScans', JSON.stringify(updatedSimple));
+
+            // allergyAnalysisHistory
+            const history = JSON.parse(localStorage.getItem('allergyAnalysisHistory') || '[]');
+            const updatedHistory = history.map(h => {
+              if (String(h.id) === String(scanId) || String(h._id) === String(scanId)) {
+                if (h.product) h.product.name = newName;
+                else h.productName = newName;
+              }
+              return h;
+            });
+            localStorage.setItem('allergyAnalysisHistory', JSON.stringify(updatedHistory));
+          } catch (e) {
+            console.warn('Falha ao atualizar armazenamento local:', e);
+          }
+
+          this.showSuccess('Nome do produto atualizado.');
+          await this.loadHistory();
+        } catch (error) {
+          console.error('Erro ao renomear scan:', error);
+          this.showError('Erro ao renomear. Tente novamente.');
+        }
+      }
+
+      changePage(page) {
+        if (page < 1 || page > this.totalPages) return;
+        
+        this.currentPage = page;
+        this.renderHistory();
+        this.renderPagination();
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      async exportHistory() {
+        try {
+          const allScans = [];
+          let page = 1;
+          let hasMore = true;
+          
+          // Get all scans
+          while (hasMore) {
+            const response = await api.getScans(page, 100);
+            allScans.push(...response.scans);
+            hasMore = page < response.pages;
+            page++;
+          }
+          
+          const exportData = {
+            user: this.user,
+            scans: allScans,
+            exportDate: new Date().toISOString(),
+            stats: {
+              total: allScans.length,
+              safe: allScans.filter(s => s.analysis.overallRisk === 'safe').length,
+              caution: allScans.filter(s => s.analysis.overallRisk === 'caution').length,
+              avoid: allScans.filter(s => s.analysis.overallRisk === 'avoid').length
+            }
+          };
+          
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `Safe-Bite-history-${new Date().toISOString().split('T')[0]}.json`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          this.showSuccess('Histórico exportado com sucesso!');
+        } catch (error) {
+          console.error('Erro ao exportar histórico:', error);
+          this.showError('Erro ao exportar histórico. Tente novamente.');
+        }
+      }
+
+      showLoading(show) {
+        document.getElementById('loadingState').style.display = show ? 'flex' : 'none';
+        document.getElementById('historyCard').style.display = show ? 'none' : 'block';
+        document.getElementById('emptyState').style.display = 'none';
+      }
+
+      showSuccess(message) {
+        const element = document.getElementById('successMessage');
+        element.textContent = message;
+        element.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+        
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 5000);
+      }
+
+      showError(message) {
+        const element = document.getElementById('errorMessage');
+        element.textContent = message;
+        element.style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+        
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 5000);
+      }
+
+      goToDashboard() {
+        APIUtils.redirectToDashboard();
+      }
+
+      goToScanner() {
+        safeRedirect('allergy-scanner.html');
+      }
+    }
+
+    // Global functions
+    function goToDashboard() {
+      APIUtils.redirectToDashboard();
+    }
+
+    function goToScanner() {
+      safeRedirect('allergy-scanner.html');
+    }
+
+    function filterHistory() {
+      window.historyInstance.filterHistory();
+    }
+
+    function changePage(page) {
+      window.historyInstance.changePage(page);
+    }
+
+    function viewScan(scanId) {
+      window.historyInstance.viewScan(scanId);
+    }
+
+    function deleteScan(scanId) {
+      window.historyInstance.deleteScan(scanId);
+    }
+
+    function exportHistory() {
+      window.historyInstance.exportHistory();
+    }
+
+    function editScanName(scanId) {
+      // Mantido por compatibilidade: iniciar edição inline
+      startInlineEdit(scanId);
+    }
+
+    // Inline edit helpers
+    function startInlineEdit(scanId) {
+      const productSpan = document.getElementById(`productName-${scanId}`);
+      const inline = document.getElementById(`inlineEdit-${scanId}`);
+      const input = document.getElementById(`inlineInput-${scanId}`);
+      if (!productSpan || !inline || !input) return;
+
+      // esconder spans e mostrar input
+      productSpan.style.display = 'none';
+      inline.style.display = 'block';
+      input.focus();
+
+      // capturar Enter/Escape
+      const keyHandler = (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          saveInlineEdit(scanId);
+        } else if (e.key === 'Escape') {
+          cancelInlineEdit(scanId);
+        }
+      };
+
+      input.addEventListener('keydown', keyHandler);
+      // armazenar para remoção posterior
+      inline._keyHandler = keyHandler;
+    }
+
+    async function saveInlineEdit(scanId) {
+      const productSpan = document.getElementById(`productName-${scanId}`);
+      const inline = document.getElementById(`inlineEdit-${scanId}`);
+      const input = document.getElementById(`inlineInput-${scanId}`);
+      if (!productSpan || !inline || !input) return;
+
+      const newName = input.value && input.value.trim();
+      if (!newName) {
+        cancelInlineEdit(scanId);
+        return;
+      }
+
+      try {
+        await window.historyInstance.renameScan(scanId, newName);
+        // atualizar UI localmente imediatamente
+        productSpan.textContent = newName;
+        productSpan.style.display = '';
+        inline.style.display = 'none';
+      } catch (e) {
+        console.error('Falha ao salvar nome inline:', e);
+        window.historyInstance.showError('Erro ao salvar o novo nome.');
+      } finally {
+        // remover listener
+        if (inline._keyHandler) input.removeEventListener('keydown', inline._keyHandler);
+        delete inline._keyHandler;
+      }
+    }
+
+    function cancelInlineEdit(scanId) {
+      const productSpan = document.getElementById(`productName-${scanId}`);
+      const inline = document.getElementById(`inlineEdit-${scanId}`);
+      const input = document.getElementById(`inlineInput-${scanId}`);
+      if (!productSpan || !inline || !input) return;
+
+      // restaurar valor original do span
+      productSpan.style.display = '';
+      inline.style.display = 'none';
+      if (inline._keyHandler) input.removeEventListener('keydown', inline._keyHandler);
+      delete inline._keyHandler;
+    }
+
+    // Initialize history when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      window.historyInstance = new NutriScanHistory();
+    });
+  </script>
+  
+  <!-- Scripts necessários (únicos) -->
+  <script src="login-system.js"></script>
+  <script src="file-checker.js"></script>
+  <script src="user-sync.js"></script>
+  <script>
+    // Histórico Controller
+    class HistoryController {
+      constructor() {
+        this.currentSection = 'history';
+        this.scans = [];
+        this.filteredScans = [];
+        this.settings = {
+          itemsPerPage: 10,
+          sortBy: 'date',
+          autoRefresh: false
+        };
+        this.init();
+      }
+
+      init() {
+        this.loadUserData();
+        this.loadScans();
+        this.setupEventListeners();
+        this.updateUI();
+      }
+
+      loadUserData() {
+        const userStr = localStorage.getItem('nutriScanUser');
+        if (userStr) {
+          this.user = JSON.parse(userStr);
+          this.updateUserInfo();
+        }
+
+        // Carregar configurações salvas
+        const settingsStr = localStorage.getItem('historySettings');
+        if (settingsStr) {
+          this.settings = { ...this.settings, ...JSON.parse(settingsStr) };
+        }
+      }
+
+      loadScans() {
+        const scansStr = localStorage.getItem('nutriScanScans');
+        if (scansStr) {
+          this.scans = JSON.parse(scansStr);
+        } else {
+          // Criar dados simulados para demonstração
+          this.scans = [
+            {
+              id: 1,
+              product: 'NutriSafe Cereal Integral',
+              brand: 'NutriBrand',
+              category: 'graos',
+              date: new Date(Date.now() - 86400000).toISOString(),
+              status: 'safe',
+              confidence: 95,
+              analysis: {
+                overallRisk: 'safe',
+                allergens: [],
+                additives: ['B12', 'Ferro'],
+                preservatives: []
+              }
+            },
+            {
+              id: 2,
+              product: 'Barra Proteína Chocolate',
+              brand: 'FitPro',
+              category: 'laticinios',
+              date: new Date(Date.now() - 172800000).toISOString(),
+              status: 'caution',
+              confidence: 87,
+              analysis: {
+                overallRisk: 'caution',
+                allergens: ['Soja', 'Leite'],
+                additives: ['Emulsificante'],
+                preservatives: ['Conservante']
+              }
+            },
+            {
+              id: 3,
+              product: 'Biscoito Recheado',
+              brand: 'DoceBom',
+              category: 'biscoitos',
+              date: new Date(Date.now() - 259200000).toISOString(),
+              status: 'avoid',
+              confidence: 92,
+              analysis: {
+                overallRisk: 'avoid',
+                allergens: ['Glúten', 'Amendoim'],
+                additives: ['Corante Artificial'],
+                preservatives: ['BHA', 'BHT']
+              }
+            }
+          ];
+          localStorage.setItem('nutriScanScans', JSON.stringify(this.scans));
+        }
+        
+        this.filteredScans = [...this.scans];
+      }
+
+      setupEventListeners() {
+        // Configurar event listeners para os filtros
+        const categoryFilter = document.getElementById('categoryFilter');
+        const riskFilter = document.getElementById('riskFilter');
+        const dateFilter = document.getElementById('dateFilter');
+        
+        if (categoryFilter) {
+          categoryFilter.addEventListener('change', () => this.filterHistory());
+        }
+        if (riskFilter) {
+          riskFilter.addEventListener('change', () => this.filterHistory());
+        }
+        if (dateFilter) {
+          dateFilter.addEventListener('change', () => this.filterHistory());
+        }
+      }
+
+      updateUserInfo() {
+        const userNameEl = document.getElementById('userName');
+        const userAvatarEl = document.getElementById('userAvatar');
+        
+        if (userNameEl && this.user) {
+          userNameEl.textContent = this.user.name || 'Usuário';
+        }
+        
+        if (userAvatarEl && this.user) {
+          userAvatarEl.textContent = this.user.name ? this.user.name.charAt(0).toUpperCase() : 'U';
+        }
+      }
+
+      showSection(sectionName) {
+        // Esconder todas as seções
+        document.getElementById('historySection').style.display = 'none';
+        document.getElementById('statsSection').style.display = 'none';
+        document.getElementById('exportSection').style.display = 'none';
+        document.getElementById('settingsSection').style.display = 'none';
+        
+        // Mostrar seção selecionada
+        const targetSection = document.getElementById(sectionName + 'Section');
+        if (targetSection) {
+          targetSection.style.display = 'block';
+        }
+        
+        // Atualizar botões de navegação
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        const activeBtn = document.querySelector(`[data-section="${sectionName}"]`);
+        if (activeBtn) {
+          activeBtn.classList.add('active');
+        }
+        
+        this.currentSection = sectionName;
+        this.updateSectionContent();
+      }
+
+      updateSectionContent() {
+        switch (this.currentSection) {
+          case 'history':
+            this.renderHistoryList();
+            break;
+          case 'stats':
+            this.renderStats();
+            break;
+          case 'export':
+            this.renderExportOptions();
+            break;
+          case 'settings':
+            this.renderSettings();
+            break;
+        }
+      }
+
+      filterHistory() {
+        const categoryFilter = document.getElementById('categoryFilter').value;
+        const riskFilter = document.getElementById('riskFilter').value;
+        const dateFilter = document.getElementById('dateFilter').value;
+        
+        this.filteredScans = this.scans.filter(scan => {
+          // Filtro por categoria
+          if (categoryFilter && scan.category !== categoryFilter) {
+            return false;
+          }
+          
+          // Filtro por risco
+          if (riskFilter && scan.status !== riskFilter) {
+            return false;
+          }
+          
+          // Filtro por data
+          if (dateFilter) {
+            const scanDate = new Date(scan.date);
+            const now = new Date();
+            const daysDiff = Math.floor((now - scanDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysDiff > parseInt(dateFilter)) {
+              return false;
+            }
+          }
+          
+          return true;
+        });
+        
+        this.renderHistoryList();
+      }
+
+      renderHistoryList() {
+        const historyList = document.getElementById('historyList');
+        if (!historyList) return;
+        
+        if (this.filteredScans.length === 0) {
+          historyList.innerHTML = `
+            <div style="text-align: center; padding: 3rem; color: var(--text-light);">
+              <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+              <p>Nenhum scan encontrado</p>
+              <p style="font-size: 0.9rem; margin-top: 0.5rem;">Tente fazer um novo scan para ver resultados aqui.</p>
+            </div>
+          `;
+          return;
+        }
+        
+        historyList.innerHTML = this.filteredScans.map(scan => `
+          <div class="scan-item" onclick="viewScanDetails(${scan.id})">
+            <div class="scan-info">
+              <div class="scan-product">${scan.product}</div>
+              <div class="scan-details">
+                <span class="scan-category">${this.getCategoryLabel(scan.category)}</span>
+                <span class="scan-date">${new Date(scan.date).toLocaleDateString('pt-BR')}</span>
+              </div>
+            </div>
+            <div class="scan-status status-${scan.status}">
+              ${this.getStatusLabel(scan.status)}
+            </div>
+          </div>
+        `).join('');
+        
+        this.updateStats();
+      }
+
+      renderStats() {
+        const statsGrid = document.getElementById('statsGrid');
+        if (!statsGrid) return;
+        
+        const stats = this.calculateStats();
+        
+        statsGrid.innerHTML = `
+          <div class="stat-card">
+            <h3>Total de Scans</h3>
+            <div class="stat-value">${stats.total}</div>
+            <div class="stat-change">+${stats.newThisMonth} este mês</div>
+          </div>
+          
+          <div class="stat-card">
+            <h3>Produtos Seguros</h3>
+            <div class="stat-value">${stats.safe}</div>
+            <div class="stat-percentage">${((stats.safe / stats.total) * 100).toFixed(1)}%</div>
+          </div>
+          
+          <div class="stat-card">
+            <h3>Com Cuidado</h3>
+            <div class="stat-value">${stats.caution}</div>
+            <div class="stat-percentage">${((stats.caution / stats.total) * 100).toFixed(1)}%</div>
+          </div>
+          
+          <div class="stat-card">
+            <h3>Evitar</h3>
+            <div class="stat-value">${stats.avoid}</div>
+            <div class="stat-percentage">${((stats.avoid / stats.total) * 100).toFixed(1)}%</div>
+          </div>
+          
+          <div class="stat-card">
+            <h3>Confiança Média</h3>
+            <div class="stat-value">${stats.avgConfidence}%</div>
+          </div>
+        `;
+      }
+
+      renderExportOptions() {
+        const exportOptions = document.querySelector('.export-options');
+        if (!exportOptions) return;
+        
+        exportOptions.innerHTML = `
+          <div class="export-card">
+            <h3>Exportar Histórico Completo</h3>
+            <p>Exporte todos os seus dados de scans em diferentes formatos</p>
+            <div class="export-buttons">
+              <button class="btn-export" onclick="historyController.exportToCSV()" data-format="csv">
+                <i class="fas fa-file-csv"></i>
+                CSV
+              </button>
+              <button class="btn-export" onclick="historyController.exportToJSON()" data-format="json">
+                <i class="fas fa-file-code"></i>
+                JSON
+              </button>
+              <button class="btn-export" onclick="historyController.exportToPDF()" data-format="pdf">
+                <i class="fas fa-file-pdf"></i>
+                PDF
+              </button>
+            </div>
+          </div>
+          
+          <div class="export-card">
+            <h3>Exportar Estatísticas</h3>
+            <p>Exporte suas estatísticas detalhadas</p>
+            <div class="export-buttons">
+              <button class="btn-export" onclick="historyController.exportStatsToCSV()" data-format="csv">
+                <i class="fas fa-file-csv"></i>
+                CSV
+              </button>
+              <button class="btn-export" onclick="historyController.exportStatsToJSON()" data-format="json">
+                <i class="fas fa-file-code"></i>
+                JSON
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      renderSettings() {
+        const settingsGrid = document.querySelector('.settings-grid');
+        if (!settingsGrid) return;
+        
+        settingsGrid.innerHTML = `
+          <div class="setting-card">
+            <h3>Exibição</h3>
+            <div class="setting-option">
+              <label for="itemsPerPage">Itens por página:</label>
+              <select id="itemsPerPage" onchange="historyController.updateSettings()">
+                <option value="10" ${this.settings.itemsPerPage === 10 ? 'selected' : ''}>10</option>
+                <option value="25" ${this.settings.itemsPerPage === 25 ? 'selected' : ''}>25</option>
+                <option value="50" ${this.settings.itemsPerPage === 50 ? 'selected' : ''}>50</option>
+                <option value="100" ${this.settings.itemsPerPage === 100 ? 'selected' : ''}>100</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="setting-card">
+            <h3>Ordenação</h3>
+            <div class="setting-option">
+              <label for="sortBy">Ordenar por:</label>
+              <select id="sortBy" onchange="historyController.updateSettings()">
+                <option value="date" ${this.settings.sortBy === 'date' ? 'selected' : ''}>Data</option>
+                <option value="product" ${this.settings.sortBy === 'product' ? 'selected' : ''}>Produto</option>
+                <option value="risk" ${this.settings.sortBy === 'risk' ? 'selected' : ''}>Risco</option>
+                <option value="confidence" ${this.settings.sortBy === 'confidence' ? 'selected' : ''}>Confiança</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="setting-card">
+            <h3>Preferências</h3>
+            <div class="setting-option">
+              <label>
+                <input type="checkbox" id="autoRefresh" onchange="historyController.updateSettings()" ${this.settings.autoRefresh ? 'checked' : ''}>
+                <span>Atualizar automaticamente</span>
+              </label>
+            </div>
+          </div>
+        `;
+      }
+
+      calculateStats() {
+        const total = this.filteredScans.length;
+        const safe = this.filteredScans.filter(s => s.status === 'safe').length;
+        const caution = this.filteredScans.filter(s => s.status === 'caution').length;
+        const avoid = this.filteredScans.filter(s => s.status === 'avoid').length;
+        const avgConfidence = this.filteredScans.reduce((sum, s) => sum + s.confidence, 0) / total;
+        
+        const now = new Date();
+        const thisMonth = this.filteredScans.filter(s => {
+          const scanDate = new Date(s.date);
+          return scanDate.getMonth() === now.getMonth() && scanDate.getFullYear() === now.getFullYear();
+        }).length;
+        
+        return {
+          total,
+          safe,
+          caution,
+          avoid,
+          avgConfidence: avgConfidence.toFixed(1),
+          newThisMonth: thisMonth
+        };
+      }
+
+      getCategoryLabel(category) {
+        const labels = {
+          'graos': 'Grãos',
+          'laticinios': 'Laticínios',
+          'biscoitos': 'Biscoitos',
+          'chocolates': 'Chocolates',
+          'doces': 'Doces',
+          'salgados': 'Salgados',
+          'bebidas': 'Bebidas',
+          'laticinios': 'Laticínios',
+          'carnes': 'Carnes',
+          'frutas': 'Frutas',
+          'vegetais': 'Vegetais'
+        };
+        return labels[category] || category;
+      }
+
+      getStatusLabel(status) {
+        const labels = {
+          'safe': '✅ Seguro',
+          'caution': '⚠️ Cuidado',
+          'avoid': '❌ Evitar'
+        };
+        return labels[status] || status;
+      }
+
+      updateSettings() {
+        const itemsPerPage = document.getElementById('itemsPerPage');
+        const sortBy = document.getElementById('sortBy');
+        const autoRefresh = document.getElementById('autoRefresh');
+        
+        if (itemsPerPage) this.settings.itemsPerPage = parseInt(itemsPerPage.value);
+        if (sortBy) this.settings.sortBy = sortBy.value;
+        if (autoRefresh) this.settings.autoRefresh = autoRefresh.checked;
+        
+        localStorage.setItem('historySettings', JSON.stringify(this.settings));
+        
+        // Reaplicar filtros e ordenação
+        this.filterHistory();
+      }
+
+      exportToCSV() {
+        const csv = this.convertToCSV(this.filteredScans);
+        this.downloadFile(csv, 'history.csv', 'text/csv');
+      }
+
+      exportToJSON() {
+        const json = JSON.stringify(this.filteredScans, null, 2);
+        this.downloadFile(json, 'history.json', 'application/json');
+      }
+
+      exportToPDF() {
+        alert('Função de exportação para PDF será implementada em breve.');
+      }
+
+      exportStatsToCSV() {
+        const stats = this.calculateStats();
+        const csv = this.convertStatsToCSV(stats);
+        this.downloadFile(csv, 'stats.csv', 'text/csv');
+      }
+
+      exportStatsToJSON() {
+        const stats = this.calculateStats();
+        const json = JSON.stringify(stats, null, 2);
+        this.downloadFile(json, 'stats.json', 'application/json');
+      }
+
+      convertToCSV(data) {
+        const headers = ['ID', 'Produto', 'Marca', 'Categoria', 'Data', 'Status', 'Confiança'];
+        const rows = data.map(scan => [
+          scan.id,
+          scan.product,
+          scan.brand,
+          this.getCategoryLabel(scan.category),
+          new Date(scan.date).toLocaleDateString('pt-BR'),
+          this.getStatusLabel(scan.status),
+          scan.confidence + '%'
+        ]);
+        
+        return [headers, ...rows].map(row => row.join(',')).join('\n');
+      }
+
+      convertStatsToCSV(stats) {
+        const headers = ['Métrica', 'Valor'];
+        const rows = [
+          ['Total de Scans', stats.total],
+          ['Produtos Seguros', stats.safe],
+          ['Com Cuidado', stats.caution],
+          ['Evitar', stats.avoid],
+          ['Confiança Média', stats.avgConfidence + '%'],
+          ['Novos este Mês', stats.newThisMonth]
+        ];
+        
+        return [headers, ...rows].map(row => row.join(',')).join('\n');
+      }
+
+      downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    // Funções globais
+    function showSection(sectionName) {
+      historyController.showSection(sectionName);
+    }
+
+    function filterHistory() {
+      historyController.filterHistory();
+    }
+
+    function updateSettings() {
+      historyController.updateSettings();
+    }
+
+    function exportToCSV() {
+      historyController.exportToCSV();
+    }
+
+    function exportToJSON() {
+      historyController.exportToJSON();
+    }
+
+    function exportToPDF() {
+      historyController.exportToPDF();
+    }
+
+    function exportStatsToCSV() {
+      historyController.exportStatsToCSV();
+    }
+
+    function exportStatsToJSON() {
+      historyController.exportStatsToJSON();
+    }
+
+    function viewScanDetails(scanId) {
+      const scan = historyController.scans.find(s => s.id === scanId);
+      if (scan) {
+        alert(`Detalhes do Scan #${scanId}:\n\nProduto: ${scan.product}\nMarca: ${scan.brand}\nCategoria: ${historyController.getCategoryLabel(scan.category)}\nStatus: ${historyController.getStatusLabel(scan.status)}\nConfiança: ${scan.confidence}%\nData: ${new Date(scan.date).toLocaleDateString('pt-BR')}`);
+      }
+    }
+
+    function goToDashboard() {
+      safeRedirect('dashboard.html');
+    }
+
+    function goToScanner() {
+      safeRedirect('allergy-scanner.html');
+    }
+  </script>
+  
+  <!-- Removidas inclusões duplicadas; dependências carregadas acima -->
+  
+  <!-- Inicializar controller
+  let historyController;
+  document.addEventListener('DOMContentLoaded', () => {
+    historyController = new HistoryController();
+    window.historyController = historyController;
+  });
+</body>
+</html>
