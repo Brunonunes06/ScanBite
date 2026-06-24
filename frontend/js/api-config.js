@@ -1,6 +1,6 @@
 // Configuração da API Nutri-Scan
 const API_CONFIG = {
-  baseURL: 'http://localhost:5000/api',
+  baseURL: 'http://localhost:3001/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
