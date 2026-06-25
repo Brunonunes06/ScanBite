@@ -4,6 +4,154 @@
   padding: 0;
   box-sizing: border-box;
 }
+/* --- CONTAINER E TÍTULO CENTRALIZADOS --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.section-header {
+    text-align: center; /* Centraliza o título principal e subtítulo */
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: var(--primary-dark); /* Utiliza o azul escuro da sua lista */
+    margin-bottom: 0.5rem;
+}
+
+.section-header .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-light); /* Utiliza o tom cinza claro da lista */
+}
+
+/* --- GRID DE CONTATO ORGANIZADO --- */
+.contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Divide em duas colunas perfeitas */
+    gap: 4rem;
+    align-items: center; /* Centraliza verticalmente a coluna da esquerda com a da direita */
+}
+
+/* --- COLUNA ESQUERDA: INFORMAÇÕES --- */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center; /* Centraliza o ícone verticalmente com o texto ao lado */
+    gap: 1.2rem;
+}
+
+/* Círculo do Ícone (Verde) */
+.contact-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-green); /* Verde Principal da sua lista */
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.contact-item h4 {
+    color: var(--primary-dark);
+    margin: 0 0 0.3rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.contact-item p {
+    color: var(--text-dark);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* --- COLUNA DIREITA: FORMULÁRIO --- */
+.contact-form {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: var(--radius-md); /* Utiliza os 12px de raio da sua lista */
+    box-shadow: var(--shadow-lg); /* Utiliza a sombra estruturada da sua lista */
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--medium-gray); /* Borda cinza suave da lista */
+    border-radius: var(--radius-sm); /* 8px de raio da lista */
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-green); /* Borda verde ao clicar */
+    box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.15); /* Sombra suave verde */
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* --- BOTÃO DE ENVIO VERDE --- */
+.btn-submit {
+    background-color: var(--primary-green); /* Verde Principal */
+    color: var(--white);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    width: auto;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-submit:hover {
+    background-color: var(--secondary-green); /* Verde Secundário mais escuro para o efeito hover */
+}
+
+/* --- AJUSTE PARA CELULAR (RESPONSIVO) --- */
+@media (max-width: 768px) {
+    .contact-content {
+        grid-template-columns: 1fr; /* Vira uma única coluna em telas menores */
+        gap: 3rem;
+    }
+    
+    .contact-form {
+        padding: 1.5rem;
+    }
+}
+
 
 :root {
   /* Cores Principais - Saúde e Tecnologia */
@@ -723,10 +871,10 @@ body {
 }
 
 /* Seções Base */
-.section {
+/* .section {
   padding: 35px 0;
-}
-
+} */
+/* 
 .section-alt {
   background: var(--light-gray);
 }
@@ -749,7 +897,7 @@ body {
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
-}
+} */
 
 /* Sobre Section */
 .about-content {
@@ -1761,9 +1909,9 @@ body {
   gap: 2rem;
 }
 
-.section-header h2 {
+/* .section-header h2 {
   font-size: 2rem;
-}
+} */
 
 .section-subtitle {
   font-size: 1rem;
@@ -1791,9 +1939,9 @@ body {
     font-size: 0.9rem;
   }
 
-  .section {
+  /* .section {
     padding: 60px 0;
-  }
+  } */
 
   .hero {
     padding: 100px 0 60px;
