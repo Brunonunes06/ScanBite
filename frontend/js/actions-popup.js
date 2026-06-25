@@ -16,89 +16,89 @@ class ActionsPopupManager {
     overlay.id = 'actionsPopupOverlay';
     overlay.className = 'actions-popup-overlay';
     
-    const popupContent = `
-      <div class="actions-popup-content">
-        <div class="actions-popup-header">
-          <h3>
-            <i class="fas fa-sliders-h"></i>
-            Configurações Rápidas
-          </h3>
-          <button class="actions-popup-close" onclick="actionsPopup.closePopup()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
+    // const popupContent = `
+    //   <div class="actions-popup-content">
+    //     <div class="actions-popup-header">
+    //       <h3>
+    //         <i class="fas fa-sliders-h"></i>
+    //         Configurações Rápidas
+    //       </h3>
+    //       <button class="actions-popup-close" onclick="actionsPopup.closePopup()">
+    //         <i class="fas fa-times"></i>
+    //       </button>
+    //     </div>
         
-        <div class="actions-popup-body">
-          <div class="action-item" id="themeActionItem">
-            <div class="action-info">
-              <div class="action-icon">
-                <i class="fas fa-moon"></i>
-              </div>
-              <div class="action-label">
-                <h4>Modo Escuro</h4>
-                <p id="themeStatus">Desativado</p>
-              </div>
-            </div>
-            <div class="action-toggle">
-              <button class="toggle-switch" id="themeToggleSwitch" onclick="actionsPopup.toggleTheme(event)"></button>
-            </div>
-          </div>
+    //     <div class="actions-popup-body">
+    //       <div class="action-item" id="themeActionItem">
+    //         <div class="action-info">
+    //           <div class="action-icon">
+    //             <i class="fas fa-moon"></i>
+    //           </div>
+    //           <div class="action-label">
+    //             <h4>Modo Escuro</h4>
+    //             <p id="themeStatus">Desativado</p>
+    //           </div>
+    //         </div>
+    //         <div class="action-toggle">
+    //           <button class="toggle-switch" id="themeToggleSwitch" onclick="actionsPopup.toggleTheme(event)"></button>
+    //         </div>
+    //       </div>
 
-          <!-- Atalhos de Teclado -->
-          <div class="action-item">
-            <div class="action-info">
-              <div class="action-icon">
-                <i class="fas fa-keyboard"></i>
-              </div>
-              <div class="action-label">
-                <h4>Atalhos de Teclado</h4>
-                <p>Ver lista completa</p>
-              </div>
-            </div>
-            <button class="action-button" onclick="actionsPopup.showKeyboardShortcuts()">
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
+    //       <!-- Atalhos de Teclado -->
+    //       <div class="action-item">
+    //         <div class="action-info">
+    //           <div class="action-icon">
+    //             <i class="fas fa-keyboard"></i>
+    //           </div>
+    //           <div class="action-label">
+    //             <h4>Atalhos de Teclado</h4>
+    //             <p>Ver lista completa</p>
+    //           </div>
+    //         </div>
+    //         <button class="action-button" onclick="actionsPopup.showKeyboardShortcuts()">
+    //           <i class="fas fa-arrow-right"></i>
+    //         </button>
+    //       </div>
 
-          <!-- Notificações -->
-          <div class="action-item">
-            <div class="action-info">
-              <div class="action-icon">
-                <i class="fas fa-bell"></i>
-              </div>
-              <div class="action-label">
-                <h4>Notificações</h4>
-                <p id="notificationStatus">Ativadas</p>
-              </div>
-            </div>
-            <div class="action-toggle">
-              <button class="toggle-switch active" id="notificationToggleSwitch" onclick="actionsPopup.toggleNotifications(event)"></button>
-            </div>
-          </div>
+    //       <!-- Notificações -->
+    //       <div class="action-item">
+    //         <div class="action-info">
+    //           <div class="action-icon">
+    //             <i class="fas fa-bell"></i>
+    //           </div>
+    //           <div class="action-label">
+    //             <h4>Notificações</h4>
+    //             <p id="notificationStatus">Ativadas</p>
+    //           </div>
+    //         </div>
+    //         <div class="action-toggle">
+    //           <button class="toggle-switch active" id="notificationToggleSwitch" onclick="actionsPopup.toggleNotifications(event)"></button>
+    //         </div>
+    //       </div>
 
-          <!-- Modo Offline -->
-          <div class="action-item">
-            <div class="action-info">
-              <div class="action-icon">
-                <i class="fas fa-wifi"></i>
-              </div>
-              <div class="action-label">
-                <h4>Disponibilidade Offline</h4>
-                <p>Permite uso sem internet</p>
-              </div>
-            </div>
-            <button class="action-button" onclick="actionsPopup.openOfflineSettings()">
-              <i class="fas fa-cog"></i>
-            </button>
-          </div>
-        </div>
+    //       <!-- Modo Offline -->
+    //       <div class="action-item">
+    //         <div class="action-info">
+    //           <div class="action-icon">
+    //             <i class="fas fa-wifi"></i>
+    //           </div>
+    //           <div class="action-label">
+    //             <h4>Disponibilidade Offline</h4>
+    //             <p>Permite uso sem internet</p>
+    //           </div>
+    //         </div>
+    //         <button class="action-button" onclick="actionsPopup.openOfflineSettings()">
+    //           <i class="fas fa-cog"></i>
+    //         </button>
+    //       </div>
+    //     </div>
         
-        <div class="actions-popup-footer">
-          <p><strong>Dica:</strong> Use <strong>"?"</strong> para abrir atalhos</p>
-          <small>Ctrl+Shift+D para modo escuro</small>
-        </div>
-      </div>
-    `;
+    //     <div class="actions-popup-footer">
+    //       <p><strong>Dica:</strong> Use <strong>"?"</strong> para abrir atalhos</p>
+    //       <small>Ctrl+Shift+D para modo escuro</small>
+    //     </div>
+    //   </div>
+    // `;
     
     overlay.innerHTML = popupContent;
     document.body.appendChild(overlay);

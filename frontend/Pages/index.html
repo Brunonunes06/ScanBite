@@ -11,8 +11,10 @@
   <link rel="stylesheet" href="../css/dark-mode.css">
   <link rel="stylesheet" href="../css/keyboard-shortcuts.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
 </head>
 
 <body>
@@ -33,13 +35,13 @@
             <li><a href="index.html" class="nav-link">Início</a></li>
             <li><a href="#sobre" class="nav-link">Sobre</a></li>
             <li><a href="#contato" class="nav-link">Contato</a></li>
-            <li><a href="../Pages/dashboard.html" class="nav-link" id="dashboardLink" style="color: rgb(231, 76, 60);"><i
-                  class="fas fa-lock"></i> Dashboard</a></li>
+            <li><a href="../Pages/dashboard.html" class="nav-link" id="dashboardLink"
+                style="color: rgb(231, 76, 60);"><i class="fas fa-lock"></i> Dashboard</a></li>
           </ul>
         </nav>
 
         <!-- Controls Container -->
-        <div class="header-controls">
+        <!-- <div class="header-controls">
           <div class="auth-status-container">
             <span class="auth-status offline" id="authStatus">Desconectado</span>
             <div class="user-info" id="userInfo">
@@ -47,6 +49,33 @@
                 <i class="fas fa-user-slash"></i>
                 <span>Faça login para continuar</span>
               </div>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="header-controls">
+          <div class="auth-status-container" style="display: flex; align-items: center; gap: 15px;">
+            <span class="auth-status offline" id="authStatus">Desconectado</span>
+
+            <div class="user-info" id="userInfo" style="display: flex; align-items: center; gap: 10px;">
+
+              <!-- Prompt de Login (visível quando deslogado) -->
+              <div id="loginPrompt" class="login-prompt"
+                style="cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 20px; transition: all 0.2s;">
+                <i class="fas fa-user-slash"></i>
+                <span>Faça login para continuar</span>
+              </div>
+
+              <!-- Dados do usuário logado (escondido inicialmente) -->
+              <div id="userLoggedIn" style="display: none; align-items: center; gap: 10px;">
+                <img id="user-pic" alt="Avatar do Usuário" class="user-avatar"
+                  style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: #f0f0f0;"
+                  src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjEyIiByPSI2IiBmaWxsPSIjY2NjIi8+PHBhdGggZD0iTTAgMzJIMzJWMjRDMzIgMTggMjYgMTIgMTYgMTJTMCAxOCAwIDI0VjMyWiIgZmlsbD0iI2NjYyIvPjwvc3ZnPg==">
+                <span id="user-name" class="user-name" style="font-weight: 500;">Usuário</span>
+              </div>
+              <button onclick="handleGoogleLogin()" class="google-btn">
+                Entrar com Google
+              </button>
             </div>
           </div>
         </div>
@@ -231,7 +260,7 @@
             </ul>
           </div>
           <button class="btn-pricing" onclick="selectPlan('professional')">Assinar agora</button>
-  
+
         </div>
       </div>
     </div>
@@ -302,7 +331,7 @@
     </div>
   </section>
 
-  
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -346,6 +375,13 @@
     </div>
   </footer>
 
+  <!-- <script>
+    localStorage.setItem('nutriScanUser', JSON.stringify({
+      name: "Seu Nome do Google",
+      picture: "https://googleusercontent.com"
+    }));
+
+  </script> -->
   <!-- Scripts -->
   <script src="../js/api-config.js"></script>
   <script src="../js/file-checker.js"></script>

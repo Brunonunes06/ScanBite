@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="../css/actions-popup.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     @import url('../style.css');
 
@@ -69,7 +70,7 @@
       color: var(--primary-green);
       margin-bottom: 1rem;
       font-weight: 700;
-      
+
     }
 
     .login-subtitle {
@@ -150,7 +151,7 @@
     .login-btn {
       width: 100%;
       padding: 1rem;
-       background: linear-gradient(235deg, var(--primary-blue) 50%, var(--secondary-green) 50%, var(--tree-green) 100%);
+      background: linear-gradient(235deg, var(--primary-blue) 50%, var(--secondary-green) 50%, var(--tree-green) 100%);
       color: white;
       border: none;
       border-radius: 10px;
@@ -178,7 +179,7 @@
       position: relative;
       width: 100%;
 
-      background: var(--light-gray);  
+      background: var(--light-gray);
       padding: 0;
       top: -20px;
     }
@@ -361,10 +362,18 @@
         </div>
 
         <!-- Login com Google -->
-        <button class="google-login-btn" onclick="handleGoogleLogin()">
+        <!-- <button class="google-login-btn" onclick="handleGoogleLogin()">
           <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
           <span>Continuar com Google</span>
-        </button>
+        </button>-->
+
+        <div id="g_id_onload" data-client_id="26159719847-pbm48bkdvn0kdojt74if1dh2s2bmnhi2.apps.googleusercontent.com"
+          data-context="signin" data-ux_mode="popup" data-callback="handleCredentialResponse" data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline" data-text="signin_with"
+          data-size="large" data-logo_alignment="left">
+        </div>
 
         <!-- Link para cadastro -->
         <div class="signup-link">

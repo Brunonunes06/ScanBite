@@ -12,56 +12,91 @@ class UpgradePopupManager {
     this.setupEventListeners();
   }
 
-  createPopup() {
-    // Criar popup HTML
-    const popupHTML = `
-      <div id="upgradePopup" class="upgrade-popup-overlay" style="display: none;">
-        <div class="upgrade-popup-content">
-          <div class="popup-header">
-            <div class="popup-icon">🚀</div>
-            <h3>Upgrade para Premium</h3>
-          </div>
-          
-          <div class="popup-body">
-            <p>Você será redirecionado para a página de pagamento para completar sua assinatura Premium.</p>
-            
-            <div class="premium-benefits">
-              <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Scans ilimitados</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Análise avançada de ingredientes</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Relatórios personalizados</span>
-              </div>
-              <div class="benefit-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Suporte prioritário</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="popup-actions" id="popupActions">
-            <button class="btn-cancel" onclick="upgradePopup.closePopup()">
-              <i class="fas fa-times"></i>
-              Cancelar
-            </button>
-            <button class="btn-premium" onclick="upgradePopup.goToPayment()">
-              <i class="fas fa-crown"></i>
-              Ver Planos
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
+  // createPopup() {
+  //   // Criar popup HTML
+  //   const popupHTML = `
+  //     <div id="upgradePopup" class="upgrade-popup-overlay" style="display: none;">
+  //       <div class="upgrade-popup-content">
+  //         <div class="popup-header">
+  //           <div class="popup-icon">🚀</div>
+  //           <h3>Upgrade para Premium</h3>
+  //         </div>
 
-    // Adicionar popup ao body
-    document.body.insertAdjacentHTML('beforeend', popupHTML);
-    this.popup = document.getElementById('upgradePopup');
+  //         <div class="popup-body">
+  //           <p>Você será redirecionado para a página de pagamento para completar sua assinatura Premium.</p>
+
+  //           <div class="premium-benefits">
+  //             <div class="benefit-item">
+  //               <i class="fas fa-check-circle"></i>
+  //               <span>Scans ilimitados</span>
+  //             </div>
+  //             <div class="benefit-item">
+  //               <i class="fas fa-check-circle"></i>
+  //               <span>Análise avançada de ingredientes</span>
+  //             </div>
+  //             <div class="benefit-item">
+  //               <i class="fas fa-check-circle"></i>
+  //               <span>Relatórios personalizados</span>
+  //             </div>
+  //             <div class="benefit-item">
+  //               <i class="fas fa-check-circle"></i>
+  //               <span>Suporte prioritário</span>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         <div class="popup-actions" id="popupActions">
+  //           <button class="btn-cancel" onclick="upgradePopup.closePopup()">
+  //             <i class="fas fa-times"></i>
+  //             Cancelar
+  //           </button>
+  //           <button class="btn-premium" onclick="upgradePopup.goToPayment()">
+  //             <i class="fas fa-crown"></i>
+  //             Ver Planos
+  //           </button>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   `;
+
+  //   // Adicionar popup ao body
+  //   document.body.insertAdjacentHTML('beforeend', popupHTML);
+  //   this.popup = document.getElementById('upgradePopup');
+  // }
+
+  createPopup(title, message, type = 'info') {
+    // Garante que o container existe
+    let popupContainer = document.getElementById('popup-container');
+    if (!popupContainer) {
+      popupContainer = document.createElement('div');
+      popupContainer.id = 'popup-container';
+      popupContainer.style.cssText = `
+      position: fixed; top: 20px; right: 20px; z-index: 10000; 
+      display: flex; flex-direction: column; gap: 10px;
+    `;
+      document.body.appendChild(popupContainer);
+    }
+
+    const popupContent = document.createElement('div');  // ← Correção: declarando aqui
+    popupContent.className = `popup popup-${type}`;
+    popupContent.style.cssText = `
+    background: white; padding: 16px; border-radius: 8px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 280px;
+    border-left: 4px solid ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#007bff'};
+  `;
+
+    popupContent.innerHTML = `
+    <strong>${title}</strong>
+    <p style="margin: 8px 0 0;">${message}</p>
+  `;
+
+    popupContainer.appendChild(popupContent);
+
+    // Auto-remove após 4 segundos
+    setTimeout(() => {
+      popupContent.style.opacity = '0';
+      setTimeout(() => popupContent.remove(), 300);
+    }, 4000);
   }
 
   setupEventListeners() {
@@ -83,7 +118,7 @@ class UpgradePopupManager {
   showPopup() {
     this.popup.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevenir scroll
-    
+
     // Verificar plano do usuário e ajustar botões
     this.adjustButtonsForUserPlan();
   }
@@ -92,7 +127,7 @@ class UpgradePopupManager {
     const user = loginSystem?.getCurrentUser();
     const btnFreeTrial = document.getElementById('btnFreeTrial');
     const popupActions = document.getElementById('popupActions');
-    
+
     if (!user) {
       // Usuário não logado - mostrar botão "Começar Grátis" com login Google
       if (btnFreeTrial) {
@@ -129,7 +164,7 @@ class UpgradePopupManager {
     this.closePopup();
     // Verificar se usuário já está logado
     const token = localStorage.getItem('nutriScanToken');
-    
+
     if (token) {
       // Usuário já logado, redirecionar para dashboard
       ScanRedirect('index.html');
@@ -207,7 +242,7 @@ class UpgradePopupManager {
     `;
 
     document.body.appendChild(loginModal);
-    
+
     // Adicionar estilos se não existirem
     if (!document.querySelector('#loginModalStyles')) {
       this.addLoginModalStyles();
@@ -371,7 +406,7 @@ class UpgradePopupManager {
         }
       </style>
     `;
-    
+
     document.head.insertAdjacentHTML('beforeend', styles);
   }
 }
@@ -407,13 +442,13 @@ class LoginManager {
     try {
       // Simulação de login com Google
       // Em produção, usaria Google Sign-In API
-      
+
       // Mostrar loading
       this.showLoading('Entrando com Google...');
-      
+
       // Simular delay de autenticação
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // Criar usuário simulado do Google
       const googleUser = {
         email: 'usuario@gmail.com',
@@ -421,16 +456,16 @@ class LoginManager {
         picture: 'https://lh3.googleusercontent.com/a/default-user',
         id: 'google_user_id'
       };
-      
+
       // Registrar ou fazer login
       await this.registerOrLoginGoogleUser(googleUser);
-      
+
       // Fechar modal
       document.querySelector('.login-modal-overlay')?.remove();
-      
+
       // Redirecionar
       ScanRedirect('index.html');
-      
+
     } catch (error) {
       console.error('Erro no login Google:', error);
       this.showError('Erro ao fazer login com Google');
@@ -454,21 +489,21 @@ class LoginManager {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         // Salvar token e usuário
         localStorage.setItem('nutriScanToken', data.token);
         localStorage.setItem('nutriScanUser', JSON.stringify(data.user));
         localStorage.setItem('lastActivity', Date.now().toString());
 
-          // Notificar userSync/authMonitor
-          try {
-            if (window.userSync && typeof window.userSync.updateUser === 'function') window.userSync.updateUser(data.user);
-            if (window.authMonitor && typeof window.authMonitor.checkAuthStatus === 'function') window.authMonitor.checkAuthStatus();
-          } catch (e) {
-            console.warn('Falha ao notificar userSync/authMonitor após upgrade:', e);
-          }
-        
+        // Notificar userSync/authMonitor
+        try {
+          if (window.userSync && typeof window.userSync.updateUser === 'function') window.userSync.updateUser(data.user);
+          if (window.authMonitor && typeof window.authMonitor.checkAuthStatus === 'function') window.authMonitor.checkAuthStatus();
+        } catch (e) {
+          console.warn('Falha ao notificar userSync/authMonitor após upgrade:', e);
+        }
+
         this.showSuccess('Login realizado com sucesso!');
       } else {
         throw new Error(data.message || 'Erro no login');
@@ -481,13 +516,13 @@ class LoginManager {
 
   async signInWithEmail(event) {
     event.preventDefault();
-    
+
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
-    
+
     try {
       this.showLoading('Fazendo login...');
-      
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -497,11 +532,11 @@ class LoginManager {
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         localStorage.setItem('nutriScanToken', data.token);
         localStorage.setItem('nutriScanUser', JSON.stringify(data.user));
-        
+
         document.querySelector('.login-modal-overlay')?.remove();
         ScanRedirect('index.html');
       } else {
