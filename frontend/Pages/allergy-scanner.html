@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('../style.css');
+
         /* CSS Variables */
         :root {
             --primary-green: #2ecc71;
@@ -24,10 +27,10 @@
             --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
             --gradient-danger: linear-gradient(135deg, #e74c3c, #c0392b);
             --gradient-warning: linear-gradient(135deg, #f39c12, #e67e22);
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
             --transition-fast: all 0.3s ease;
             --transition-medium: all 0.5s ease;
         }
@@ -69,13 +72,18 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             animation: float 20s infinite linear;
         }
 
         @keyframes float {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .allergy-header h1 {
@@ -161,8 +169,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .upload-text {
@@ -233,14 +248,16 @@
             width: 20px;
             height: 20px;
             margin: -10px 0 0 -10px;
-            border: 3px solid rgba(255,255,255,0.3);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Results Section */
@@ -440,9 +457,9 @@
             position: absolute;
             top: 2rem;
             left: 2rem;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             padding: 0.8rem 1.2rem;
             border-radius: 10px;
             text-decoration: none;
@@ -453,7 +470,7 @@
         }
 
         .back-btn:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
@@ -486,6 +503,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="allergy-container">
         <!-- Header -->
@@ -505,7 +523,7 @@
                     <i class="fas fa-camera"></i>
                     Escanear Imagem
                 </h2>
-                
+
                 <div class="upload-area" id="uploadArea">
                     <i class="fas fa-cloud-upload-alt upload-icon"></i>
                     <div class="upload-text">Clique para adiciona imagem ou arraste uma imagem aqui</div>
@@ -527,7 +545,7 @@
                     <i class="fas fa-flask"></i>
                     Resultados da Análise
                 </h2>
-                
+
                 <div id="resultsContainer">
                     <div class="empty-state">
                         <i class="fas fa-inbox empty-icon"></i>
@@ -543,7 +561,7 @@
                     <i class="fas fa-table"></i>
                     Tabela de Alergias Alimentares Comuns
                 </h2>
-                
+
                 <table class="allergy-table" id="allergyTable">
                     <thead>
                         <tr>
@@ -563,4 +581,5 @@
 
     <script src="../js/allergy-scanner.js"></script>
 </body>
+
 </html>

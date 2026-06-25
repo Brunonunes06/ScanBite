@@ -37,6 +37,9 @@ class FileChecker {
     // Detect if running on file:// protocol
     const isFileProtocol = window.location.protocol === 'file:';
     
+    // Detect if we're in Pages folder
+    const isInPagesFolder = window.location.pathname.includes('/Pages/');
+    
     for (const file of this.requiredFiles) {
       try {
         if (isFileProtocol) {
@@ -44,7 +47,9 @@ class FileChecker {
           this.availableFiles.add(file);
           console.log(`✅ ${file} - Assumindo disponível (protocolo file://)`);
         } else {
-          const response = await fetch(file, { method: 'HEAD' });
+          // Adjust path based on current location
+          const filePath = isInPagesFolder ? `../${file}` : file;
+          const response = await fetch(filePath, { method: 'HEAD' });
           if (response.ok) {
             this.availableFiles.add(file);
             console.log(`✅ ${file} - Disponível`);
@@ -82,7 +87,9 @@ class FileChecker {
           // Redirecionar para página segura
           if (this.availableFiles.has('index.html')) {
             console.log('🔄 Redirecionando para index.html');
-            window.location.href = 'index.html';
+            // Check if we're in Pages folder and adjust path accordingly
+            const isInPagesFolder = window.location.pathname.includes('/Pages/');
+            window.location.href = isInPagesFolder ? '../index.html' : 'index.html';
             return;
           }
         }

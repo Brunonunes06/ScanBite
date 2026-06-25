@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+  @import url('../style.css');
     .history-container {
       min-height: 100vh;
       background: var(--light-gray);
@@ -78,6 +80,7 @@
       align-items: center;
       gap: 0.75rem;
     }
+
     .scan-filename {
       font-size: 0.85rem;
       color: #666;
@@ -90,14 +93,17 @@
 
     .btn-small.btn-edit {
       background: transparent;
-      border: 1px dashed rgba(0,0,0,0.06);
+      border: 1px dashed rgba(0, 0, 0, 0.06);
       color: #444;
       padding: 6px;
       border-radius: 6px;
       margin-left: 6px;
       cursor: pointer;
     }
-    .btn-small.btn-edit i { color: #2c3e50; }
+
+    .btn-small.btn-edit i {
+      color: #2c3e50;
+    }
 
     .user-avatar {
       width: 40px;
@@ -499,8 +505,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .empty-state {
@@ -590,6 +601,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="history-container">
     <!-- Header -->
@@ -611,7 +623,7 @@
           <i class="fas fa-download"></i>
           <span>Exportar</span>
         </button>
-        <button class="nav-btn"  onclick="window.location.href='dashboard.html'">
+        <button class="nav-btn" onclick="window.location.href='dashboard.html'">
           <i class="fas fa-cog"></i>
           <span>Configurações</span>
         </button>
@@ -635,194 +647,194 @@
     <!-- Main Content -->
     <main class="history-main">
       <div id="historyCard">
-      <!-- Loading State -->
-      <div class="loading" id="loadingState">
-        <div class="spinner"></div>
-      </div>
-
-      <!-- History Section -->
-      <div class="history-card" id="historySection" style="display: block;">
-        <!-- Header with Filters -->
-        <div class="history-header-card">
-          <h1 class="history-title">
-            <i class="fas fa-history"></i>
-            Histórico de Scans
-          </h1>
-          <div class="filters">
-            <div class="filter-group">
-              <label for="categoryFilter">Categoria:</label>
-              <select id="categoryFilter" onchange="filterHistory()">
-                <option value="">Todas</option>
-                <option value="biscoitos">Biscoitos</option>
-                <option value="chocolates">Chocolates</option>
-                <option value="doces">Doces</option>
-                <option value="salgados">Salgados</option>
-                <option value="bebidas">Bebidas</option>
-                <option value="laticinios">Laticínios</option>
-                <option value="carnes">Carnes</option>
-                <option value="frutas">Frutas</option>
-                <option value="vegetais">Vegetais</option>
-                <option value="graos">Grãos</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label for="riskFilter">Risco:</label>
-              <select id="riskFilter" onchange="filterHistory()">
-                <option value="">Todos</option>
-                <option value="Scan">Seguro</option>
-                <option value="caution">Cuidado</option>
-                <option value="avoid">Evitar</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label for="dateFilter">Período:</label>
-              <select id="dateFilter" onchange="filterHistory()">
-                <option value="">Todos</option>
-                <option value="7">Últimos 7 dias</option>
-                <option value="30">Últimos 30 dias</option>
-                <option value="90">Últimos 90 dias</option>
-              </select>
-            </div>
-          </div>
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+          <div class="spinner"></div>
         </div>
 
-        <!-- Messages -->
-        <div id="successMessage" class="success-message" style="display: none;"></div>
-        <div id="errorMessage" class="error-message" style="display: none;"></div>
-
-        <!-- Stats Overview -->
-        <div class="stats-overview" id="statsOverview">
-          <div class="stat-card">
-            <div class="stat-value" id="totalScans">0</div>
-            <div class="stat-label">Total de Scans</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="ScanScans">0</div>
-            <div class="stat-label">Seguros</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="warningScans">0</div>
-            <div class="stat-label">Com Cuidado</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value" id="dangerScans">0</div>
-            <div class="stat-label">Evitar</div>
-          </div>
-        </div>
-
-        <!-- History List -->
-        <div class="history-list" id="historyList">
-          <!-- Scan items will be populated here -->
-        </div>
-      </div>
-
-      <!-- Stats Section -->
-      <div class="history-card" id="statsSection" style="display: none;">
-        <div class="history-header-card">
-          <h1 class="history-title">
-            <i class="fas fa-chart-bar"></i>
-            Estatísticas Detalhadas
-          </h1>
-        </div>
-        
-        <div class="stats-grid" id="statsGrid">
-          <!-- Detailed stats will be populated here -->
-        </div>
-      </div>
-
-      <!-- Export Section -->
-      <div class="history-card" id="exportSection" style="display: none;">
-        <div class="history-header-card">
-          <h1 class="history-title">
-            <i class="fas fa-download"></i>
-            Exportar Dados
-          </h1>
-        </div>
-        
-        <div class="export-options">
-          <div class="export-card">
-            <h3>Exportar Histórico</h3>
-            <p>Exporte seu histórico de scans em diferentes formatos</p>
-            <div class="export-buttons">
-              <button class="btn-export" onclick="exportToCSV()" data-format="csv">
-                <i class="fas fa-file-csv"></i>
-                CSV
-              </button>
-              <button class="btn-export" onclick="exportToJSON()" data-format="json">
-                <i class="fas fa-file-code"></i>
-                JSON
-              </button>
-              <button class="btn-export" onclick="exportToPDF()" data-format="pdf">
-                <i class="fas fa-file-pdf"></i>
-                PDF
-              </button>
+        <!-- History Section -->
+        <div class="history-card" id="historySection" style="display: block;">
+          <!-- Header with Filters -->
+          <div class="history-header-card">
+            <h1 class="history-title">
+              <i class="fas fa-history"></i>
+              Histórico de Scans
+            </h1>
+            <div class="filters">
+              <div class="filter-group">
+                <label for="categoryFilter">Categoria:</label>
+                <select id="categoryFilter" onchange="filterHistory()">
+                  <option value="">Todas</option>
+                  <option value="biscoitos">Biscoitos</option>
+                  <option value="chocolates">Chocolates</option>
+                  <option value="doces">Doces</option>
+                  <option value="salgados">Salgados</option>
+                  <option value="bebidas">Bebidas</option>
+                  <option value="laticinios">Laticínios</option>
+                  <option value="carnes">Carnes</option>
+                  <option value="frutas">Frutas</option>
+                  <option value="vegetais">Vegetais</option>
+                  <option value="graos">Grãos</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="riskFilter">Risco:</label>
+                <select id="riskFilter" onchange="filterHistory()">
+                  <option value="">Todos</option>
+                  <option value="Scan">Seguro</option>
+                  <option value="caution">Cuidado</option>
+                  <option value="avoid">Evitar</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="dateFilter">Período:</label>
+                <select id="dateFilter" onchange="filterHistory()">
+                  <option value="">Todos</option>
+                  <option value="7">Últimos 7 dias</option>
+                  <option value="30">Últimos 30 dias</option>
+                  <option value="90">Últimos 90 dias</option>
+                </select>
+              </div>
             </div>
           </div>
-          
-          <div class="export-card">
-            <h3>Exportar Estatísticas</h3>
-            <p>Exporte suas estatísticas detalhadas</p>
-            <div class="export-buttons">
-              <button class="btn-export" onclick="exportStatsToCSV()" data-format="csv">
-                <i class="fas fa-file-csv"></i>
-                CSV
-              </button>
-              <button class="btn-export" onclick="exportStatsToJSON()" data-format="json">
-                <i class="fas fa-file-code"></i>
-                JSON
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Settings Section -->
-      <div class="history-card" id="settingsSection" style="display: none;">
-        <div class="history-header-card">
-          <h1 class="history-title">
-            <i class="fas fa-cog"></i>
-            Configurações do Histórico
-          </h1>
-        </div>
-        
-        <div class="settings-grid">
-          <div class="setting-card">
-            <h3>Exibição</h3>
-            <div class="setting-option">
-              <label for="itemsPerPage">Itens por página:</label>
-              <select id="itemsPerPage" onchange="updateSettings()">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
+          <!-- Messages -->
+          <div id="successMessage" class="success-message" style="display: none;"></div>
+          <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+          <!-- Stats Overview -->
+          <div class="stats-overview" id="statsOverview">
+            <div class="stat-card">
+              <div class="stat-value" id="totalScans">0</div>
+              <div class="stat-label">Total de Scans</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="ScanScans">0</div>
+              <div class="stat-label">Seguros</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="warningScans">0</div>
+              <div class="stat-label">Com Cuidado</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="dangerScans">0</div>
+              <div class="stat-label">Evitar</div>
             </div>
           </div>
-          
-          <div class="setting-card">
-            <h3>Ordenação</h3>
-            <div class="setting-option">
-              <label for="sortBy">Ordenar por:</label>
-              <select id="sortBy" onchange="updateSettings()">
-                <option value="date">Data</option>
-                <option value="product">Produto</option>
-                <option value="risk">Risco</option>
-                <option value="confidence">Confiança</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="setting-card">
-            <h3>Filtros</h3>
-            <div class="setting-option">
-              <label>
-                <input type="checkbox" id="autoRefresh" onchange="updateSettings()">
-                <span>Atualizar automaticamente</span>
-              </label>
-            </div>
+
+          <!-- History List -->
+          <div class="history-list" id="historyList">
+            <!-- Scan items will be populated here -->
           </div>
         </div>
-      </div>
+
+        <!-- Stats Section -->
+        <div class="history-card" id="statsSection" style="display: none;">
+          <div class="history-header-card">
+            <h1 class="history-title">
+              <i class="fas fa-chart-bar"></i>
+              Estatísticas Detalhadas
+            </h1>
+          </div>
+
+          <div class="stats-grid" id="statsGrid">
+            <!-- Detailed stats will be populated here -->
+          </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="history-card" id="exportSection" style="display: none;">
+          <div class="history-header-card">
+            <h1 class="history-title">
+              <i class="fas fa-download"></i>
+              Exportar Dados
+            </h1>
+          </div>
+
+          <div class="export-options">
+            <div class="export-card">
+              <h3>Exportar Histórico</h3>
+              <p>Exporte seu histórico de scans em diferentes formatos</p>
+              <div class="export-buttons">
+                <button class="btn-export" onclick="exportToCSV()" data-format="csv">
+                  <i class="fas fa-file-csv"></i>
+                  CSV
+                </button>
+                <button class="btn-export" onclick="exportToJSON()" data-format="json">
+                  <i class="fas fa-file-code"></i>
+                  JSON
+                </button>
+                <button class="btn-export" onclick="exportToPDF()" data-format="pdf">
+                  <i class="fas fa-file-pdf"></i>
+                  PDF
+                </button>
+              </div>
+            </div>
+
+            <div class="export-card">
+              <h3>Exportar Estatísticas</h3>
+              <p>Exporte suas estatísticas detalhadas</p>
+              <div class="export-buttons">
+                <button class="btn-export" onclick="exportStatsToCSV()" data-format="csv">
+                  <i class="fas fa-file-csv"></i>
+                  CSV
+                </button>
+                <button class="btn-export" onclick="exportStatsToJSON()" data-format="json">
+                  <i class="fas fa-file-code"></i>
+                  JSON
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="history-card" id="settingsSection" style="display: none;">
+          <div class="history-header-card">
+            <h1 class="history-title">
+              <i class="fas fa-cog"></i>
+              Configurações do Histórico
+            </h1>
+          </div>
+
+          <div class="settings-grid">
+            <div class="setting-card">
+              <h3>Exibição</h3>
+              <div class="setting-option">
+                <label for="itemsPerPage">Itens por página:</label>
+                <select id="itemsPerPage" onchange="updateSettings()">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3>Ordenação</h3>
+              <div class="setting-option">
+                <label for="sortBy">Ordenar por:</label>
+                <select id="sortBy" onchange="updateSettings()">
+                  <option value="date">Data</option>
+                  <option value="product">Produto</option>
+                  <option value="risk">Risco</option>
+                  <option value="confidence">Confiança</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3>Filtros</h3>
+              <div class="setting-option">
+                <label>
+                  <input type="checkbox" id="autoRefresh" onchange="updateSettings()">
+                  <span>Atualizar automaticamente</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Messages -->
         <div id="successMessage" class="success-message" style="display: none;"></div>
@@ -881,8 +893,8 @@
           Fazer Primeiro Scan
         </button>
       </div>
-      </div>
-    </main>
+  </div>
+  </main>
   </div>
 
   <!-- Scripts -->
@@ -920,7 +932,7 @@
           if (!e.key) return;
           if (e.key === 'allergyAnalysisLastUpdate' || e.key === 'allergyAnalysisLast' || e.key === 'allergyAnalysisDeleted') {
             // Recarregar histórico local para refletir mudanças
-            this.loadHistory().catch(() => {});
+            this.loadHistory().catch(() => { });
           }
         });
       }
@@ -947,7 +959,7 @@
       async loadHistory() {
         try {
           this.showLoading(true);
-          
+
           // Primeiro tentar obter do servidor
           let scans = [];
           try {
@@ -986,12 +998,12 @@
 
           this.scans = scans;
           this.filteredScans = [...this.scans];
-          
+
           this.applyFilters();
           this.renderHistory();
           this.renderPagination();
           this.updateStats();
-          
+
           this.showLoading(false);
         } catch (error) {
           console.error('Erro ao carregar histórico:', error);
@@ -1004,7 +1016,7 @@
         this.filters.category = document.getElementById('categoryFilter').value;
         this.filters.risk = document.getElementById('riskFilter').value;
         this.filters.date = document.getElementById('dateFilter').value;
-        
+
         this.applyFilters();
         this.currentPage = 1;
         this.renderHistory();
@@ -1017,22 +1029,22 @@
           if (this.filters.category && scan.product.category !== this.filters.category) {
             return false;
           }
-          
+
           // Risk filter
           if (this.filters.risk && scan.analysis.overallRisk !== this.filters.risk) {
             return false;
           }
-          
+
           // Date filter
           if (this.filters.date) {
             const scanDate = new Date(scan.createdAt);
             const daysAgo = Math.floor((Date.now() - scanDate.getTime()) / (1000 * 60 * 60 * 24));
-            
+
             if (daysAgo > parseInt(this.filters.date)) {
               return false;
             }
           }
-          
+
           return true;
         });
       }
@@ -1041,29 +1053,29 @@
         const container = document.getElementById('historyList');
         const emptyState = document.getElementById('emptyState');
         const historyCard = document.getElementById('historyCard');
-        
+
         if (this.filteredScans.length === 0) {
           container.style.display = 'none';
           emptyState.style.display = 'block';
           historyCard.style.display = 'none';
           return;
         }
-        
+
         container.style.display = 'flex';
         emptyState.style.display = 'none';
         historyCard.style.display = 'block';
-        
+
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         const pageScans = this.filteredScans.slice(startIndex, endIndex);
-        
+
         container.innerHTML = pageScans.map(scan => this.renderScanItem(scan)).join('');
       }
 
       renderScanItem(scan) {
         const riskClass = scan.analysis.overallRisk;
-        const riskIcon = riskClass === 'Scan' ? 'check' : 
-                        riskClass === 'caution' ? 'exclamation' : 'times';
+        const riskIcon = riskClass === 'Scan' ? 'check' :
+          riskClass === 'caution' ? 'exclamation' : 'times';
         const imgSrc = (scan.raw && scan.raw.image) ? scan.raw.image : (scan.image || '');
         const imageHTML = imgSrc ? `<img src="${imgSrc}" alt="scan" style="width:80px;height:80px;border-radius:10px;object-fit:cover;"/>` : `<i class="fas fa-${riskIcon}"></i>`;
 
@@ -1090,7 +1102,7 @@
               <div class="scan-product">
                 <span class="scan-product-name" id="productName-${scan._id}">${scan.product?.name || scan.product || 'Imagem analisada'}</span>
                 <div class="inline-edit" id="inlineEdit-${scan._id}" style="display:none; margin-top:6px;">
-                  <input type="text" id="inlineInput-${scan._id}" value="${(scan.product?.name || scan.product || 'Imagem analisada').replace(/\"/g,'&quot;')}" style="padding:6px 8px;border-radius:6px;border:1px solid var(--medium-gray);width:220px;" />
+                  <input type="text" id="inlineInput-${scan._id}" value="${(scan.product?.name || scan.product || 'Imagem analisada').replace(/\"/g, '&quot;')}" style="padding:6px 8px;border-radius:6px;border:1px solid var(--medium-gray);width:220px;" />
                   <button class="btn-small" onclick="event.stopPropagation(); saveInlineEdit('${scan._id}')" title="Salvar" style="margin-left:6px;background:var(--primary-green);color:white;border:none;">OK</button>
                   <button class="btn-small" onclick="event.stopPropagation(); cancelInlineEdit('${scan._id}')" title="Cancelar" style="margin-left:6px;background:transparent;border:1px solid var(--medium-gray);">Cancelar</button>
                 </div>
@@ -1110,8 +1122,8 @@
             </div>
             <div class="scan-actions">
               <span class="scan-risk ${riskClass}">
-                ${riskClass === 'Scan' ? 'Seguro' : 
-                  riskClass === 'caution' ? 'Cuidado' : 'Evitar'}
+                ${riskClass === 'Scan' ? 'Seguro' :
+            riskClass === 'caution' ? 'Cuidado' : 'Evitar'}
               </span>
               <button class="btn-small btn-view" onclick="event.stopPropagation(); viewScan('${scan._id}')">
                 <i class="fas fa-eye"></i>
@@ -1129,16 +1141,16 @@
 
       renderPagination() {
         const container = document.getElementById('pagination');
-        
+
         let paginationHTML = '';
-        
+
         // Previous button
         paginationHTML += `
           <button ${this.currentPage === 1 ? 'disabled' : ''} onclick="changePage(${this.currentPage - 1})">
             <i class="fas fa-chevron-left"></i>
           </button>
         `;
-        
+
         // Page numbers
         for (let i = 1; i <= this.totalPages; i++) {
           if (i === this.currentPage) {
@@ -1147,14 +1159,14 @@
             paginationHTML += `<button onclick="changePage(${i})">${i}</button>`;
           }
         }
-        
+
         // Next button
         paginationHTML += `
           <button ${this.currentPage === this.totalPages ? 'disabled' : ''} onclick="changePage(${this.currentPage + 1})">
             <i class="fas fa-chevron-right"></i>
           </button>
         `;
-        
+
         container.innerHTML = paginationHTML;
       }
 
@@ -1163,7 +1175,7 @@
         const ScanScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'Scan').length;
         const warningScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'caution').length;
         const dangerScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'avoid').length;
-        
+
         document.getElementById('totalScans').textContent = totalScans;
         document.getElementById('ScanScans').textContent = ScanScans;
         document.getElementById('warningScans').textContent = warningScans;
@@ -1332,11 +1344,11 @@
 
       changePage(page) {
         if (page < 1 || page > this.totalPages) return;
-        
+
         this.currentPage = page;
         this.renderHistory();
         this.renderPagination();
-        
+
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
@@ -1346,7 +1358,7 @@
           const allScans = [];
           let page = 1;
           let hasMore = true;
-          
+
           // Get all scans
           while (hasMore) {
             const response = await api.getScans(page, 100);
@@ -1354,7 +1366,7 @@
             hasMore = page < response.pages;
             page++;
           }
-          
+
           const exportData = {
             user: this.user,
             scans: allScans,
@@ -1366,7 +1378,7 @@
               avoid: allScans.filter(s => s.analysis.overallRisk === 'avoid').length
             }
           };
-          
+
           const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
@@ -1395,7 +1407,7 @@
         element.textContent = message;
         element.style.display = 'block';
         document.getElementById('errorMessage').style.display = 'none';
-        
+
         setTimeout(() => {
           element.style.display = 'none';
         }, 5000);
@@ -1406,7 +1418,7 @@
         element.textContent = message;
         element.style.display = 'block';
         document.getElementById('successMessage').style.display = 'none';
-        
+
         setTimeout(() => {
           element.style.display = 'none';
         }, 5000);
@@ -1528,7 +1540,7 @@
       window.historyInstance = new NutriScanHistory();
     });
   </script>
-  
+
   <!-- Scripts necessários (únicos) -->
   <script src="../js/login-system.js"></script>
   <script src="../js/file-checker.js"></script>
@@ -1624,7 +1636,7 @@
           ];
           localStorage.setItem('nutriScanScans', JSON.stringify(this.scans));
         }
-        
+
         this.filteredScans = [...this.scans];
       }
 
@@ -1633,7 +1645,7 @@
         const categoryFilter = document.getElementById('categoryFilter');
         const riskFilter = document.getElementById('riskFilter');
         const dateFilter = document.getElementById('dateFilter');
-        
+
         if (categoryFilter) {
           categoryFilter.addEventListener('change', () => this.filterHistory());
         }
@@ -1648,11 +1660,11 @@
       updateUserInfo() {
         const userNameEl = document.getElementById('userName');
         const userAvatarEl = document.getElementById('userAvatar');
-        
+
         if (userNameEl && this.user) {
           userNameEl.textContent = this.user.name || 'Usuário';
         }
-        
+
         if (userAvatarEl && this.user) {
           userAvatarEl.textContent = this.user.name ? this.user.name.charAt(0).toUpperCase() : 'U';
         }
@@ -1664,23 +1676,23 @@
         document.getElementById('statsSection').style.display = 'none';
         document.getElementById('exportSection').style.display = 'none';
         document.getElementById('settingsSection').style.display = 'none';
-        
+
         // Mostrar seção selecionada
         const targetSection = document.getElementById(sectionName + 'Section');
         if (targetSection) {
           targetSection.style.display = 'block';
         }
-        
+
         // Atualizar botões de navegação
         document.querySelectorAll('.nav-btn').forEach(btn => {
           btn.classList.remove('active');
         });
-        
+
         const activeBtn = document.querySelector(`[data-section="${sectionName}"]`);
         if (activeBtn) {
           activeBtn.classList.add('active');
         }
-        
+
         this.currentSection = sectionName;
         this.updateSectionContent();
       }
@@ -1706,39 +1718,39 @@
         const categoryFilter = document.getElementById('categoryFilter').value;
         const riskFilter = document.getElementById('riskFilter').value;
         const dateFilter = document.getElementById('dateFilter').value;
-        
+
         this.filteredScans = this.scans.filter(scan => {
           // Filtro por categoria
           if (categoryFilter && scan.category !== categoryFilter) {
             return false;
           }
-          
+
           // Filtro por risco
           if (riskFilter && scan.status !== riskFilter) {
             return false;
           }
-          
+
           // Filtro por data
           if (dateFilter) {
             const scanDate = new Date(scan.date);
             const now = new Date();
             const daysDiff = Math.floor((now - scanDate) / (1000 * 60 * 60 * 24));
-            
+
             if (daysDiff > parseInt(dateFilter)) {
               return false;
             }
           }
-          
+
           return true;
         });
-        
+
         this.renderHistoryList();
       }
 
       renderHistoryList() {
         const historyList = document.getElementById('historyList');
         if (!historyList) return;
-        
+
         if (this.filteredScans.length === 0) {
           historyList.innerHTML = `
             <div style="text-align: center; padding: 3rem; color: var(--text-light);">
@@ -1749,7 +1761,7 @@
           `;
           return;
         }
-        
+
         historyList.innerHTML = this.filteredScans.map(scan => `
           <div class="scan-item" onclick="viewScanDetails(${scan.id})">
             <div class="scan-info">
@@ -1764,16 +1776,16 @@
             </div>
           </div>
         `).join('');
-        
+
         this.updateStats();
       }
 
       renderStats() {
         const statsGrid = document.getElementById('statsGrid');
         if (!statsGrid) return;
-        
+
         const stats = this.calculateStats();
-        
+
         statsGrid.innerHTML = `
           <div class="stat-card">
             <h3>Total de Scans</h3>
@@ -1809,7 +1821,7 @@
       renderExportOptions() {
         const exportOptions = document.querySelector('.export-options');
         if (!exportOptions) return;
-        
+
         exportOptions.innerHTML = `
           <div class="export-card">
             <h3>Exportar Histórico Completo</h3>
@@ -1850,7 +1862,7 @@
       renderSettings() {
         const settingsGrid = document.querySelector('.settings-grid');
         if (!settingsGrid) return;
-        
+
         settingsGrid.innerHTML = `
           <div class="setting-card">
             <h3>Exibição</h3>
@@ -1896,13 +1908,13 @@
         const caution = this.filteredScans.filter(s => s.status === 'caution').length;
         const avoid = this.filteredScans.filter(s => s.status === 'avoid').length;
         const avgConfidence = this.filteredScans.reduce((sum, s) => sum + s.confidence, 0) / total;
-        
+
         const now = new Date();
         const thisMonth = this.filteredScans.filter(s => {
           const scanDate = new Date(s.date);
           return scanDate.getMonth() === now.getMonth() && scanDate.getFullYear() === now.getFullYear();
         }).length;
-        
+
         return {
           total,
           Scan,
@@ -1943,13 +1955,13 @@
         const itemsPerPage = document.getElementById('itemsPerPage');
         const sortBy = document.getElementById('sortBy');
         const autoRefresh = document.getElementById('autoRefresh');
-        
+
         if (itemsPerPage) this.settings.itemsPerPage = parseInt(itemsPerPage.value);
         if (sortBy) this.settings.sortBy = sortBy.value;
         if (autoRefresh) this.settings.autoRefresh = autoRefresh.checked;
-        
+
         localStorage.setItem('historySettings', JSON.stringify(this.settings));
-        
+
         // Reaplicar filtros e ordenação
         this.filterHistory();
       }
@@ -1991,7 +2003,7 @@
           this.getStatusLabel(scan.status),
           scan.confidence + '%'
         ]);
-        
+
         return [headers, ...rows].map(row => row.join(',')).join('\n');
       }
 
@@ -2005,7 +2017,7 @@
           ['Confiança Média', stats.avgConfidence + '%'],
           ['Novos este Mês', stats.newThisMonth]
         ];
-        
+
         return [headers, ...rows].map(row => row.join(',')).join('\n');
       }
 
@@ -2070,9 +2082,9 @@
       ScanRedirect('allergy-scanner.html');
     }
   </script>
-  
+
   <!-- Removidas inclusões duplicadas; dependências carregadas acima -->
-  
+
   <!-- Inicializar controller
   let historyController;
   document.addEventListener('DOMContentLoaded', () => {

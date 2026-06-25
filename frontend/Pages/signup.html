@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -320,122 +321,125 @@
     }
   </style>
 </head>
+
 <body>
   <div class="signup-container">
     <title>Cadastro - Scan-Bite</title>
     <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
-      <!-- Lado esquerdo - Informações -->
-      <div class="signup-left">
-        <div class="signup-logo">
-          <i class="fas fa-leaf"></i>
-        </div>
-        <h2 class="signup-title">Nutri-Scan</h2>
-        <p class="signup-subtitle">Junte-se a milhares de pessoas cuidando da sua saúde</p>
-        
-        <div class="plan-preview">
-          <h4>🎁 Plano Free Inicial</h4>
-          <ul class="plan-features">
-            <li><i class="fas fa-check"></i>10 scans gratuitos por mês</li>
-            <li><i class="fas fa-check"></i>Verificação básica de alérgenos</li>
-            <li><i class="fas fa-check"></i>Histórico de scans</li>
-            <li><i class="fas fa-check"></i>Acesso ao dashboard</li>
-          </ul>
-        </div>
+    <!-- Lado esquerdo - Informações -->
+    <div class="signup-left">
+      <div class="signup-logo">
+        <i class="fas fa-leaf"></i>
+      </div>
+      <h2 class="signup-title">Nutri-Scan</h2>
+      <p class="signup-subtitle">Junte-se a milhares de pessoas cuidando da sua saúde</p>
 
-        <ul class="features-list">
-          <li>
-            <i class="fas fa-shield-alt"></i>
-            <span>Segurança e privacidade</span>
-          </li>
-          <li>
-            <i class="fas fa-mobile-alt"></i>
-            <span>Compatível com todos dispositivos</span>
-          </li>
-          <li>
-            <i class="fas fa-headset"></i>
-            <span>Suporte dedicado</span>
-          </li>
+      <div class="plan-preview">
+        <h4>🎁 Plano Free Inicial</h4>
+        <ul class="plan-features">
+          <li><i class="fas fa-check"></i>10 scans gratuitos por mês</li>
+          <li><i class="fas fa-check"></i>Verificação básica de alérgenos</li>
+          <li><i class="fas fa-check"></i>Histórico de scans</li>
+          <li><i class="fas fa-check"></i>Acesso ao dashboard</li>
         </ul>
       </div>
 
-      <!-- Lado direito - Formulário -->
-      <div class="signup-right">
-        <h2 class="signup-title">Criar sua conta</h2>
-        <p class="signup-subtitle">Comece grátis em menos de 1 minuto</p>
+      <ul class="features-list">
+        <li>
+          <i class="fas fa-shield-alt"></i>
+          <span>Segurança e privacidade</span>
+        </li>
+        <li>
+          <i class="fas fa-mobile-alt"></i>
+          <span>Compatível com todos dispositivos</span>
+        </li>
+        <li>
+          <i class="fas fa-headset"></i>
+          <span>Suporte dedicado</span>
+        </li>
+      </ul>
+    </div>
 
-        <!-- Mensagens -->
-        <div id="errorMessage" class="error-message"></div>
-        <div id="successMessage" class="success-message"></div>
+    <!-- Lado direito - Formulário -->
+    <div class="signup-right">
+      <h2 class="signup-title">Criar sua conta</h2>
+      <p class="signup-subtitle">Comece grátis em menos de 1 minuto</p>
 
-        <!-- Formulário de Cadastro -->
-        <form id="signupForm" class="signup-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="firstName">Nome</label>
-              <input type="text" id="firstName" name="firstName" placeholder="Seu nome" required>
-              <div class="error-text" id="firstNameError"></div>
-            </div>
-            <div class="form-group">
-              <label for="lastName">Sobrenome</label>
-              <input type="text" id="lastName" name="lastName" placeholder="Seu sobrenome" required>
-              <div class="error-text" id="lastNameError"></div>
-            </div>
-          </div>
+      <!-- Mensagens -->
+      <div id="errorMessage" class="error-message"></div>
+      <div id="successMessage" class="success-message"></div>
 
+      <!-- Formulário de Cadastro -->
+      <form id="signupForm" class="signup-form">
+        <div class="form-row">
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
-            <div class="error-text" id="emailError"></div>
+            <label for="firstName">Nome</label>
+            <input type="text" id="firstName" name="firstName" placeholder="Seu nome" required>
+            <div class="error-text" id="firstNameError"></div>
           </div>
-
           <div class="form-group">
-            <label for="password">Senha</label>
-            <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
-            <div class="error-text" id="passwordError"></div>
+            <label for="lastName">Sobrenome</label>
+            <input type="text" id="lastName" name="lastName" placeholder="Seu sobrenome" required>
+            <div class="error-text" id="lastNameError"></div>
           </div>
-
-          <div class="form-group">
-            <label for="confirmPassword">Confirmar Senha</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Digite a senha novamente" required>
-            <div class="error-text" id="confirmPasswordError"></div>
-          </div>
-
-          <div class="terms-group">
-            <label>
-              <input type="checkbox" id="terms" name="terms" required>
-              <span>Aceito os <a href="#" onclick="window.open('terms.html', '_blank')">Termos de Uso</a> e a <a href="#" onclick="window.open('privacy.html', '_blank')">Política de Privacidade</a></span>
-            </label>
-          </div>
-
-          <div class="terms-group">
-            <label>
-              <input type="checkbox" id="newsletter" name="newsletter">
-              <span>Desejo receber novidades e dicas por email</span>
-            </label>
-          </div>
-
-          <button type="submit" class="signup-btn" id="signupBtn">
-            <i class="fas fa-user-plus"></i>
-            Criar Conta Gratuita
-          </button>
-        </form>
-
-        <div class="divider">
-          <span>ou</span>
         </div>
 
-        <!-- Cadastro com Google -->
-        <button class="google-signup-btn" onclick="handleGoogleSignup()">
-          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
-          <span>Criar conta com Google</span>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+          <div class="error-text" id="emailError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" required>
+          <div class="error-text" id="passwordError"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Senha</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Digite a senha novamente"
+            required>
+          <div class="error-text" id="confirmPasswordError"></div>
+        </div>
+
+        <div class="terms-group">
+          <label>
+            <input type="checkbox" id="terms" name="terms" required>
+            <span>Aceito os <a href="#" onclick="window.open('terms.html', '_blank')">Termos de Uso</a> e a <a href="#"
+                onclick="window.open('privacy.html', '_blank')">Política de Privacidade</a></span>
+          </label>
+        </div>
+
+        <div class="terms-group">
+          <label>
+            <input type="checkbox" id="newsletter" name="newsletter">
+            <span>Desejo receber novidades e dicas por email</span>
+          </label>
+        </div>
+
+        <button type="submit" class="signup-btn" id="signupBtn">
+          <i class="fas fa-user-plus"></i>
+          Criar Conta Gratuita
         </button>
+      </form>
 
-        <!-- Link para login -->
-        <div class="login-link">
-          <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
-        </div>
+      <div class="divider">
+        <span>ou</span>
+      </div>
+
+      <!-- Cadastro com Google -->
+      <button class="google-signup-btn" onclick="handleGoogleSignup()">
+        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
+        <span>Criar conta com Google</span>
+      </button>
+
+      <!-- Link para login -->
+      <div class="login-link">
+        <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Scripts -->
@@ -443,4 +447,5 @@
   <script src="../js/login-system.js"></script>
   <script src="../js/signup-system.js"></script>
 </body>
+
 </html>
