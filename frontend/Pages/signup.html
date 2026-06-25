@@ -13,6 +13,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    @import url('../style.css');
+
     /* Estilos específicos da página de cadastro */
     .signup-container {
       min-height: 100vh;
@@ -43,16 +45,20 @@
       justify-content: center;
       align-items: center;
       text-align: center;
+      background-color: var(--white);
+      border-radius: 20px 0 0 20px;
     }
 
     .signup-right {
       flex: 1.2;
       padding: 3rem;
       display: flex;
+      background-color: var(--secondary-dark);
       flex-direction: column;
       justify-content: center;
       max-height: 700px;
       overflow-y: auto;
+      border-radius: 20px;
     }
 
     .signup-logo {
@@ -63,13 +69,13 @@
 
     .signup-title {
       font-size: 2rem;
-      color: var(--text-dark);
+      color: var(--primary-green);
       margin-bottom: 1rem;
       font-weight: 700;
     }
 
     .signup-subtitle {
-      color: var(--text-light);
+      color: var(--text-dark);
       margin-bottom: 2rem;
       font-size: 1.1rem;
     }
@@ -92,7 +98,7 @@
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      color: var(--text-dark);
+      color: var(--light-gray);
     }
 
     .form-group input {
@@ -143,7 +149,7 @@
     }
 
     .terms-group a {
-      color: var(--primary-green);
+      color: var(--secondary-green);
       text-decoration: none;
     }
 
@@ -154,7 +160,7 @@
     .signup-btn {
       width: 100%;
       padding: 1rem;
-      background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+      background: linear-gradient(135deg, var(--primary-blue) 50%, var(--secondary-green) 50%, var(--tree-green) 100%);
       color: white;
       border: none;
       border-radius: 10px;

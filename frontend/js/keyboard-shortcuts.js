@@ -28,13 +28,7 @@ class KeyboardShortcutsManager {
     this.addShortcut('h', 'home', 'Ir para página inicial', () => {
       window.location.href = 'index.html';
     });
-    
-    this.addShortcut('d', 'theme-shortcut', 'Alternar tema', () => {
-      if (window.darkModeManager) {
-        darkModeManager.toggleTheme();
-      }
-    });
-    
+
     this.addShortcut('s', 'scan', 'Iniciar novo scan', () => {
       if (typeof simulateUploadAndScan === 'function') {
         simulateUploadAndScan();
@@ -42,20 +36,20 @@ class KeyboardShortcutsManager {
         window.location.href = 'index.html#como-funciona';
       }
     });
-    
+
     // Ações
     this.addShortcut('n', 'new', 'Novo scan', () => {
       if (typeof simulateUploadAndScan === 'function') {
         simulateUploadAndScan();
       }
     });
-    
+
     this.addShortcut('e', 'export', 'Exportar dados', () => {
       if (typeof exportScanData === 'function') {
         exportScanData();
       }
     });
-    
+
     this.addShortcut('f', 'search', 'Focar busca', () => {
       const searchInput = document.getElementById('scanSearch');
       if (searchInput) {
@@ -63,67 +57,67 @@ class KeyboardShortcutsManager {
         searchInput.select();
       }
     });
-    
-    // Interface
-    this.addShortcut('t', 'theme', 'Alternar tema', () => {
-      if (window.darkModeManager) {
-        darkModeManager.toggleTheme();
-      }
-    });
-    
+
     this.addShortcut('l', 'logout', 'Logout', () => {
       if (window.authMonitor) {
         authMonitor.logout('Logout via atalho de teclado');
       }
     });
-    
+
     // Ajuda
     this.addShortcut('?', 'help', 'Mostrar ajuda', () => {
       this.showHelp();
     });
-    
-    // Modificadores
-    this.addShortcut(['ctrl', 'shift', 'd'], 'theme', 'Alternar tema (Ctrl+Shift+D)', () => {
+
+    // Tema - Ctrl+Shift+D e Ctrl+Shift+L
+    this.addShortcut(['ctrl', 'shift', 'd'], 'theme-d', 'Alternar tema (Ctrl+Shift+D)', () => {
       if (window.darkModeManager) {
         darkModeManager.toggleTheme();
       }
     });
-    
+
+    this.addShortcut(['ctrl', 'shift', 'l'], 'theme-l', 'Alternar tema (Ctrl+Shift+L)', () => {
+      if (window.darkModeManager) {
+        darkModeManager.toggleTheme();
+      }
+    });
+
+    // Modificadores avançados
     this.addShortcut(['ctrl', 'shift', 's'], 'save', 'Salvar dados', () => {
       if (typeof saveToLocalStorage === 'function') {
         saveToLocalStorage();
       }
     });
-    
+
     this.addShortcut(['ctrl', 'shift', 'r'], 'refresh', 'Recarregar dados', () => {
       if (window.authMonitor) {
         authMonitor.forceCheck();
       }
     });
-    
-    this.addShortcut(['ctrl', 'shift', 'e'], 'export', 'Exportar dados', () => {
+
+    this.addShortcut(['ctrl', 'shift', 'e'], 'export-advanced', 'Exportar dados', () => {
       if (typeof exportScanData === 'function') {
         exportScanData();
       }
     });
-    
+
     // Navegação no dashboard
     this.addShortcut('left', 'previous', 'Página anterior', () => {
       if (typeof previousPage === 'function') {
         previousPage();
       }
     });
-    
+
     this.addShortcut('right', 'next', 'Próxima página', () => {
       if (typeof nextPage === 'function') {
         nextPage();
       }
     });
-    
+
     this.addShortcut('escape', 'close', 'Fechar modal', () => {
       this.closeAllModals();
     });
-    
+
     console.log(`📋 ${this.shortcuts.size} atalhos configurados`);
   }
 
@@ -270,7 +264,6 @@ class KeyboardShortcutsManager {
     const sections = {
       '🧭 Navegação': [
         { keys: 'H', desc: 'Ir para página inicial' },
-        { keys: 'D', desc: 'Alternar tema' },
         { keys: '← →', desc: 'Navegar entre páginas' }
       ],
       '📸 Scans': [
@@ -279,12 +272,14 @@ class KeyboardShortcutsManager {
         { keys: 'F', desc: 'Focar busca' }
       ],
       '⚙️ Ações': [
-        { keys: 'T', desc: 'Alternar tema' },
         { keys: 'E', desc: 'Exportar dados' },
         { keys: 'L', desc: 'Logout' }
       ],
+      '🎨 Tema': [
+        { keys: 'Ctrl+Shift+D', desc: 'Alternar tema claro/escuro' },
+        { keys: 'Ctrl+Shift+L', desc: 'Alternar tema claro/escuro' }
+      ],
       '🔧 Avançado': [
-        { keys: 'Ctrl+Shift+D', desc: 'Alternar tema' },
         { keys: 'Ctrl+Shift+S', desc: 'Salvar dados' },
         { keys: 'Ctrl+Shift+R', desc: 'Recarregar dados' },
         { keys: 'Ctrl+Shift+E', desc: 'Exportar dados' }
