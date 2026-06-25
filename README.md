@@ -1,4 +1,4 @@
-# Safe-Bite 🥗
+# Scan-Bite 🥗
 
 Sistema de análise nutricional e pagamento com integração Mercado Pago.
 
@@ -66,7 +66,7 @@ npm start
 
 ## 📄 Licença
 
-Este projeto é propriedade de Safe-Bite. Todos os direitos reservados.
+Este projeto é propriedade de Scan-Bite. Todos os direitos reservados.
 
 ## ⚠️ Aviso de Segurança
 

@@ -122,7 +122,7 @@ class UpgradePopupManager {
 
   goToPayment() {
     this.closePopup();
-    safeRedirect('payment.html');
+    ScanRedirect('payment.html');
   }
 
   startFreeTrial() {
@@ -132,7 +132,7 @@ class UpgradePopupManager {
     
     if (token) {
       // Usuário já logado, redirecionar para dashboard
-      safeRedirect('index.html');
+      ScanRedirect('index.html');
     } else {
       // Usuário não logado, mostrar tela de login
       this.showLoginModal();
@@ -146,7 +146,7 @@ class UpgradePopupManager {
       loginSystem.handleGoogleLogin();
     } else {
       // Fallback - redirecionar para página de login
-      safeRedirect('login.html');
+      ScanRedirect('login.html');
     }
   }
 
@@ -429,7 +429,7 @@ class LoginManager {
       document.querySelector('.login-modal-overlay')?.remove();
       
       // Redirecionar
-      safeRedirect('index.html');
+      ScanRedirect('index.html');
       
     } catch (error) {
       console.error('Erro no login Google:', error);
@@ -503,7 +503,7 @@ class LoginManager {
         localStorage.setItem('nutriScanUser', JSON.stringify(data.user));
         
         document.querySelector('.login-modal-overlay')?.remove();
-        safeRedirect('index.html');
+        ScanRedirect('index.html');
       } else {
         throw new Error(data.message || 'Erro no login');
       }

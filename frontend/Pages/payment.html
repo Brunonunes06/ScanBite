@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assinatura - Safe-Bite</title>
+  <title>Assinatura - Scan-Bite</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../css/upgrade-popup.css">
   <link rel="stylesheet" href="../css/auth-indicators.css">
@@ -624,15 +624,15 @@
 </head>
 <body>
   <div class="payment-container">
-    <title>Pagamento - Safe-Bite</title>
-    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
+    <title>Pagamento - Scan-Bite</title>
+    <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
     <header class="payment-header">
       <button class="back-button" onclick="goToDashboard()">
         <i class="fas fa-arrow-left"></i>
       </button>
       <div class="payment-logo">
         <i class="fas fa-leaf" href="./dashboard.html"></i>
-        <span>Safe-Bite</span>
+        <span>Scan-Bite</span>
       </div>
       <div class="user-info">
         <div class="user-avatar" id="userAvatar">JD</div>
@@ -646,7 +646,7 @@
         <!-- Payment Header -->
         <div class="payment-header-card">
           <h1 class="payment-title">Escolha seu Plano</h1>
-          <p class="payment-subtitle">Desbloqueie todos os recursos do Safe-Bite</p>
+          <p class="payment-subtitle">Desbloqueie todos os recursos do Scan-Bite</p>
         </div>
 
         <!-- Payment Body -->
@@ -765,7 +765,7 @@
                     <label class="method-row" data-method="card" style="display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--medium-gray);border-radius:10px;cursor:pointer">
                       <input type="radio" name="method" value="card" checked style="margin:0">
                       <div style="flex:1">Cartão de crédito <span style="color:var(--text-light);font-size:0.9rem;margin-left:6px">(Stripe)</span></div>
-                      <div style="display:flex;gap:6px;align-items:center"><img src="Logos/visa.jpeg" alt="visa" style="height:18px"><img src="Logos/master.png" alt="mc" style="height:18px"></div>
+                      <div style="display:flex;gap:6px;align-items:center"><img src="../Logos/visa.jpeg" alt="visa" style="height:18px"><img src="../Logos/master.png" alt="mc" style="height:18px"></div>
                     </label>
 
                     <label class="method-row" data-method="pix" style="display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--medium-gray);border-radius:10px;cursor:pointer">
@@ -1089,7 +1089,7 @@
         try {
           if (!paymentIntegration) throw new Error('PaymentIntegration não disponível');
 
-          const pixPayment = await paymentIntegration.generatePIX(this.amount, 'Assinatura Premium Safe-Bite');
+          const pixPayment = await paymentIntegration.generatePIX(this.amount, 'Assinatura Premium Scan-Bite');
           this.paymentData = pixPayment;
 
           this.displayPIXPayment(pixPayment);
@@ -1342,11 +1342,11 @@
       }
 
       redirectToDashboard() {
-        safeRedirect('dashboard.html');
+        ScanRedirect('dashboard.html');
       }
 
       redirectToLogin() {
-        safeRedirect('index.html');
+        ScanRedirect('index.html');
       }
     }
 
@@ -1355,7 +1355,7 @@
 
     // Global functions
     function goToDashboard() {
-      safeRedirect('dashboard.html');
+      ScanRedirect('dashboard.html');
     }
 
     function copyToClipboard(text) {

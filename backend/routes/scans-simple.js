@@ -54,7 +54,7 @@ router.post('/', async (req, res) => {
           sodium: 200
         },
         warnings: [],
-        safetyRating: 'safe'
+        ScantyRating: 'Scan'
       });
     }
 
@@ -74,7 +74,7 @@ router.post('/', async (req, res) => {
     });
 
     // Determinar risco geral
-    let overallRisk = 'safe';
+    let overallRisk = 'Scan';
     if (alerts.some(a => a.severity === 'danger')) {
       overallRisk = 'avoid';
     } else if (alerts.length > 0) {
@@ -92,7 +92,7 @@ router.post('/', async (req, res) => {
         nutritionalInfo: product.nutritionalInfo,
         overallRisk,
         alerts,
-        recommendations: overallRisk === 'safe' ? 
+        recommendations: overallRisk === 'Scan' ? 
           ['Produto seguro para consumo'] : 
           ['Consulte um nutricionista', 'Verifique os ingredientes com cuidado']
       },
@@ -103,10 +103,10 @@ router.post('/', async (req, res) => {
     });
 
     // Atualizar estatísticas do usuário
-    const stats = user.stats || { totalScans: 0, safeProducts: 0, warningProducts: 0, dangerProducts: 0 };
+    const stats = user.stats || { totalScans: 0, ScanProducts: 0, warningProducts: 0, dangerProducts: 0 };
     stats.totalScans += 1;
     
-    if (overallRisk === 'safe') stats.safeProducts += 1;
+    if (overallRisk === 'Scan') stats.ScanProducts += 1;
     else if (overallRisk === 'caution') stats.warningProducts += 1;
     else stats.dangerProducts += 1;
 

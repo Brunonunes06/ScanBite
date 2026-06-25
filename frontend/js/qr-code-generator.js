@@ -74,7 +74,7 @@ class QRCodeGenerator {
     return this.generateQRCode(pixCode, {
       width: 300,
       height: 300,
-      colorDark: '#2ecc71', // Verde Safe-Bite
+      colorDark: '#2ecc71', // Verde Scan-Bite
       colorLight: '#ffffff',
       correctLevel: 'H' // Alta correção de erro
     });

@@ -25,7 +25,7 @@ class PaymentManager {
         },
         body: JSON.stringify({
           amount,
-          description: description || 'Assinatura Premium Safe-Bite',
+          description: description || 'Assinatura Premium Scan-Bite',
           customerInfo
         })
       });
@@ -262,7 +262,7 @@ class PaymentManager {
       digitableLine: '12345.67890 12345.678901 12345.678901 1 12345678901234',
       boletoUrl: 'https://example.com/boleto',
       dueDate: dueDate.toISOString(),
-      beneficiary: { name: 'Safe-Bite Ltda' },
+      beneficiary: { name: 'Scan-Bite Ltda' },
       instructions: [
         'Pague em qualquer banco, lotérica ou app de pagamento.',
         'Não pague após o vencimento sem verificar a correção monetária.',

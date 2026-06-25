@@ -60,7 +60,7 @@ class MercadoPagoPixIntegration {
         },
         body: JSON.stringify({
           amount,
-          description: description || 'Pagamento Safe-Bite',
+          description: description || 'Pagamento Scan-Bite',
           customerInfo: {
             name: customer.name || 'Cliente',
             email: customer.email,

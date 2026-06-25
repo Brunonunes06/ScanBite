@@ -1,5 +1,5 @@
 // Sistema de Monitoramento Contínuo de Autenticação
-// Safe-Bite Authentication Monitor
+// Scan-Bite Authentication Monitor
 
 class AuthMonitor {
   constructor() {

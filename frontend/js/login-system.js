@@ -53,7 +53,7 @@ class LoginSystem {
       // Usuário já está logado, redirecionar para dashboard
       if (window.location.pathname.includes('login.html') || 
           window.location.pathname.includes('index.html')) {
-        safeRedirect('dashboard.html');
+        ScanRedirect('dashboard.html');
       }
     }
   }
@@ -173,7 +173,7 @@ class LoginSystem {
         // Redirecionar
         setTimeout(() => {
           const redirectUrl = this.getRedirectUrl();
-          safeRedirect(redirectUrl);
+          ScanRedirect(redirectUrl);
         }, 1500);
       } else {
         throw new Error(result.message || 'Erro no login');
@@ -253,7 +253,7 @@ class LoginSystem {
 
         setTimeout(() => {
           const redirectUrl = this.getRedirectUrl();
-          safeRedirect(redirectUrl);
+          ScanRedirect(redirectUrl);
         }, 1500);
       } else {
         throw new Error(result.message || 'Erro no login Google');
@@ -411,7 +411,7 @@ class LoginSystem {
     localStorage.removeItem('nutriScanRemember');
 
     // Redirecionar para login
-    safeRedirect('login.html');
+    ScanRedirect('login.html');
   }
 
   // Verificar se usuário está autenticado
@@ -452,7 +452,7 @@ function handleForgotPassword(event) {
 function handleSignup(event) {
   event.preventDefault();
   // Redirecionar para página de cadastro ou mostrar modal
-  safeRedirect('signup.html');
+  ScanRedirect('signup.html');
 }
 
 // Inicializar sistema

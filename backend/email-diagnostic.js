@@ -1,4 +1,4 @@
-// Diagnóstico do Sistema de Email Safe-Bite
+// Diagnóstico do Sistema de Email Scan-Bite
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -150,18 +150,18 @@ class EmailDiagnostic {
       
       // Tentar enviar email de teste
       const testEmail = {
-        from: `"Teste Safe-Bite" <${process.env.GMAIL_EMAIL || 'bruno.nunes.santos06@escola.pr.gov.br'}>`,
+        from: `"Teste Scan-Bite" <${process.env.GMAIL_EMAIL || 'bruno.nunes.santos06@escola.pr.gov.br'}>`,
         to: process.env.GMAIL_EMAIL || 'bruno.nunes.santos06@escola.pr.gov.br',
-        subject: '🧪 TESTE - Safe-Bite Email Diagnostic',
+        subject: '🧪 TESTE - Scan-Bite Email Diagnostic',
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px;">
-            <h2 style="color: #2ecc71;">✅ Email de Teste - Safe-Bite</h2>
+            <h2 style="color: #2ecc71;">✅ Email de Teste - Scan-Bite</h2>
             <p>Este é um email de teste para verificar se o sistema de envio está funcionando.</p>
             <p><strong>Data do teste:</strong> ${new Date().toLocaleString('pt-BR')}</p>
             <p><strong>Status:</strong> Sistema funcionando perfeitamente!</p>
             <hr style="margin: 20px 0;">
             <p style="color: #666; font-size: 12px;">
-              Este email foi gerado automaticamente pelo sistema de diagnóstico do Safe-Bite.
+              Este email foi gerado automaticamente pelo sistema de diagnóstico do Scan-Bite.
             </p>
           </div>
         `

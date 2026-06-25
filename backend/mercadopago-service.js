@@ -53,7 +53,7 @@ class MercadoPagoService {
         items: [
           {
             id: 'premium-subscription',
-            title: description || 'Assinatura Premium Safe-Bite',
+            title: description || 'Assinatura Premium Scan-Bite',
             description: 'Acesso ao plano Premium com análises avançadas',
             quantity: 1,
             unit_price: amount,
@@ -84,7 +84,7 @@ class MercadoPagoService {
         },
         auto_return: 'approved',
         notification_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payment/webhook/mercadopago`,
-        statement_descriptor: 'SAFE-BITE'
+        statement_descriptor: 'Scan-BITE'
       };
 
       // Criar preferência de pagamento
@@ -134,7 +134,7 @@ class MercadoPagoService {
           expiration: 3600
         },
         transaction_amount: amount,
-        description: description || 'Pagamento Safe-Bite',
+        description: description || 'Pagamento Scan-Bite',
         items: [
           {
             title: description || 'Assinatura Premium',
@@ -245,7 +245,7 @@ class MercadoPagoService {
     const transactionId = `NUTRISCAN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
     // QR Code mock (pixel art PIX logo)
-    const mockQRCode = `myhpc3301@gmial.com ${transactionId} 52060000530398654061${amount.toFixed(2).replace('.', '')}5802BR5913SAFE-BITE6009SAOPAULO62070503***63041D3D`;
+    const mockQRCode = `myhpc3301@gmial.com ${transactionId} 52060000530398654061${amount.toFixed(2).replace('.', '')}5802BR5913Scan-BITE6009SAOPAULO62070503***63041D3D`;
 
     return {
       success: true,

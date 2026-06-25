@@ -62,12 +62,12 @@ router.post('/', async (req, res) => {
       const mailOptions = {
         from: `"${nome}" <${email}>`,
         to: process.env.GMAIL_EMAIL || 'bruno.nunes.santos06@escola.pr.gov.br',
-        subject: `📧 Nova Mensagem de Contato - Safe-Bite`,
+        subject: `📧 Nova Mensagem de Contato - Scan-Bite`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
             <div style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; padding: 20px; border-radius: 10px 10px 0 0; text-align: center;">
               <h1 style="margin: 0; font-size: 24px;">
-                <i class="fas fa-leaf"></i> Safe-Bite
+                <i class="fas fa-leaf"></i> Scan-Bite
               </h1>
               <p style="margin: 5px 0 0; opacity: 0.9;">Nova Mensagem de Contato</p>
             </div>
@@ -91,7 +91,7 @@ router.post('/', async (req, res) => {
               
               <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
                 <p style="margin: 0; color: #7f8c8d; font-size: 12px;">
-                  Esta mensagem foi enviada através do formulário de contato do site Safe-Bite
+                  Esta mensagem foi enviada através do formulário de contato do site Scan-Bite
                 </p>
               </div>
             </div>

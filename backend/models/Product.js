@@ -200,11 +200,11 @@ productSchema.virtual('hasAllergens').get(function() {
   return this.allergens.some(allergen => allergen.present);
 });
 
-productSchema.virtual('isSafeForDiabetics').get(function() {
+productSchema.virtual('isScanForDiabetics').get(function() {
   return this.nutritionalInfo.sugar <= 10;
 });
 
-productSchema.virtual('isSafeForHypertensive').get(function() {
+productSchema.virtual('isScanForHypertensive').get(function() {
   return this.nutritionalInfo.sodium <= 140;
 });
 
@@ -240,7 +240,7 @@ productSchema.methods.addReview = function(userId, rating, comment) {
 };
 
 // Método para verificar se produto é seguro para usuário
-productSchema.methods.isSafeForUser = function(userRestrictions) {
+productSchema.methods.isScanForUser = function(userRestrictions) {
   const warnings = [];
   
   // Verificar alérgenos
@@ -261,7 +261,7 @@ productSchema.methods.isSafeForUser = function(userRestrictions) {
   });
   
   // Verificar açúcar para diabéticos
-  if (userRestrictions.includes('diabetes') && !this.isSafeForDiabetics) {
+  if (userRestrictions.includes('diabetes') && !this.isScanForDiabetics) {
     warnings.push({
       type: 'diabetes',
       message: 'Alto teor de açúcar',
@@ -270,7 +270,7 @@ productSchema.methods.isSafeForUser = function(userRestrictions) {
   }
   
   // Verificar sódio para hipertensos
-  if (userRestrictions.includes('hypertension') && !this.isSafeForHypertensive) {
+  if (userRestrictions.includes('hypertension') && !this.isScanForHypertensive) {
     warnings.push({
       type: 'hypertension',
       message: 'Alto teor de sódio',
@@ -279,7 +279,7 @@ productSchema.methods.isSafeForUser = function(userRestrictions) {
   }
   
   return {
-    safe: warnings.length === 0,
+    Scan: warnings.length === 0,
     warnings,
     risk: warnings.length > 0 && warnings.some(w => w.severity === 'danger') ? 'avoid' : 'caution'
   };
@@ -306,7 +306,7 @@ productSchema.statics.getByCategory = function(category, limit = 20) {
 };
 
 // Método estático para buscar produtos sem alérgenos específicos
-productSchema.statics.getSafeForRestrictions = function(restrictions, limit = 20) {
+productSchema.statics.getScanForRestrictions = function(restrictions, limit = 20) {
   const allergenQuery = restrictions.map(restriction => ({
     $or: [
       { 'allergens.name': restriction, 'allergens.present': false },

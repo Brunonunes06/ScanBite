@@ -126,7 +126,7 @@ class RealtimeDashboardSync {
     // Update scan counters
     updateScanCounters(scanData) {
         const totalScansEl = document.getElementById('totalScans');
-        const safeProductsEl = document.getElementById('safeProducts');
+        const ScanProductsEl = document.getElementById('ScanProducts');
         const warningsFoundEl = document.getElementById('warningsFound');
         
         if (totalScansEl) {
@@ -134,9 +134,9 @@ class RealtimeDashboardSync {
             totalScansEl.textContent = current + 1;
         }
         
-        if (scanData.status === 'safe' && safeProductsEl) {
-            const current = parseInt(safeProductsEl.textContent) || 0;
-            safeProductsEl.textContent = current + 1;
+        if (scanData.status === 'Scan' && ScanProductsEl) {
+            const current = parseInt(ScanProductsEl.textContent) || 0;
+            ScanProductsEl.textContent = current + 1;
         }
         
         if ((scanData.status === 'warning' || scanData.status === 'danger') && warningsFoundEl) {
@@ -151,7 +151,7 @@ class RealtimeDashboardSync {
         notification.className = 'realtime-notification';
         notification.innerHTML = `
             <div class="notification-content">
-                <i class="fas fa-${scanData.status === 'safe' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                <i class="fas fa-${scanData.status === 'Scan' ? 'check-circle' : 'exclamation-triangle'}"></i>
                 <span>Novo scan: ${scanData.product}</span>
                 <span class="status-${scanData.status}">${this.getStatusText(scanData.status)}</span>
             </div>
@@ -185,7 +185,7 @@ class RealtimeDashboardSync {
                     color: var(--primary-green);
                 }
                 
-                .status-safe { color: var(--success-green); }
+                .status-Scan { color: var(--success-green); }
                 .status-warning { color: var(--warning-orange); }
                 .status-danger { color: var(--danger-red); }
                 
@@ -247,7 +247,7 @@ class RealtimeDashboardSync {
     // Get status text
     getStatusText(status) {
         const texts = {
-            'safe': 'Seguro',
+            'Scan': 'Seguro',
             'warning': 'Atenção',
             'danger': 'Perigo'
         };
@@ -257,7 +257,7 @@ class RealtimeDashboardSync {
     // Get status icon
     getStatusIcon(status) {
         const icons = {
-            'safe': 'check-circle',
+            'Scan': 'check-circle',
             'warning': 'exclamation-triangle',
             'danger': 'times-circle'
         };
@@ -365,7 +365,7 @@ class RealtimeDashboardSync {
     updateDashboard(data) {
         // Update counters with animation
         this.updateCounter('totalScans', data.totalScans);
-        this.updateCounter('safeProducts', data.safeProducts);
+        this.updateCounter('ScanProducts', data.ScanProducts);
         this.updateCounter('warningsFound', data.warningsFound);
         this.updateCounter('planUsage', `${data.planUsage}/${data.planLimit}`);
         

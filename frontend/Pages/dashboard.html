@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Safe-Bite</title>
+  <title>Dashboard - Scan-Bite</title>
   <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../css/upgrade-popup.css">
@@ -268,7 +268,7 @@
       gap: 6px;
     }
 
-    .status-safe {
+    .status-Scan {
       background: rgba(46, 204, 113, 0.1);
       color: var(--primary-green);
     }
@@ -618,7 +618,7 @@
       border-left-color: var(--danger-red);
     }
 
-    .scan-status.status-safe {
+    .scan-status.status-Scan {
       background: rgba(39, 174, 96, 0.1);
       color: var(--success-green);
     }
@@ -690,7 +690,7 @@
       font-weight: 600;
     }
 
-    .status-safe {
+    .status-Scan {
       background: rgba(46, 204, 113, 0.1);
       color: var(--primary-green);
     }
@@ -723,15 +723,15 @@
       <div class="header-content">
         <div class="logo">
           <i class="fas fa-leaf"></i>
-          <span>Safe-Bite</span>
+          <span>Scan-Bite</span>
         </div>
         
         <nav class="nav-menu">
           <ul>
-            <li><a href="Pages/index.html" class="nav-link">Início</a></li>
-            <li><a href="Pages/allergy-scanner.html" class="nav-link">Scanner</a></li>
-            <!-- <li><a href="Pages/history.html" class="nav-link">Histórico</a></li> -->
-            <li><a href="Pages/settings.html" class="nav-link">Configurações</a></li>
+            <li><a href="index.html" class="nav-link">Início</a></li>
+            <li><a href="allergy-scanner.html" class="nav-link">Scanner</a></li>
+            <!-- <li><a href="history.html" class="nav-link">Histórico</a></li> -->
+            <li><a href="settings.html" class="nav-link">Configurações</a></li>
             <li><a href="#" class="nav-link" id="logoutBtn">Sair</a></li>
           </ul>
         </nav>
@@ -773,7 +773,7 @@
         <div class="dashboard-card">
           <div class="card-header">
             <div>
-              <div class="stat-value" id="safeProducts">0</div>
+              <div class="stat-value" id="ScanProducts">0</div>
               <div class="stat-label">Produtos Seguros</div>
             </div>
             <div class="card-icon icon-blue">
@@ -851,7 +851,7 @@
           <div class="filter-group">
             <select id="statusFilter" onchange="filterScans()">
               <option value="">Todos os status</option>
-              <option value="safe">Seguros</option>
+              <option value="Scan">Seguros</option>
               <option value="warning">Alertas</option>
               <option value="danger">Perigosos</option>
             </select>
@@ -893,30 +893,30 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-section">
-          <h4>Safe-Bite</h4>
+          <h4>Scan-Bite</h4>
           <p>Seu assistente de segurança alimentar</p>
         </div>
         
         <div class="footer-section">
           <h4>Links Úteis</h4>
           <ul>
-            <li><a href="../Pages/index.html">Início</a></li>
-            <!-- <li><a href="Pages/allergy-scanner.html">Scanner</a></li> -->
-            <li><a href="../Pages/help.html">Ajuda</a></li>
+            <li><a href="../index.html">Início</a></li>
+            <!-- <li><a href="allergy-scanner.html">Scanner</a></li> -->
+            <li><a href="help.html">Ajuda</a></li>
           </ul>
         </div>
         
         <div class="footer-section">
           <h4>Legal</h4>
           <ul>
-            <li><a href="Pages/privacy.html">Privacidade</a></li>
-            <li><a href="Pages/help.html">Termos</a></li>
+            <li><a href="privacy.html">Privacidade</a></li>
+            <li><a href="help.html">Termos</a></li>
           </ul>
         </div>
       </div>
       
       <div class="footer-bottom">
-        <p>&copy; 2026 Safe-Bite. Todos os direitos reservados.</p>
+        <p>&copy; 2026 Scan-Bite. Todos os direitos reservados.</p>
       </div>
     </div>
   </footer>
@@ -937,7 +937,7 @@
         this.scans = [];
         this.stats = {
           totalScans: 0,
-          safeProducts: 0,
+          ScanProducts: 0,
           warningsFound: 0,
           planUsage: 0,
           planLimit: 10
@@ -975,9 +975,9 @@
           this.scans = [
             {
               id: 1,
-              product: 'NutriSafe Cereal',
+              product: 'NutriScan Cereal',
               date: new Date(Date.now() - 86400000).toISOString(),
-              status: 'safe',
+              status: 'Scan',
               confidence: 95
             },
             {
@@ -991,7 +991,7 @@
               id: 3,
               product: 'Organic Juice',
               date: new Date(Date.now() - 259200000).toISOString(),
-              status: 'safe',
+              status: 'Scan',
               confidence: 92
             },
             {
@@ -1005,7 +1005,7 @@
               id: 5,
               product: 'Vegan Cookies',
               date: new Date(Date.now() - 432000000).toISOString(),
-              status: 'safe',
+              status: 'Scan',
               confidence: 89
             }
           ];
@@ -1073,7 +1073,7 @@
 
       calculateStats() {
         this.stats.totalScans = this.scans.length;
-        this.stats.safeProducts = this.scans.filter(scan => scan.status === 'safe').length;
+        this.stats.ScanProducts = this.scans.filter(scan => scan.status === 'Scan').length;
         this.stats.warningsFound = this.scans.filter(scan => scan.status === 'warning' || scan.status === 'danger').length;
         // Uso do plano no mês atual
         this.stats.planUsage = this.scans.filter(scan => this.isSameMonth(scan.date)).length;
@@ -1150,11 +1150,11 @@
 
       simulateNewScan() {
         const products = [
-          { name: 'Healthy Granola', status: 'safe', confidence: 96, image: 'https://via.placeholder.com/80?text=Granola' },
+          { name: 'Healthy Granola', status: 'Scan', confidence: 96, image: 'https://via.placeholder.com/80?text=Granola' },
           { name: 'Energy Drink', status: 'warning', confidence: 78, image: 'https://via.placeholder.com/80?text=Drink' },
           { name: 'Nut Butter', status: 'danger', confidence: 91, image: 'https://via.placeholder.com/80?text=Butter' },
-          { name: 'Green Tea', status: 'safe', confidence: 88, image: 'https://via.placeholder.com/80?text=Tea' },
-          { name: 'Protein Shake', status: 'safe', confidence: 93, image: 'https://via.placeholder.com/80?text=Shake' }
+          { name: 'Green Tea', status: 'Scan', confidence: 88, image: 'https://via.placeholder.com/80?text=Tea' },
+          { name: 'Protein Shake', status: 'Scan', confidence: 93, image: 'https://via.placeholder.com/80?text=Shake' }
         ];
         
         const randomProduct = products[Math.floor(Math.random() * products.length)];
@@ -1203,7 +1203,7 @@
 
           // Contagens derivadas
           const total = scans.length;
-          const safe = scans.filter(s => s.status === 'safe').length;
+          const Scan = scans.filter(s => s.status === 'Scan').length;
           const alerts = scans.filter(s => s.status === 'warning' || s.status === 'danger').length;
 
           // Uso do plano no mês atual (contar por timestamp em allergyAnalysisHistory quando disponível)
@@ -1232,7 +1232,7 @@
           // Atualizar dados locais e UI
           this.scans = scans;
           this.stats.totalScans = total;
-          this.stats.safeProducts = safe;
+          this.stats.ScanProducts = Scan;
           this.stats.warningsFound = alerts;
           this.stats.planUsage = monthlyUsage;
           this.stats.planLimit = (JSON.parse(localStorage.getItem('nutriScanPlan') || 'null') || {}).plan === 'premium' ? 999999 : 10;
@@ -1259,7 +1259,7 @@
 
           // Atualizar estado interno e UI
           this.scans = [];
-          this.stats = { totalScans: 0, safeProducts: 0, warningsFound: 0, planUsage: 0, planLimit: 10 };
+          this.stats = { totalScans: 0, ScanProducts: 0, warningsFound: 0, planUsage: 0, planLimit: 10 };
           this.updateUI();
 
           alert('Dados resetados com sucesso. Tudo zerado para testes.');
@@ -1274,9 +1274,9 @@
         try {
           const now = new Date();
           const scans = [
-            { id: 1001, product: 'Produto A', date: new Date(now.getTime() - 1 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 95 },
-            { id: 1002, product: 'Produto B', date: new Date(now.getTime() - 2 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 92 },
-            { id: 1003, product: 'Produto C', date: new Date(now.getTime() - 3 * 24*60*60*1000).toISOString(), status: 'safe', confidence: 90 },
+            { id: 1001, product: 'Produto A', date: new Date(now.getTime() - 1 * 24*60*60*1000).toISOString(), status: 'Scan', confidence: 95 },
+            { id: 1002, product: 'Produto B', date: new Date(now.getTime() - 2 * 24*60*60*1000).toISOString(), status: 'Scan', confidence: 92 },
+            { id: 1003, product: 'Produto C', date: new Date(now.getTime() - 3 * 24*60*60*1000).toISOString(), status: 'Scan', confidence: 90 },
             { id: 1004, product: 'Produto D', date: new Date(now.getTime() - 4 * 24*60*60*1000).toISOString(), status: 'warning', confidence: 80 },
             { id: 1005, product: 'Produto E', date: new Date(now.getTime() - 5 * 24*60*60*1000).toISOString(), status: 'other', confidence: 70 }
           ];
@@ -1332,7 +1332,7 @@
 
       getStatusText(status) {
         const texts = {
-          'safe': 'Seguro',
+          'Scan': 'Seguro',
           'warning': 'Atenção',
           'danger': 'Perigo'
         };
@@ -1342,7 +1342,7 @@
       updateUIWithAnimation() {
         // Atualizar contadores com animação
         this.animateCounter('totalScans', this.stats.totalScans);
-        this.animateCounter('safeProducts', this.stats.safeProducts);
+        this.animateCounter('ScanProducts', this.stats.ScanProducts);
         this.animateCounter('warningsFound', this.stats.warningsFound);
         this.animateCounter('planUsage', `${this.stats.planUsage}/${this.stats.planLimit}`);
         
@@ -1482,7 +1482,7 @@
 
       getStatusIcon(status) {
         const icons = {
-          'safe': 'check-circle',
+          'Scan': 'check-circle',
           'warning': 'exclamation-triangle',
           'danger': 'times-circle'
         };
@@ -1557,8 +1557,8 @@
         
         // Atualizar estatísticas
         this.stats.totalScans++;
-        if (status === 'safe') {
-          this.stats.safeProducts++;
+        if (status === 'Scan') {
+          this.stats.ScanProducts++;
         } else if (status === 'warning' || status === 'danger') {
           this.stats.warningsFound++;
         }
@@ -1615,7 +1615,7 @@
       updateUI() {
         // Atualizar contadores
         document.getElementById('totalScans').textContent = this.stats.totalScans;
-        document.getElementById('safeProducts').textContent = this.stats.safeProducts;
+        document.getElementById('ScanProducts').textContent = this.stats.ScanProducts;
         document.getElementById('warningsFound').textContent = this.stats.warningsFound;
         document.getElementById('planUsage').textContent = `${this.stats.planUsage}/${this.stats.planLimit}`;
         
@@ -1659,7 +1659,7 @@
 
       updateStats() {
         const totalScansEl = document.getElementById('totalScans');
-        const safeProductsEl = document.getElementById('safeProducts');
+        const ScanProductsEl = document.getElementById('ScanProducts');
         const warningsFoundEl = document.getElementById('warningsFound');
         const planUsageEl = document.getElementById('planUsage');
         const usageProgressEl = document.getElementById('usageProgress');
@@ -1668,9 +1668,9 @@
           totalScansEl.textContent = this.scans.length;
         }
 
-        const safeCount = this.scans.filter(s => s.status === 'safe').length;
-        if (safeProductsEl) {
-          safeProductsEl.textContent = safeCount;
+        const ScanCount = this.scans.filter(s => s.status === 'Scan').length;
+        if (ScanProductsEl) {
+          ScanProductsEl.textContent = ScanCount;
         }
 
         const warningCount = this.scans.filter(s => s.status === 'warning').length;
@@ -1739,7 +1739,7 @@
 
           const status = document.createElement('div');
           status.className = `scan-status status-${scan.status}`;
-          status.innerHTML = scan.status === 'safe' ? 'Seguro' : scan.status === 'warning' ? 'Alerta' : 'Perigoso';
+          status.innerHTML = scan.status === 'Scan' ? 'Seguro' : scan.status === 'warning' ? 'Alerta' : 'Perigoso';
 
           scanItem.appendChild(left);
           scanItem.appendChild(status);
@@ -1753,11 +1753,11 @@
       logout() {
         localStorage.removeItem('nutriScanToken');
         localStorage.removeItem('nutriScanUser');
-        safeRedirect('index.html');
+        ScanRedirect('index.html');
       }
 
       redirectToLogin() {
-        safeRedirect('login.html');
+        ScanRedirect('login.html');
       }
     }
 
@@ -2130,11 +2130,11 @@
       const scan = dashboardController.scans.find(s => s.id === scanId);
       if (!scan) return;
       
-      const shareText = `Safe-Bite Scan: ${scan.product} - Status: ${getStatusText(scan.status)}`;
+      const shareText = `Scan-Bite Scan: ${scan.product} - Status: ${getStatusText(scan.status)}`;
       
       if (navigator.share) {
         navigator.share({
-          title: 'Safe-Bite Scan',
+          title: 'Scan-Bite Scan',
           text: shareText,
           url: window.location.href
         });
@@ -2170,7 +2170,7 @@
       
       const link = document.createElement('a');
       link.href = url;
-      link.download = `safe-bite-scans-${new Date().toISOString().split('T')[0]}.json`;
+      link.download = `Scan-bite-scans-${new Date().toISOString().split('T')[0]}.json`;
       link.click();
       
       URL.revokeObjectURL(url);
@@ -2180,7 +2180,7 @@
     // Funções auxiliares
     function getStatusIcon(status) {
       const icons = {
-        'safe': 'check-circle',
+        'Scan': 'check-circle',
         'warning': 'exclamation-triangle',
         'danger': 'times-circle'
       };
@@ -2189,7 +2189,7 @@
 
     function getStatusText(status) {
       const texts = {
-        'safe': 'Seguro',
+        'Scan': 'Seguro',
         'warning': 'Atenção',
         'danger': 'Perigo'
       };
@@ -2250,7 +2250,7 @@
           window.dashboardController.scans = [];
           window.dashboardController.stats = {
             totalScans: 0,
-            safeProducts: 0,
+            ScanProducts: 0,
             warningsFound: 0,
             planUsage: 0,
             planLimit: 10
@@ -2336,7 +2336,7 @@
     window.help = window.dashboardHelp;
 
     // Exibir mensagem de boas-vindas no console
-    console.log('%c🎉 Safe-Bite Dashboard Carregado', 'font-size: 20px; color: #2ecc71; font-weight: bold;');
+    console.log('%c🎉 Scan-Bite Dashboard Carregado', 'font-size: 20px; color: #2ecc71; font-weight: bold;');
     console.log('%cDigite help() para ver comandos disponíveis', 'font-size: 12px; color: #7f8c8d;');
   </script>
 </body>

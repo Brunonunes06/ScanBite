@@ -18,9 +18,9 @@ let mockDatabase = {
         {
             id: 1,
             userId: '1',
-            product: 'NutriSafe Cereal',
+            product: 'NutriScan Cereal',
             date: new Date(Date.now() - 86400000).toISOString(),
-            status: 'safe',
+            status: 'Scan',
             confidence: 95,
             ingredients: ['Aveia', 'Mel', 'Frutas secas'],
             allergens: []
@@ -40,7 +40,7 @@ let mockDatabase = {
             userId: '1',
             product: 'Organic Juice',
             date: new Date(Date.now() - 259200000).toISOString(),
-            status: 'safe',
+            status: 'Scan',
             confidence: 92,
             ingredients: ['Laranja', 'Maçã', 'Cenoura'],
             allergens: []
@@ -60,7 +60,7 @@ let mockDatabase = {
             userId: '1',
             product: 'Vegan Cookies',
             date: new Date(Date.now() - 432000000).toISOString(),
-            status: 'safe',
+            status: 'Scan',
             confidence: 89,
             ingredients: ['Farinha de arroz', 'Coco', 'Baunilha'],
             allergens: []
@@ -85,7 +85,7 @@ router.get('/stats', async (req, res) => {
         // Calculate statistics
         const stats = {
             totalScans: userScans.length,
-            safeProducts: userScans.filter(scan => scan.status === 'safe').length,
+            ScanProducts: userScans.filter(scan => scan.status === 'Scan').length,
             warningsFound: userScans.filter(scan => scan.status === 'warning' || scan.status === 'danger').length,
             planUsage: userScans.filter(scan => isToday(scan.date)).length,
             planLimit: user.planLimit,
@@ -114,7 +114,7 @@ router.get('/global-stats', async (req, res) => {
         
         const globalStats = {
             totalScans: allScans.length,
-            safeProducts: allScans.filter(scan => scan.status === 'safe').length,
+            ScanProducts: allScans.filter(scan => scan.status === 'Scan').length,
             warningsFound: allScans.filter(scan => scan.status === 'warning' || scan.status === 'danger').length,
             activeUsers: activeUsers,
             scansToday: allScans.filter(scan => isToday(scan.date)).length,
@@ -142,7 +142,7 @@ router.post('/scan', async (req, res) => {
             userId: userId,
             product: product || 'Unknown Product',
             date: new Date().toISOString(),
-            status: status || 'safe',
+            status: status || 'Scan',
             confidence: confidence || 85,
             ingredients: ingredients || [],
             allergens: allergens || []
@@ -218,7 +218,7 @@ router.get('/analytics', async (req, res) => {
             totalScans: userScans.length,
             averageConfidence: userScans.reduce((sum, scan) => sum + scan.confidence, 0) / userScans.length,
             scansByStatus: {
-                safe: userScans.filter(scan => scan.status === 'safe').length,
+                Scan: userScans.filter(scan => scan.status === 'Scan').length,
                 warning: userScans.filter(scan => scan.status === 'warning').length,
                 danger: userScans.filter(scan => scan.status === 'danger').length
             },
@@ -263,7 +263,7 @@ function getTopScannedProducts(scans) {
 
 function getRiskDistribution(scans) {
     const distribution = {
-        safe: scans.filter(scan => scan.status === 'safe').length,
+        Scan: scans.filter(scan => scan.status === 'Scan').length,
         warning: scans.filter(scan => scan.status === 'warning').length,
         danger: scans.filter(scan => scan.status === 'danger').length
     };
@@ -272,7 +272,7 @@ function getRiskDistribution(scans) {
     return {
         ...distribution,
         percentages: {
-            safe: total > 0 ? (distribution.safe / total * 100).toFixed(1) : 0,
+            Scan: total > 0 ? (distribution.Scan / total * 100).toFixed(1) : 0,
             warning: total > 0 ? (distribution.warning / total * 100).toFixed(1) : 0,
             danger: total > 0 ? (distribution.danger / total * 100).toFixed(1) : 0
         }
@@ -329,11 +329,11 @@ function getImprovementTrend(scans) {
     const recentScans = scans.slice(0, Math.floor(scans.length / 2));
     const olderScans = scans.slice(Math.floor(scans.length / 2));
     
-    const recentSafe = recentScans.filter(scan => scan.status === 'safe').length;
-    const olderSafe = olderScans.filter(scan => scan.status === 'safe').length;
+    const recentScan = recentScans.filter(scan => scan.status === 'Scan').length;
+    const olderScan = olderScans.filter(scan => scan.status === 'Scan').length;
     
-    const recentPercentage = (recentSafe / recentScans.length) * 100;
-    const olderPercentage = (olderSafe / olderScans.length) * 100;
+    const recentPercentage = (recentScan / recentScans.length) * 100;
+    const olderPercentage = (olderScan / olderScans.length) * 100;
     
     return (recentPercentage - olderPercentage).toFixed(1);
 }

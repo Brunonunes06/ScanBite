@@ -10,7 +10,7 @@ class DashboardSyncServer {
         this.userStats = new Map(); // userId -> stats cache
         this.globalStats = {
             totalScans: 0,
-            safeProducts: 0,
+            ScanProducts: 0,
             warningsFound: 0,
             activeUsers: 0
         };
@@ -125,7 +125,7 @@ class DashboardSyncServer {
         const userScans = await this.getUserScans(userId);
         const stats = {
             totalScans: userScans.length,
-            safeProducts: userScans.filter(scan => scan.status === 'safe').length,
+            ScanProducts: userScans.filter(scan => scan.status === 'Scan').length,
             warningsFound: userScans.filter(scan => scan.status === 'warning' || scan.status === 'danger').length,
             planUsage: userScans.filter(scan => this.isScanToday(scan.date)).length,
             planLimit: this.getPlanLimit('Premium'),
@@ -151,9 +151,9 @@ class DashboardSyncServer {
         return [
             {
                 id: 1,
-                product: 'NutriSafe Cereal',
+                product: 'NutriScan Cereal',
                 date: new Date(Date.now() - 86400000).toISOString(),
-                status: 'safe',
+                status: 'Scan',
                 confidence: 95
             },
             {
@@ -167,7 +167,7 @@ class DashboardSyncServer {
                 id: 3,
                 product: 'Organic Juice',
                 date: new Date(Date.now() - 259200000).toISOString(),
-                status: 'safe',
+                status: 'Scan',
                 confidence: 92
             }
         ];
@@ -209,8 +209,8 @@ class DashboardSyncServer {
             // Update global stats
             this.globalStats.totalScans++;
             
-            if (scanData.status === 'safe') {
-                this.globalStats.safeProducts++;
+            if (scanData.status === 'Scan') {
+                this.globalStats.ScanProducts++;
             } else if (scanData.status === 'warning' || scanData.status === 'danger') {
                 this.globalStats.warningsFound++;
             }
@@ -219,8 +219,8 @@ class DashboardSyncServer {
             const userStats = this.userStats.get(userId) || {};
             userStats.totalScans = (userStats.totalScans || 0) + 1;
             
-            if (scanData.status === 'safe') {
-                userStats.safeProducts = (userStats.safeProducts || 0) + 1;
+            if (scanData.status === 'Scan') {
+                userStats.ScanProducts = (userStats.ScanProducts || 0) + 1;
             } else {
                 userStats.warningsFound = (userStats.warningsFound || 0) + 1;
             }

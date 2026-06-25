@@ -311,7 +311,7 @@ class AllergyScanner {
 
     // Calculate overall risk level
     calculateOverallRisk(allergens) {
-        if (allergens.length === 0) return 'safe';
+        if (allergens.length === 0) return 'Scan';
         
         const hasGrave = allergens.some(a => a.severity === 'grave');
         const hasModerada = allergens.some(a => a.severity === 'moderada');
@@ -422,7 +422,7 @@ class AllergyScanner {
     // Get severity text in Portuguese
     getSeverityText(severity) {
         const texts = {
-            'safe': 'Seguro',
+            'Scan': 'Seguro',
             'caution': 'Cuidado',
             'warning': 'Atenção',
             'danger': 'Perigo'
@@ -455,7 +455,7 @@ class AllergyScanner {
                 id: analysis.id,
                 product: 'Imagem analisada',
                 date: analysis.timestamp || new Date().toISOString(),
-                status: (analysis.overallRisk === 'safe' ? 'safe' : (analysis.overallRisk === 'warning' ? 'warning' : 'danger')),
+                status: (analysis.overallRisk === 'Scan' ? 'Scan' : (analysis.overallRisk === 'warning' ? 'warning' : 'danger')),
                 confidence: analysis.detectedAllergens && analysis.detectedAllergens[0] ? Math.round(analysis.detectedAllergens[0].confidence * 100) : 90,
                 image: analysis.image || this.currentImage || ''
             };
@@ -555,4 +555,4 @@ document.addEventListener('DOMContentLoaded', () => {
     new AllergyScanner();
 });
 
-// Nota: `safeRedirect` é centralizado em `api-config.js`.
+// Nota: `ScanRedirect` é centralizado em `api-config.js`.

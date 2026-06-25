@@ -11,17 +11,17 @@ const API_CONFIG = {
  * Função utilitária de redirecionamento seguro
  * Pode ser sobrescrita por módulos específicos se necessário
  */
-function safeRedirect(url) {
+function ScanRedirect(url) {
   // Valida e redireciona de forma segura
   if (!url) return;
 
   // Se há um fileChecker com método especializado, delegar a ele (mantém compatibilidade)
-  if (window.fileChecker && typeof window.fileChecker.safeRedirectTo === 'function') {
+  if (window.fileChecker && typeof window.fileChecker.ScanRedirectTo === 'function') {
     try {
-      window.fileChecker.safeRedirectTo(url);
+      window.fileChecker.ScanRedirectTo(url);
       return;
     } catch (e) {
-      console.warn('fileChecker.safeRedirectTo falhou, fallback para window.location:', e);
+      console.warn('fileChecker.ScanRedirectTo falhou, fallback para window.location:', e);
     }
   }
 
@@ -36,7 +36,7 @@ function safeRedirect(url) {
       }
     }
   } catch (e) {
-    console.warn('URL inválida passada para safeRedirect:', url, e);
+    console.warn('URL inválida passada para ScanRedirect:', url, e);
     return;
   }
 
@@ -273,12 +273,12 @@ const APIUtils = {
   // Redirecionar para login
   redirectToLogin() {
     localStorage.removeItem('nutriScanToken');
-    safeRedirect('index.html');
+    ScanRedirect('index.html');
   },
 
   // Redirecionar para dashboard
   redirectToDashboard() {
-    safeRedirect('dashboard.html');
+    ScanRedirect('dashboard.html');
   },
 
   // Formatar data

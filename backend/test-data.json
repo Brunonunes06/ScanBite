@@ -16,7 +16,7 @@
       },
       "stats": {
         "totalScans": 0,
-        "safeProducts": 0,
+        "ScanProducts": 0,
         "warningProducts": 0,
         "dangerProducts": 0
       },
@@ -54,7 +54,7 @@
         "contém glúten",
         "contém lactose"
       ],
-      "safetyRating": "caution",
+      "ScantyRating": "caution",
       "createdAt": "2026-04-23T19:31:42.518Z",
       "updatedAt": "2026-04-23T19:31:42.518Z"
     },
@@ -76,7 +76,7 @@
         "sodium": 1
       },
       "warnings": [],
-      "safetyRating": "safe",
+      "ScantyRating": "Scan",
       "createdAt": "2026-04-23T19:31:42.518Z",
       "updatedAt": "2026-04-23T19:31:42.518Z"
     }

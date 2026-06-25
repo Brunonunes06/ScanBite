@@ -1,5 +1,5 @@
 /* Dark Mode Styles */
-/* Safe-Bite Dark Theme */
+/* Scan-Bite Dark Theme */
 
 /* Root Variables for Dark Mode */
 [data-theme="dark"] {
@@ -287,7 +287,7 @@ body.dark-mode .scan-date {
   color: var(--text-muted);
 }
 
-body.dark-mode .scan-status.status-safe {
+body.dark-mode .scan-status.status-Scan {
   color: var(--success-green);
 }
 

@@ -2,7 +2,7 @@ PixPayment Adapter for geradorqrcode
 =================================
 
 Este diretório contém um componente React pronto para integrar o repositório
-`dlsoares18/geradorqrcode` à API do backend (`/api/payment/pix`) do Safe-Bite.
+`dlsoares18/geradorqrcode` à API do backend (`/api/payment/pix`) do Scan-Bite.
 
 Objetivo
 --------
@@ -43,7 +43,7 @@ function App() {
 export default App;
 ```
 
-5. Ajuste `package.json` ou `proxy` se necessário para apontar para o backend do Safe-Bite. Por exemplo, no `package.json` do React adicione:
+5. Ajuste `package.json` ou `proxy` se necessário para apontar para o backend do Scan-Bite. Por exemplo, no `package.json` do React adicione:
 
 ```json
   "proxy": "http://localhost:3001"

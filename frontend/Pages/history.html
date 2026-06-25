@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Histórico - Safe-Bite</title>
-  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
-  <link rel="stylesheet" href="style.css">
+  <title>Histórico - Scan-Bite</title>
+  <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -378,7 +378,7 @@
       font-weight: 600;
     }
 
-    .scan-risk.safe {
+    .scan-risk.Scan {
       background: rgba(46, 204, 113, 0.1);
       color: var(--primary-green);
     }
@@ -594,9 +594,9 @@
   <div class="history-container">
     <!-- Header -->
     <header class="history-header">
-      <a class="history-logo" href="index.html" title="Voltar para Início">
+      <a class="history-logo" href="../index.html" title="Voltar para Início">
         <i class="fas fa-leaf"></i>
-        <span>Safe-Bite</span>
+        <span>Scan-Bite</span>
       </a>
       <nav class="history-nav">
         <button class="nav-btn active" onclick="showSection('history')" data-section="history">
@@ -669,7 +669,7 @@
               <label for="riskFilter">Risco:</label>
               <select id="riskFilter" onchange="filterHistory()">
                 <option value="">Todos</option>
-                <option value="safe">Seguro</option>
+                <option value="Scan">Seguro</option>
                 <option value="caution">Cuidado</option>
                 <option value="avoid">Evitar</option>
               </select>
@@ -697,7 +697,7 @@
             <div class="stat-label">Total de Scans</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value" id="safeScans">0</div>
+            <div class="stat-value" id="ScanScans">0</div>
             <div class="stat-label">Seguros</div>
           </div>
           <div class="stat-card">
@@ -835,7 +835,7 @@
             <div class="stat-label">Total de Scans</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value" id="safeScans">0</div>
+            <div class="stat-value" id="ScanScans">0</div>
             <div class="stat-label">Seguros</div>
           </div>
           <div class="stat-card">
@@ -874,7 +874,7 @@
         </div>
         <h2 class="empty-title">Nenhum scan encontrado</h2>
         <p class="empty-text">
-          Comece a usar o Safe-Bite para analisar produtos e proteger sua saúde!
+          Comece a usar o Scan-Bite para analisar produtos e proteger sua saúde!
         </p>
         <button class="btn-primary" onclick="goToScanner()">
           <i class="fas fa-camera"></i>
@@ -961,7 +961,7 @@
               _id: s.id || s._id || Date.now().toString(),
               product: { name: s.product || 'Imagem analisada', brand: s.brand || '' },
               createdAt: s.date || s.createdAt || new Date().toISOString(),
-              analysis: { overallRisk: s.status === 'safe' ? 'safe' : s.status === 'warning' ? 'caution' : 'avoid' },
+              analysis: { overallRisk: s.status === 'Scan' ? 'Scan' : s.status === 'warning' ? 'caution' : 'avoid' },
               image: s.image || ''
             }));
             this.totalPages = 1;
@@ -974,7 +974,7 @@
               _id: d.id || Date.now().toString(),
               product: { name: d.productName || 'Imagem analisada', brand: d.productBrand || '' },
               createdAt: d.timestamp || d.date || new Date().toISOString(),
-              analysis: { overallRisk: d.overallRisk || d.analysis?.overallRisk || 'safe' },
+              analysis: { overallRisk: d.overallRisk || d.analysis?.overallRisk || 'Scan' },
               raw: d,
               image: d.image || ''
             }));
@@ -1062,7 +1062,7 @@
 
       renderScanItem(scan) {
         const riskClass = scan.analysis.overallRisk;
-        const riskIcon = riskClass === 'safe' ? 'check' : 
+        const riskIcon = riskClass === 'Scan' ? 'check' : 
                         riskClass === 'caution' ? 'exclamation' : 'times';
         const imgSrc = (scan.raw && scan.raw.image) ? scan.raw.image : (scan.image || '');
         const imageHTML = imgSrc ? `<img src="${imgSrc}" alt="scan" style="width:80px;height:80px;border-radius:10px;object-fit:cover;"/>` : `<i class="fas fa-${riskIcon}"></i>`;
@@ -1110,7 +1110,7 @@
             </div>
             <div class="scan-actions">
               <span class="scan-risk ${riskClass}">
-                ${riskClass === 'safe' ? 'Seguro' : 
+                ${riskClass === 'Scan' ? 'Seguro' : 
                   riskClass === 'caution' ? 'Cuidado' : 'Evitar'}
               </span>
               <button class="btn-small btn-view" onclick="event.stopPropagation(); viewScan('${scan._id}')">
@@ -1160,12 +1160,12 @@
 
       updateStats() {
         const totalScans = this.filteredScans.length;
-        const safeScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'safe').length;
+        const ScanScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'Scan').length;
         const warningScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'caution').length;
         const dangerScans = this.filteredScans.filter(s => s.analysis.overallRisk === 'avoid').length;
         
         document.getElementById('totalScans').textContent = totalScans;
-        document.getElementById('safeScans').textContent = safeScans;
+        document.getElementById('ScanScans').textContent = ScanScans;
         document.getElementById('warningScans').textContent = warningScans;
         document.getElementById('dangerScans').textContent = dangerScans;
       }
@@ -1206,7 +1206,7 @@
         const image = scan.image || (scan.raw && scan.raw.image) || '';
         const productName = (scan.product && scan.product.name) || scan.productName || scan.product || 'Imagem analisada';
         const brand = (scan.product && scan.product.brand) || scan.productBrand || scan.brand || '';
-        const risk = (scan.analysis && scan.analysis.overallRisk) || scan.overallRisk || scan.status || 'safe';
+        const risk = (scan.analysis && scan.analysis.overallRisk) || scan.overallRisk || scan.status || 'Scan';
         const detailsHtml = `
           <div style="font-family:Inter, Arial, sans-serif; padding:20px; max-width:800px;">
             <h2>${productName}</h2>
@@ -1361,7 +1361,7 @@
             exportDate: new Date().toISOString(),
             stats: {
               total: allScans.length,
-              safe: allScans.filter(s => s.analysis.overallRisk === 'safe').length,
+              Scan: allScans.filter(s => s.analysis.overallRisk === 'Scan').length,
               caution: allScans.filter(s => s.analysis.overallRisk === 'caution').length,
               avoid: allScans.filter(s => s.analysis.overallRisk === 'avoid').length
             }
@@ -1371,7 +1371,7 @@
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `Safe-Bite-history-${new Date().toISOString().split('T')[0]}.json`;
+          a.download = `Scan-Bite-history-${new Date().toISOString().split('T')[0]}.json`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -1417,7 +1417,7 @@
       }
 
       goToScanner() {
-        safeRedirect('allergy-scanner.html');
+        ScanRedirect('allergy-scanner.html');
       }
     }
 
@@ -1427,7 +1427,7 @@
     }
 
     function goToScanner() {
-      safeRedirect('allergy-scanner.html');
+      ScanRedirect('allergy-scanner.html');
     }
 
     function filterHistory() {
@@ -1578,14 +1578,14 @@
           this.scans = [
             {
               id: 1,
-              product: 'NutriSafe Cereal Integral',
+              product: 'NutriScan Cereal Integral',
               brand: 'NutriBrand',
               category: 'graos',
               date: new Date(Date.now() - 86400000).toISOString(),
-              status: 'safe',
+              status: 'Scan',
               confidence: 95,
               analysis: {
-                overallRisk: 'safe',
+                overallRisk: 'Scan',
                 allergens: [],
                 additives: ['B12', 'Ferro'],
                 preservatives: []
@@ -1783,8 +1783,8 @@
           
           <div class="stat-card">
             <h3>Produtos Seguros</h3>
-            <div class="stat-value">${stats.safe}</div>
-            <div class="stat-percentage">${((stats.safe / stats.total) * 100).toFixed(1)}%</div>
+            <div class="stat-value">${stats.Scan}</div>
+            <div class="stat-percentage">${((stats.Scan / stats.total) * 100).toFixed(1)}%</div>
           </div>
           
           <div class="stat-card">
@@ -1892,7 +1892,7 @@
 
       calculateStats() {
         const total = this.filteredScans.length;
-        const safe = this.filteredScans.filter(s => s.status === 'safe').length;
+        const Scan = this.filteredScans.filter(s => s.status === 'Scan').length;
         const caution = this.filteredScans.filter(s => s.status === 'caution').length;
         const avoid = this.filteredScans.filter(s => s.status === 'avoid').length;
         const avgConfidence = this.filteredScans.reduce((sum, s) => sum + s.confidence, 0) / total;
@@ -1905,7 +1905,7 @@
         
         return {
           total,
-          safe,
+          Scan,
           caution,
           avoid,
           avgConfidence: avgConfidence.toFixed(1),
@@ -1932,7 +1932,7 @@
 
       getStatusLabel(status) {
         const labels = {
-          'safe': '✅ Seguro',
+          'Scan': '✅ Seguro',
           'caution': '⚠️ Cuidado',
           'avoid': '❌ Evitar'
         };
@@ -1999,7 +1999,7 @@
         const headers = ['Métrica', 'Valor'];
         const rows = [
           ['Total de Scans', stats.total],
-          ['Produtos Seguros', stats.safe],
+          ['Produtos Seguros', stats.Scan],
           ['Com Cuidado', stats.caution],
           ['Evitar', stats.avoid],
           ['Confiança Média', stats.avgConfidence + '%'],
@@ -2063,11 +2063,11 @@
     }
 
     function goToDashboard() {
-      safeRedirect('dashboard.html');
+      ScanRedirect('dashboard.html');
     }
 
     function goToScanner() {
-      safeRedirect('allergy-scanner.html');
+      ScanRedirect('allergy-scanner.html');
     }
   </script>
   

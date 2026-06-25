@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
           // Fallback se o popup não estiver disponível
           console.log('Popup não disponível, redirecionando...');
-          safeRedirect('payment.html');
+          ScanRedirect('payment.html');
         }
       });
     }
@@ -431,7 +431,7 @@ function showLoginRequiredWarning() {
         <button onclick="this.closest('div').parentElement.remove()" style="padding: 0.8rem 1.5rem; background: var(--medium-gray); color: var(--text-dark); border: none; border-radius: 8px; cursor: pointer;">
           Cancelar
         </button>
-        <button onclick="safeRedirect('login.html')" style="padding: 0.8rem 1.5rem; background: var(--gradient-primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
+        <button onclick="ScanRedirect('login.html')" style="padding: 0.8rem 1.5rem; background: var(--gradient-primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
           Fazer Login
         </button>
       </div>
@@ -1079,7 +1079,7 @@ function updateDashboardStats(status) {
   
   // Inicializar estatísticas se não existirem
   if (!stats.totalScans) stats.totalScans = 0;
-  if (!stats.safeProducts) stats.safeProducts = 0;
+  if (!stats.ScanProducts) stats.ScanProducts = 0;
   if (!stats.warningsFound) stats.warningsFound = 0;
   if (!stats.planUsage) stats.planUsage = 0;
   if (!stats.planLimit) stats.planLimit = 10;
@@ -1088,8 +1088,8 @@ function updateDashboardStats(status) {
   stats.totalScans++;
   stats.planUsage++;
   
-  if (status === 'safe') {
-    stats.safeProducts++;
+  if (status === 'Scan') {
+    stats.ScanProducts++;
   } else if (status === 'warning' || status === 'danger') {
     stats.warningsFound++;
   }
@@ -1112,7 +1112,7 @@ function handleHeroStartFree() {
   }
   
   // Usuário logado, redirecionar para dashboard
-  safeRedirect('dashboard.html');
+  ScanRedirect('dashboard.html');
 }
 
 // Exportar funções para uso global

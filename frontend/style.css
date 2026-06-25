@@ -460,7 +460,7 @@ body {
 
   .logo span {
     display: none;
-    /* Esconder texto "Safe-Bite" em telas muito pequenas */
+    /* Esconder texto "Scan-Bite" em telas muito pequenas */
   }
 
   .auth-status-container>* {

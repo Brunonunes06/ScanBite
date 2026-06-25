@@ -1,5 +1,5 @@
 // Sistema de Dark Mode
-// Safe-Bite Theme Manager
+// Scan-Bite Theme Manager
 
 class DarkModeManager {
   constructor() {

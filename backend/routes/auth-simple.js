@@ -51,7 +51,7 @@ router.post('/register', async (req, res) => {
       },
       stats: {
         totalScans: 0,
-        safeProducts: 0,
+        ScanProducts: 0,
         warningProducts: 0,
         dangerProducts: 0
       },

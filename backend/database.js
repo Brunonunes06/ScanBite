@@ -232,7 +232,7 @@ class SimpleDatabase {
         },
         stats: {
           totalScans: 0,
-          safeProducts: 0,
+          ScanProducts: 0,
           warningProducts: 0,
           dangerProducts: 0
         }
@@ -255,7 +255,7 @@ class SimpleDatabase {
             sodium: 50
           },
           warnings: ['contém glúten', 'contém lactose'],
-          safetyRating: 'caution'
+          ScantyRating: 'caution'
         },
         {
           name: 'Maçã Gala',
@@ -272,7 +272,7 @@ class SimpleDatabase {
             sodium: 1
           },
           warnings: [],
-          safetyRating: 'safe'
+          ScantyRating: 'Scan'
         }
       ];
 

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scanner - Safe-Bite</title>
-  <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
-  <link rel="stylesheet" href="style.css">
+  <title>Scanner - Scan-Bite</title>
+  <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -345,7 +345,7 @@
       background: var(--light-gray);
     }
 
-    .ingredient-item.safe {
+    .ingredient-item.Scan {
       border-left: 4px solid var(--primary-green);
     }
 
@@ -367,7 +367,7 @@
       font-size: 0.9rem;
     }
 
-    .ingredient-icon.safe {
+    .ingredient-icon.Scan {
       background: rgba(46, 204, 113, 0.1);
       color: var(--primary-green);
     }
@@ -570,7 +570,7 @@
     <header class="scanner-header">
       <div class="scanner-logo">
         <i class="fas fa-leaf"></i>
-        <span>Safe-Bite</span>
+        <span>Scan-Bite</span>
       </div>
       <div class="user-info">
         <div class="user-avatar" id="userAvatar">JD</div>
@@ -866,7 +866,7 @@
         // Step 2: Analyzing with AI
         await this.animateStep('step2', 2000);
 
-        // Step 3: Checking safety
+        // Step 3: Checking Scanty
         await this.animateStep('step3', 1500);
 
         // Process the image
@@ -950,7 +950,7 @@
         
         container.innerHTML = ingredients.map(ingredient => {
           const riskClass = ingredient.risk;
-          const icon = riskClass === 'safe' ? 'check' : 
+          const icon = riskClass === 'Scan' ? 'check' : 
                         riskClass === 'warning' ? 'exclamation' : 'times';
           
           return `
@@ -1073,11 +1073,11 @@
       }
 
       goToHome() {
-        safeRedirect('index.html');
+        ScanRedirect('../index.html');
       }
 
       goToDashboard() {
-        safeRedirect('dashboard.html');
+        ScanRedirect('dashboard.html');
       }
     }
 

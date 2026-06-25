@@ -41,7 +41,7 @@ const scanSchema = new mongoose.Schema({
       },
       risk: {
         type: String,
-        enum: ['safe', 'warning', 'danger'],
+        enum: ['Scan', 'warning', 'danger'],
         required: true
       },
       confidence: {
@@ -81,7 +81,7 @@ const scanSchema = new mongoose.Schema({
     },
     overallRisk: {
       type: String,
-      enum: ['safe', 'caution', 'avoid'],
+      enum: ['Scan', 'caution', 'avoid'],
       required: true
     },
     confidence: {
@@ -115,7 +115,7 @@ const scanSchema = new mongoose.Schema({
   recommendations: [{
     type: {
       type: String,
-      enum: ['avoid', 'limit', 'alternative', 'safe'],
+      enum: ['avoid', 'limit', 'alternative', 'Scan'],
       required: true
     },
     message: {

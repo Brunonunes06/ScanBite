@@ -67,7 +67,7 @@ app.use('/api/users', usersRoutes);
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: 'API Safe-Bite funcionando',
+    message: 'API Scan-Bite funcionando',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
   });
@@ -122,7 +122,7 @@ const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
   console.log(`
   ========================================
-  Servidor Safe-Bite rodando na porta ${PORT}
+  Servidor Scan-Bite rodando na porta ${PORT}
   Ambiente: ${process.env.NODE_ENV || 'development'}
   API: http://localhost:${PORT}/api
   ========================================

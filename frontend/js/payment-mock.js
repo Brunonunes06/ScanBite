@@ -51,7 +51,7 @@ class PaymentMockService {
         qrCode: qrCode,
         pixCode: pixCode,
         expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-        description: description || 'Assinatura Premium Safe-Bite',
+        description: description || 'Assinatura Premium Scan-Bite',
         createdAt: new Date().toISOString()
       }
     };
@@ -80,7 +80,7 @@ class PaymentMockService {
         boletoUrl: `https://example.com/boleto/${boletoId}`,
         dueDate: dueDate.toISOString(),
         beneficiary: {
-          name: 'Safe-Bite',
+          name: 'Scan-Bite',
           cnpj: '12.345.678/0001-90',
           bank: 'Mercado Pago'
         },

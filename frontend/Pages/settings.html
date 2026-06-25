@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações - Safe-Bite</title>
-    <link rel="icon" href="Logos/logo.jpeg" type="image/jpeg">
-  <link rel="stylesheet" href="style.css">
+    <title>Configurações - Scan-Bite</title>
+    <link rel="icon" href="../Logos/logo.jpeg" type="image/jpeg">
+  <link rel="stylesheet" href="../style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -889,7 +889,7 @@
     <header class="settings-header">
       <div class="settings-logo">
         <i class="fas fa-leaf"></i>
-        <span>Safe-Bite</span>
+        <span>Scan-Bite</span>
       </div>
       <h1>
         <i class="fas fa-cog"></i>
@@ -1298,7 +1298,7 @@
         if (confirm('Tem certeza que deseja sair da sua conta?')) {
           localStorage.removeItem('nutriScanToken');
           localStorage.removeItem('nutriScanUser');
-          safeRedirect('index.html');
+          ScanRedirect('index.html');
         }
       }
 
@@ -1718,7 +1718,7 @@
         // Simulação - em um app real, isso chamaria uma API
         setTimeout(() => {
           localStorage.clear();
-          safeRedirect('index.html');
+          ScanRedirect('index.html');
         }, 2000);
       } else if (confirmation !== null) {
         alert('Texto de confirmação incorreto. Ação cancelada.');

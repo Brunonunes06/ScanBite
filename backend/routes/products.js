@@ -180,9 +180,9 @@ router.get('/category/:category', async (req, res) => {
 });
 
 // @desc    Obter produtos seguros para restrições específicas
-// @route   POST /api/products/safe
+// @route   POST /api/products/Scan
 // @access  Private
-router.post('/safe', protect, async (req, res) => {
+router.post('/Scan', protect, async (req, res) => {
   try {
     const { dietaryRestrictions } = req.body;
     const limit = parseInt(req.query.limit) || 20;
@@ -194,7 +194,7 @@ router.post('/safe', protect, async (req, res) => {
       });
     }
     
-    const products = await Product.getSafeForRestrictions(dietaryRestrictions, limit);
+    const products = await Product.getScanForRestrictions(dietaryRestrictions, limit);
 
     res.status(200).json({
       success: true,
@@ -300,9 +300,9 @@ router.get('/:id/reviews', async (req, res) => {
 });
 
 // @desc    Verificar se produto é seguro para usuário
-// @route   POST /api/products/:id/check-safety
+// @route   POST /api/products/:id/check-Scanty
 // @access  Private
-router.post('/:id/check-safety', protect, async (req, res) => {
+router.post('/:id/check-Scanty', protect, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     
@@ -315,7 +315,7 @@ router.post('/:id/check-safety', protect, async (req, res) => {
     
     const user = await User.findById(req.user.id);
     
-    const safetyCheck = product.isSafeForUser(user.dietaryRestrictions);
+    const ScantyCheck = product.isScanForUser(user.dietaryRestrictions);
     
     res.status(200).json({
       success: true,
@@ -325,7 +325,7 @@ router.post('/:id/check-safety', protect, async (req, res) => {
         brand: product.brand,
         category: product.category
       },
-      safetyCheck,
+      ScantyCheck,
       userRestrictions: user.dietaryRestrictions
     });
   } catch (error) {

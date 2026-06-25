@@ -1,4 +1,4 @@
-// Sistema de Contato Safe-Bite
+// Sistema de Contato Scan-Bite
 class ContactSystem {
   constructor() {
     // Verificar se NutriScanAPI está disponível
@@ -88,10 +88,15 @@ class ContactSystem {
   }
 
   getFormData() {
+    const nomeEl = document.getElementById('nome');
+    const emailEl = document.getElementById('email');
+    const mensagemEl = document.getElementById('mensagem');
+
+    // Return empty values if elements don't exist
     return {
-      nome: document.getElementById('nome').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      mensagem: document.getElementById('mensagem').value.trim()
+      nome: nomeEl ? nomeEl.value.trim() : '',
+      email: emailEl ? emailEl.value.trim() : '',
+      mensagem: mensagemEl ? mensagemEl.value.trim() : ''
     };
   }
 

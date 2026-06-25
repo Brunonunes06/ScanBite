@@ -1,5 +1,5 @@
 // Sistema de Atalhos de Teclado Globais
-// Safe-Bite Keyboard Shortcuts Manager
+// Scan-Bite Keyboard Shortcuts Manager
 
 class KeyboardShortcutsManager {
   constructor() {
