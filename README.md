@@ -10,48 +10,6 @@ Sistema de análise nutricional e pagamento com integração Mercado Pago.
 - **QR Code Dinâmico**: Geração automática de QR Code para pagamentos PIX
 - **Segurança Profissional**: Proteção de credenciais e dados sensíveis
 
-## 🔐 Segurança
-
-Este projeto implementa medidas de segurança profissionais:
-
-- ✅ Credenciais protegidas por .gitignore
-- ✅ Variáveis de ambiente centralizadas em backend/.env.example
-- ✅ JWT secrets fortes para autenticação
-- ✅ Webhook secrets para validação de pagamentos
-- ✅ CORS configurado para origens permitidas
-- ✅ Validação de entrada e sanitização de dados
-
-## 📋 Configuração
-
-### 1. Configurar Variáveis de Ambiente
-
-```bash
-# Copiar arquivo de exemplo
-cp backend/.env.example backend/.env
-
-# Editar backend/.env com suas credenciais reais
-```
-
-### 2. Obter Credenciais Mercado Pago
-
-- Acesse: https://www.mercadopago.com.br/developers
-- Crie uma aplicação
-- Copie Access Token e Public Key
-- Configure em backend/.env
-
-### 3. Iniciar Servidor
-
-```bash
-# Instalar dependências
-npm install
-
-# Iniciar backend
-cd backend
-npm start
-
-# Servidor rodará em http://localhost:5000
-```
-
 ## 📱 QR Code PIX
 
 ![QR Code PIX](qr-code-pix.png)
